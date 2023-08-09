@@ -2,9 +2,17 @@ import logging
 import numbers
 from time import time
 from typing import Optional, Union
-import mip
 
-from .objective_term import ObjectiveTerm, Variables
+import mip
+import pandas as pd
+import plotly.express as px
+from plotly.graph_objects import Figure
+
+from .objective_term import ObjectiveTerm, Variables, Fun, Grad
+from .utils import log_table_header, log_table_row
+
+
+logging.getLogger("mip").setLevel(logging.WARNING)
 
 
 class Model(mip.Model):
@@ -16,8 +24,18 @@ class Model(mip.Model):
             solver_name: str = "",
             solver: Optional[mip.Solver] = None,
             max_gap: float = 1e-6,
-            verbose: bool = False,
+            step_size: float = 1e-6,
     ):
+        """Construct for optimization model.
+
+        Args:
+            name: str, default=""
+            sense: str, default=mip.MINIMIZE
+            solver_name: str, default=""
+            solver: mip.Solver, default=None
+            max_gap: float, default=1e-6
+            step_size: float, default=1e-6
+        """
         super().__init__(
             name=name,
             sense=sense,
@@ -25,21 +43,32 @@ class Model(mip.Model):
             solver=solver,
         )
         self.max_gap = max_gap
-        self.verbose = verbose
+        self.step_size = step_size
         self._objective_terms: list[ObjectiveTerm] = list()
         self._initialization_objective: Optional[mip.LinExpr] = None
         self._search_log: list[dict[str, numbers.Real]] = list()
 
     def add_objective_term(
             self,
-            variables: Variables,
-            fun,
-            grad=None
+            var: Variables,
+            func: Fun,
+            grad: Optional[Grad] = None,
     ) -> ObjectiveTerm:
+        """
+
+        Args:
+            var:
+            func:
+            grad:
+
+        Returns:
+
+        """
         objective_term = ObjectiveTerm(
-            var=variables,
-            fun=fun,
+            var=var,
+            func=func,
             grad=grad,
+            step_size=self.step_size,
         )
         self._objective_terms.append(objective_term)
         return objective_term
@@ -54,6 +83,20 @@ class Model(mip.Model):
         max_nodes_same_incumbent: int = mip.INT_MAX,
         relax: bool = False,
     ) -> mip.OptimizationStatus:
+        """
+
+        Args:
+            max_iters:
+            max_seconds:
+            max_nodes:
+            max_solutions:
+            max_seconds_same_incumbent:
+            max_nodes_same_incumbent:
+            relax:
+
+        Returns: mip.OptimizationStatus
+
+        """
 
         # Check that at least one objective term has been added
         assert self.objective_terms, (
@@ -69,8 +112,7 @@ class Model(mip.Model):
             self.objective = 1.
         else:
             self.objective = self.initialization_objective
-        if self.verbose:
-            logging.info("Performing initialization solve...")
+        logging.info("Performing initialization solve...")
         status = super().optimize(
             max_seconds=max_seconds,
             max_nodes=max_nodes,
@@ -78,12 +120,10 @@ class Model(mip.Model):
             max_seconds_same_incumbent=max_seconds_same_incumbent,
             max_nodes_same_incumbent=max_nodes_same_incumbent,
         )
-        self.reset()
 
         # If no feasible solution found, exit solve and return status
         if status not in (mip.OptimizationStatus.OPTIMAL, mip.OptimizationStatus.FEASIBLE):
-            if self.verbose:
-                logging.info(f"Initial solve unsuccessful - exiting with optimization status: '{status.value}'")
+            logging.info(f"Initial solve unsuccessful - exiting with optimization status: '{status.value}'")
             return status
 
         # Define objective in epigraph form
@@ -93,6 +133,7 @@ class Model(mip.Model):
         for i in range(max_iters):
 
             # Set starting solution for discrete variables
+            # Note: the attribute `vars` of the Model class from the `mip` package accidentally shadows a built-in name
             self.start = [(var, var.x) for var in self.vars if var.var_type in (mip.BINARY, mip.INTEGER)]
 
             # Add new cut
@@ -113,30 +154,33 @@ class Model(mip.Model):
 
             # If no feasible solution found, exit solve and return status
             if status not in (mip.OptimizationStatus.OPTIMAL, mip.OptimizationStatus.FEASIBLE):
-                if self.verbose:
-                    logging.info(f"Solve unsuccessful - exiting with optimization status: '{status.value}'.")
+                logging.info(f"Solve unsuccessful - exiting with optimization status: '{status.value}'.")
                 return status
 
-            # Update
+            # Update search log
             incumbent, bound = self.objective_value, super().objective_value
-            gap = abs(incumbent - bound) / min(abs(incumbent), abs(bound))
+            gap = abs(incumbent - bound) / max(min(abs(incumbent), abs(bound)), self.max_gap ** 2)
             self._search_log.append(
                 {
                     "iteration": i,
                     "time_elapsed": time() - start_time,
                     "incumbent": incumbent,
-                    "bound": bound
+                    "bound": bound,
+                    "gap": gap,
                 }
             )
+            row = self._search_log[-1]
+            if not i:
+                log_table_header(columns=row.keys())
+            log_table_row(values=row.values())
+            # print({key: "{0:.3e}".format(value) if isinstance(value, float) else value for key, value in row.items()})
 
             # Check early termination condition
             if gap <= self.max_gap:
-                if self.verbose:
-                    logging.info(f"Optimality tolerance reached - terminating search early.")
+                logging.info(f"Optimality tolerance reached - terminating search early.")
                 return mip.OptimizationStatus.OPTIMAL
 
-        if self.verbose:
-            logging.info(f"Max iterations reached - terminating search.")
+        logging.info(f"Max iterations reached - terminating search.")
         return mip.OptimizationStatus.FEASIBLE
 
     def clear(self) -> None:
@@ -161,3 +205,20 @@ class Model(mip.Model):
         if not isinstance(expr, (mip.LinExpr, mip.Var)):
             raise TypeError
         self._initialization_objective = expr
+
+    @property
+    def search_log(self) -> pd.DataFrame:
+        return pd.DataFrame(self._search_log)
+
+    def plot_search(
+            self,
+            log_scale: bool = False,
+            x: str = "iteration",
+            gap: bool = False
+    ) -> Figure:
+        return px.line(
+            data_frame=self.search_log,
+            x=x,
+            y="gap" if gap else ["incumbent", "bound"],
+            log_y=log_scale,
+        )

@@ -10,7 +10,9 @@ setup(
     author_email="joshua.k.ivanhoe@gmail.com",
     url="https://github.com/joshivanhoe/halfspace.git",
     install_requires=[
-       "mip>=1.15.0",
-       "numpy>=1.25.2",
+        "mip>=1.15.0",
+        "numpy>=1.25.2",
+        "pandas>=2.0.3",
+        "plotly>=5.15.0",
     ],
 )

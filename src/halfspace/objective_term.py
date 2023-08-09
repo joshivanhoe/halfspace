@@ -1,7 +1,7 @@
-import mip
-from typing import Union, Callable, Optional
-import numpy as np
+from typing import Union, Callable
 
+import mip
+import numpy as np
 
 Input = Union[float, list[float], np.ndarray]
 Fun = Callable[[Input], float]
@@ -14,41 +14,58 @@ class ObjectiveTerm:
     def __init__(
         self,
         var: Variables,
-        fun: Callable,
-        grad: Optional[Callable],
-        eps: float = 1e-5,
+        func: Fun,
+        grad: Grad,
+        step_size: float,
     ):
+        """Objective term constructor.
+
+        Args:
+            var:
+            func:
+            grad:
+            step_size: float
+        """
         self.var = var
-        self._eval_fun = fun
+        self.func = func
         self.grad = grad
-        self.eps = eps
+        self.step_size = step_size
+        self._validate()
 
     @property
     def x(self) -> Union[float, np.ndarray]:
+        """Get the variable value(s) of the incumbent solution."""
         if isinstance(self.var, mip.Var):
-            return self.var.x
-        return np.ndarray([var.x for var in self.var])
+            return float(self.var.x)
+        return np.array([float(var.x) for var in self.var])
 
     @property
     def value(self) -> float:
-        return self._eval_fun(x=self.x)
+        """Get the objective term value of the incumbent solution."""
+        return self._evaluate_func(x=self.x)
 
     def generate_cut(self, x: Input = None) -> mip.LinExpr:
+        """Generate a cutting plane for the objective term."""
         x = x or self.x
-        fun = self._eval_fun(x=x)
-        grad = self._eval_grad(x=x)
+        fun = self._evaluate_func(x=x)
+        grad = self._evaluate_grad(x=x)
         if isinstance(self.var, mip.Var):
             return grad * (self.var - x) + fun
         return mip.xsum(grad * (np.array(self.var) - x)) + fun
 
-    def _eval_fun(self, x: Input) -> float:
+    def _validate(self) -> None:
+        pass
+
+    def _evaluate_func(self, x: Input) -> float:
+        """Evaluate the objective term value."""
         if isinstance(self.var, (mip.Var, mip.LinExpr)):
-            return self._eval_fun(x)
+            return self.func(x)
         if isinstance(self.var, list):
-            return self._eval_fun(*x)
+            return self.func(*x)
         raise NotImplementedError
 
-    def _eval_grad(self, x: Input) -> np.ndarray:
+    def _evaluate_grad(self, x: Input) -> np.ndarray:
+        """Evaluate the objective term gradient."""
         if self.grad is None:
             return self._approximate_grad(x=x)
         if isinstance(self.var, (mip.Var, mip.LinExpr)):
@@ -60,14 +77,17 @@ class ObjectiveTerm:
     def _approximate_grad(self, x: Input) -> Union[float, np.ndarray]:
         """Approximate the gradient of the function at point using the central finite difference method."""
         if isinstance(self.var, mip.Var):
-            return (self._eval_fun(x=x + self.eps / 2) - self._eval_fun(x=x - self.eps / 2)) / self.eps
+            return (
+                self._evaluate_func(x=x + self.step_size / 2)
+                - self._evaluate_func(x=x - self.step_size / 2)
+            ) / self.step_size
         else:
             indexes = np.arange(len(x))
             return np.array([
                 (
-                    self._eval_fun(x=x + self.eps / 2 * (indexes == i))
-                    - self._eval_fun(x=x - self.eps / 2 * (indexes == i))
-                ) / self.eps
+                    self._evaluate_func(x=x + self.step_size / 2 * (indexes == i))
+                    - self._evaluate_func(x=x - self.step_size / 2 * (indexes == i))
+                ) / self.step_size
                 for i in indexes
             ])
 
