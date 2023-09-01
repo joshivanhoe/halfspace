@@ -17,6 +17,7 @@ class ObjectiveTerm:
         func: Fun,
         grad: Grad,
         step_size: float,
+        name: str = ""
     ):
         """Objective term constructor.
 
@@ -30,6 +31,7 @@ class ObjectiveTerm:
         self.func = func
         self.grad = grad
         self.step_size = step_size
+        self.name = name
         self._validate()
 
     @property
@@ -44,9 +46,14 @@ class ObjectiveTerm:
         """Get the objective term value of the incumbent solution."""
         return self._evaluate_func(x=self.x)
 
+    @property
+    def is_multivariable(self) -> bool:
+        return not isinstance(self.var, mip.Var)
+
     def generate_cut(self, x: Input = None) -> mip.LinExpr:
         """Generate a cutting plane for the objective term."""
-        x = x or self.x
+        if x is None:
+            x = self.x
         fun = self._evaluate_func(x=x)
         grad = self._evaluate_grad(x=x)
         if isinstance(self.var, mip.Var):
@@ -58,7 +65,7 @@ class ObjectiveTerm:
 
     def _evaluate_func(self, x: Input) -> float:
         """Evaluate the objective term value."""
-        if isinstance(self.var, (mip.Var, mip.LinExpr)):
+        if isinstance(self.var, (mip.Var, mip.LinExprTensor)):
             return self.func(x)
         if isinstance(self.var, list):
             return self.func(*x)
@@ -68,7 +75,7 @@ class ObjectiveTerm:
         """Evaluate the objective term gradient."""
         if self.grad is None:
             return self._approximate_grad(x=x)
-        if isinstance(self.var, (mip.Var, mip.LinExpr)):
+        if isinstance(self.var, (mip.Var, mip.LinExprTensor)):
             return self.grad(x)
         if isinstance(self.var, list):
             return self.grad(*x)
@@ -90,4 +97,5 @@ class ObjectiveTerm:
                 ) / self.step_size
                 for i in indexes
             ])
+
 
