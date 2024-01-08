@@ -2,13 +2,13 @@ import logging
 from typing import Optional, Iterable, Union
 
 import mip
-import numpy as np
 import pandas as pd
 import plotly.express as px
 from plotly.graph_objs import Figure
 
 from .search_state import SearchState
-from .term import NonlinearTerm, Variables, Fun, Grad
+from .term import NonlinearTerm, Var, Fun, Grad
+from .utils import check_scalar
 
 Start = list[tuple[mip.Var, float]]
 
@@ -19,23 +19,24 @@ class Model:
             self,
             minimize: bool = True,
             max_gap: float = 1e-4,
-            max_mip_gap: float = 1e-6,
+            max_gap_abs: float = 1e-4,
             solver_name: Optional[str] = None,
+            log_freq: Optional[int] = 1,
     ):
         """
 
         Args:
-            minimize:
-            max_gap:
-            max_mip_gap:
-            min_update_weight:
-            update_smoothing:
-            solver_name:
+            minimize: bool, default=`True`
+            max_gap: float, default=1e-4
+            max_gap_abs: float, default=1e-4
+            solver_name: str or `None`, default=`None`
+            log_freq: int or `None`, default = 1
         """
         self.minimize = minimize
         self.max_gap = max_gap
-        self.max_mip_gap = max_mip_gap
+        self.max_gap_abs = max_gap_abs
         self.solver_name = solver_name
+        self.log_freq = log_freq
         self.reset()
 
     def reset(self) -> None:
@@ -45,13 +46,12 @@ class Model:
             sense=mip.MINIMIZE if self.minimize else mip.MAXIMIZE,
         )
         self._mip_model.verbose = 0
-        self._mip_model.max_mip_gap = self.max_mip_gap
         self._start: dict[mip.Var, float] = dict()
         self._objective_terms: list[NonlinearTerm] = list()
         self._nonlinear_constraints: list[NonlinearTerm] = list()
         self._search_state: Optional[SearchState] = None
 
-    def add_variable(
+    def add_var(
             self,
             lb: float,
             ub: float,
@@ -70,6 +70,11 @@ class Model:
         Returns: mip.Var
             The decision variable.
         """
+        if var_type == mip.BINARY:
+            lb, ub = 0, 1
+        else:
+            check_scalar(x=lb, name="lb", var_type=(float, int), ub=ub, lb=-mip.INF, include_boundaries=False)
+            check_scalar(x=ub, name="ub", var_type=(float, int), ub=mip.INF, lb=lb, include_boundaries=False)
         return self._mip_model.add_var(lb=lb, ub=ub, var_type=var_type, name=name)
 
     def add_variable_tensor(
@@ -94,6 +99,11 @@ class Model:
         Returns: mip.LinExprTensor
             The tensor of decision variables.
         """
+        if var_type == mip.BINARY:
+            lb, ub = 0, 1
+        else:
+            check_scalar(x=lb, name="lb", var_type=(float, int), ub=ub, lb=-mip.INF, include_boundaries=False)
+            check_scalar(x=ub, name="ub", var_type=(float, int), ub=mip.INF, lb=lb, include_boundaries=False)
         return self._mip_model.add_var_tensor(
             shape=shape,
             lb=lb,
@@ -107,6 +117,7 @@ class Model:
 
         Args:
             constraint: mip.LinExpr
+                The linear constraint.
             name: str, default=''
                 The name of the constraint.
 
@@ -117,7 +128,7 @@ class Model:
 
     def add_nonlinear_constraint(
             self,
-            var: Variables,
+            var: Var,
             func: Fun,
             grad: Optional[Grad] = None,
             name: str = "",
@@ -148,7 +159,7 @@ class Model:
 
     def add_objective_term(
             self,
-            var: Variables,
+            var: Var,
             func: Fun,
             grad: Optional[Grad] = None,
             name: str = "",
@@ -179,12 +190,12 @@ class Model:
     def optimize(
             self,
             max_iters: int = 100,
-            max_iters_no_improvement: Optional[int] = None,
+            max_iters_without_improvement: Optional[int] = None,
             max_seconds_per_cut: Optional[float] = None,
     ) -> mip.OptimizationStatus:
 
         # Define objective in epigraph form
-        objective = self.add_variable(lb=-mip.INF, ub=mip.INF, name="_objective")
+        objective = self.add_var(lb=-mip.INF, ub=mip.INF, name="_objective")
         self._mip_model.objective = objective
 
         # Initialize query point and search state
@@ -227,11 +238,11 @@ class Model:
             self._search_state.update(incumbent=incumbent, bound=bound)
 
             # Check early termination conditions
-            if self._search_state.gap <= self.max_gap:
+            if self._search_state.gap <= self.max_gap or self._search_state.gap_abs <= self.max_gap_abs:
                 logging.info(f"Optimality tolerance reached - terminating search early.")
                 return mip.OptimizationStatus.OPTIMAL
-            if max_iters_no_improvement is not None:
-                if self._search_state.iterations_without_improvement > max_iters_no_improvement:
+            if max_iters_without_improvement is not None:
+                if self._search_state.iterations_without_improvement > max_iters_without_improvement:
                     logging.info(f"Max iterations without improvement reached - terminating search early.")
                 return mip.OptimizationStatus.FEASIBLE
 

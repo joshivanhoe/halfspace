@@ -5,16 +5,16 @@ import mip
 import numpy as np
 import pandas as pd
 
-from .utils import _log_table_header, _log_table_row
+from .utils import log_table_header, log_table_row
 
 Start = list[tuple[mip.Var, float]]
 
 
 class SearchState:
 
-    def __init__(self, minimize: bool = True, logging_frequency: Optional[int] = 1):
+    def __init__(self, minimize: bool = True, log_freq: Optional[int] = 1):
         self.minimize = minimize
-        self.logging_frequency = logging_frequency
+        self.log_freq = log_freq
         self._incumbent: float = (1 if self.minimize else -1) * mip.INF
         self._best: float = self._incumbent
         self._bound: float = -self._best
@@ -48,11 +48,11 @@ class SearchState:
 
         # Update log
         self._log.append(self.to_dict())
-        if self.logging_frequency is not None:
-            if self.iteration % self.logging_frequency == 0:
+        if self.log_freq is not None:
+            if self.iteration % self.log_freq == 0:
                 if self.iteration == 1:
-                    _log_table_header(columns=self._log[-1].keys())
-                _log_table_row(values=self._log[-1].values())
+                    log_table_header(columns=self._log[-1].keys())
+                log_table_row(values=self._log[-1].values())
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -93,8 +93,12 @@ class SearchState:
         return self._bound
 
     @property
+    def gap_abs(self) -> float:
+        return abs(self.best - self.bound)
+
+    @property
     def gap(self) -> float:
-        return abs(self.best - self.bound) / max(min(abs(self.best), abs(self.bound)), 1e-10)
+        return self.gap_abs / max(min(abs(self.best), abs(self.bound)), 1e-10)
 
     @property
     def log(self) -> pd.DataFrame:

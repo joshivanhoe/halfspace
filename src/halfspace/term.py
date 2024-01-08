@@ -4,19 +4,20 @@ import mip
 import numpy as np
 
 Input = Union[float, list[float], np.ndarray]
+Var = Union[mip.Var, list[mip.Var], mip.LinExprTensor]
 Fun = Callable[[Input], float]
 Grad = Callable[[Input], Union[float, np.ndarray]]
-Variables = Union[mip.Var, list[mip.Var], mip.LinExprTensor]
 
 
 class NonlinearTerm:
 
     def __init__(
         self,
-        var: Variables,
+        var: Var,
         func: Fun,
         grad: Grad,
-        step_size: float,
+        step_size: float = 1e-6,
+        feasibility_tol: float = 1e-4,
         is_constraint: bool = False,
         name: str = "",
     ):
@@ -27,11 +28,15 @@ class NonlinearTerm:
             func:
             grad:
             step_size: float
+            feasibility_tol: float,
+            is_constraint: bool, default=False
+            name: str, default=''
         """
         self.var = var
         self.func = func
         self.grad = grad
         self.step_size = step_size
+        self.tol = feasibility_tol
         self.is_constraint = is_constraint
         self.name = name
         self._validate()
@@ -69,7 +74,7 @@ class NonlinearTerm:
 
         # Evaluate function and gradient
         fun = self._evaluate_func(x=x)
-        if self.is_constraint and fun <= 1e-4:
+        if self.is_constraint and fun <= self.tol:
             return
         grad = self._evaluate_grad(x=x)
 
