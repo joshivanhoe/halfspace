@@ -4,12 +4,11 @@ from typing import Optional, Iterable, Union
 import mip
 import numpy as np
 import pandas as pd
-from plotly.graph_objs import Figure
 import plotly.express as px
+from plotly.graph_objs import Figure
 
-from .objective_term import ObjectiveTerm, Variables, Fun, Grad
-from .utils import _log_table_header, _log_table_row, _sigmoid
-from time import time
+from .search_state import SearchState
+from .term import NonlinearTerm, Variables, Fun, Grad
 
 Start = list[tuple[mip.Var, float]]
 
@@ -21,15 +20,21 @@ class Model:
             minimize: bool = True,
             max_gap: float = 1e-4,
             max_mip_gap: float = 1e-6,
-            min_update_weight: float = 0.1,
-            update_smoothing: float = 1.,
             solver_name: Optional[str] = None,
     ):
+        """
+
+        Args:
+            minimize:
+            max_gap:
+            max_mip_gap:
+            min_update_weight:
+            update_smoothing:
+            solver_name:
+        """
         self.minimize = minimize
         self.max_gap = max_gap
         self.max_mip_gap = max_mip_gap
-        self.min_update_weight = min_update_weight
-        self.update_smoothing = update_smoothing,
         self.solver_name = solver_name
         self.reset()
 
@@ -37,26 +42,27 @@ class Model:
         """Reset the model."""
         self._mip_model: mip.Model = mip.Model(
             solver_name=self.solver_name,
-            sense=mip.MINIMIZE if self.minimize else mip.MAX,
+            sense=mip.MINIMIZE if self.minimize else mip.MAXIMIZE,
         )
         self._mip_model.verbose = 0
         self._mip_model.max_mip_gap = self.max_mip_gap
-        self._start: dict[int, tuple[mip.Var, float]] = dict()
-        self._objective_terms: list[ObjectiveTerm] = list()
-        self._search_log: list[dict[str, float]] = list()
+        self._start: dict[mip.Var, float] = dict()
+        self._objective_terms: list[NonlinearTerm] = list()
+        self._nonlinear_constraints: list[NonlinearTerm] = list()
+        self._search_state: Optional[SearchState] = None
 
     def add_variable(
             self,
-            lb: float = 0.,
-            ub: float = mip.INF,
+            lb: float,
+            ub: float,
             var_type: str = mip.CONTINUOUS,
             name: str = ""
     ) -> mip.Var:
         """Add a decision variable to the model.
 
         Args:
-            lb: float, default=0.
-            ub: float, default=inf
+            lb: float
+            ub: float
             var_type: str, default='C'
             name: str, default=''
                 The name of the decision variable
@@ -69,8 +75,8 @@ class Model:
     def add_variable_tensor(
             self,
             shape: tuple[int, ...],
-            lb: float = 0,
-            ub: float = mip.INF,
+            lb: float,
+            ub: float,
             var_type: str = mip.CONTINUOUS,
             name: str = ""
     ) -> mip.LinExprTensor:
@@ -96,7 +102,7 @@ class Model:
             name=name,
         )
 
-    def add_constraint(self, constraint: mip.LinExpr, name: str = "") -> mip.Constr:
+    def add_linear_constraint(self, constraint: mip.LinExpr, name: str = "") -> mip.Constr:
         """Add a linear constraint to the model.
 
         Args:
@@ -109,6 +115,37 @@ class Model:
         """
         return self._mip_model.add_constr(lin_expr=constraint, name=name)
 
+    def add_nonlinear_constraint(
+            self,
+            var: Variables,
+            func: Fun,
+            grad: Optional[Grad] = None,
+            name: str = "",
+            step_size: float = 1e-6,
+    ) -> NonlinearTerm:
+        """Add a nonlinear constraint to the model.
+
+        Args:
+            var: mip.Var or list of mip.Var or mip.LinExprTensor
+            func: callable
+            grad: callable
+            name: str, default=''
+            step_size: float, default=1e-6
+
+        Returns: NonlinearTerm
+            The constraint
+        """
+        term = NonlinearTerm(
+            var=var,
+            func=func,
+            grad=grad,
+            step_size=step_size,
+            is_constraint=True,
+            name=name,
+        )
+        self._nonlinear_constraints.append(term)
+        return term
+
     def add_objective_term(
             self,
             var: Variables,
@@ -116,7 +153,7 @@ class Model:
             grad: Optional[Grad] = None,
             name: str = "",
             step_size: float = 1e-6,
-    ) -> ObjectiveTerm:
+    ) -> NonlinearTerm:
         """Add an objective term to the model.
 
         Args:
@@ -126,18 +163,18 @@ class Model:
             name: str, default=''
             step_size: float, default=1e-6
 
-        Returns: ObjectiveTerm
+        Returns: NonlinearTerm
             The objective term
         """
-        objective_term = ObjectiveTerm(
+        term = NonlinearTerm(
             var=var,
             func=func,
             grad=grad,
             step_size=step_size,
             name=name,
         )
-        self._objective_terms.append(objective_term)
-        return objective_term
+        self._objective_terms.append(term)
+        return term
 
     def optimize(
             self,
@@ -146,54 +183,22 @@ class Model:
             max_seconds_per_cut: Optional[float] = None,
     ) -> mip.OptimizationStatus:
 
-        start_time = time()
-
         # Define objective in epigraph form
-        objective = self.add_variable(lb=-mip.INF, name="_objective")
+        objective = self.add_variable(lb=-mip.INF, ub=mip.INF, name="_objective")
         self._mip_model.objective = objective
 
-        # Initialize query point
-        query_point = list()
-        for term in self.objective_terms:
-            if term.is_multivariable:
-                query_point.append(np.array([self._default_value(x=x) for x in term.var]))
-            else:
-                query_point.append(self._default_value(x=term.var))
-
-        # Initialize search variables
-        if self.minimize:
-            best = mip.INF
-        else:
-            best = -mip.INF
-        incumbent = best
-        gap = mip.INF
-        n_iters_no_improvement = 0
+        # Initialize query point and search state
+        query_point = {x: self._start.get(x) or (x.lb + x.ub) / 2 for x in self._mip_model.vars}
+        self._search_state = SearchState(minimize=self.minimize)
 
         for i in range(max_iters):
-            if i:
-                # Update query point
-                if n_iters_no_improvement:
-                    update_weight = max(
-                        _sigmoid(-abs(incumbent - best) / max(min(abs(incumbent), abs(best)), 1e-10), scale=100),
-                        self.min_update_weight
-                    )
 
-                else:
-                    update_weight = 1.
-                query_point = [x + update_weight * (term.x - x) for term, x in zip(self.objective_terms, query_point)]
-
-                # Update MIP warm start
-                self._mip_model.start = [
-                    (var, var.x) for var in self._mip_model.vars
-                    if var.var_type in (mip.BINARY, mip.INTEGER)
-                ]
-
-            # Add cutting plane
-            expr = mip.xsum(term.generate_cut(x=x) for term, x in zip(self.objective_terms, query_point))
+            # Add objective cut
+            expr = mip.xsum(term.generate_cut(query_point=query_point) for term in self.objective_terms)
             if self.minimize:
-                self.add_constraint(objective >= expr, name=f"_cut_{i}")
+                self.add_linear_constraint(objective >= expr)
             else:
-                self.add_constraint(objective <= expr, name=f"_cut_{i}")
+                self.add_linear_constraint(objective <= expr)
 
             # Re-optimize MIP model
             status = self._mip_model.optimize(max_seconds=max_seconds_per_cut)
@@ -203,64 +208,52 @@ class Model:
                 logging.info(f"Solve unsuccessful - exiting with optimization status: '{status.value}'.")
                 return status
 
-            # Update search log
-            incumbent, bound = self.objective_value, float(objective.x)
-            if (self.minimize and incumbent < best) or (not self.minimize and incumbent > best):
-                n_iters_no_improvement = 0
-                best = incumbent
-                gap = abs(best - bound) / max(min(abs(best), abs(bound)), self.max_gap ** 2)
+            # Update query point
+            query_point = {var: var.x for var in self._mip_model.vars}
+
+            # Add cuts for violated nonlinear constraints
+            is_feasible = True
+            for constraint in self.nonlinear_constraints:
+                expr = constraint.generate_cut(query_point=query_point)
+                if expr is not None:  # If the constraint is not violated, the cut expression will be `None`
+                    is_feasible = False
+                    self.add_linear_constraint(expr <= 0)
+
+            # Update search state
+            if is_feasible:
+                incumbent, bound = self.objective_value, float(objective.x)
             else:
-                n_iters_no_improvement += 1
-            row = {
-                "iteration": i,
-                "time": time() - start_time,
-                "incumbent": incumbent,
-                "best": best,
-                "bound": bound,
-                "gap": gap,
-            }
-            self._search_log.append(row)
-            if not i:
-                _log_table_header(columns=row.keys())
-            _log_table_row(values=row.values())
+                incumbent, bound = None, None
+            self._search_state.update(incumbent=incumbent, bound=bound)
 
             # Check early termination conditions
-            if gap <= self.max_gap:
+            if self._search_state.gap <= self.max_gap:
                 logging.info(f"Optimality tolerance reached - terminating search early.")
                 return mip.OptimizationStatus.OPTIMAL
-            if n_iters_no_improvement > max_iters_no_improvement:
-                logging.info(f"Max iterations without improvement reached - terminating search early.")
+            if max_iters_no_improvement is not None:
+                if self._search_state.iterations_without_improvement > max_iters_no_improvement:
+                    logging.info(f"Max iterations without improvement reached - terminating search early.")
                 return mip.OptimizationStatus.FEASIBLE
 
         logging.info(f"Max iterations reached - terminating search.")
         return mip.OptimizationStatus.FEASIBLE
 
-    def _default_value(self, x: mip.Var) -> float:
-        start = self._start.get(hash(x))
-        if start:
-            return start[1]
-        lb_finite = np.isfinite(x.lb)
-        ub_finite = np.isfinite(x.ub)
-        if lb_finite and ub_finite:
-            return (x.lb + x.ub) / 2
-        if lb_finite:
-            return float(x.lb)
-        if ub_finite:
-            return float(x.ub)
-        return 0.
-
     @property
     def start(self) -> Start:
-        return list(self._start.values())
+        return [(key, value) for key, value in self._start.items()]
 
     @start.setter
     def start(self, value: Start) -> None:
         # TODO add validation checks here
-        self._start = {hash(var): (var, x) for var, x in value}
+        self._start = {var: x for var, x in value}
         self._mip_model.start = value
 
     @property
-    def objective_terms(self) -> list[ObjectiveTerm]:
+    def nonlinear_constraints(self) -> list[NonlinearTerm]:
+        return self._nonlinear_constraints
+
+    @property
+    def objective_terms(self) -> list[NonlinearTerm]:
         return self._objective_terms
 
     @property
@@ -269,7 +262,7 @@ class Model:
 
     @property
     def search_log(self) -> pd.DataFrame:
-        return pd.DataFrame(self._search_log)
+        return self._search_state.log
 
     @staticmethod
     def sum(terms: Iterable[Union[mip.Var, mip.LinExpr]]) -> mip.LinExpr:

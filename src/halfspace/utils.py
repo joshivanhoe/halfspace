@@ -24,7 +24,7 @@ def _sigmoid(x: float, scale: float = 1.) -> float:
 def _check_scalar(
     x: Any,
     name: str,
-    var_type: Optional[Union[Type, tuple[TypeError]]] = None,
+    var_type: Optional[Union[Type, tuple[Type, ...]]] = None,
     lb: Optional[str] = None,
     ub: Optional[str] = None,
     include_boundaries: bool = True,
