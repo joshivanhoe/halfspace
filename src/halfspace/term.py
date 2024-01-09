@@ -3,6 +3,7 @@ from typing import Union, Callable, Optional
 import mip
 import numpy as np
 
+QueryPoint = dict[mip.Var, float]
 Input = Union[float, list[float], np.ndarray]
 Var = Union[mip.Var, list[mip.Var], mip.LinExprTensor]
 Fun = Callable[[Input], float]
@@ -41,50 +42,39 @@ class NonlinearTerm:
         self.name = name
         self._validate()
 
-    @property
-    def x(self) -> Union[float, np.ndarray]:
-        """Get the variable value(s) of the incumbent solution."""
-        if self.is_multivariable:
-            return np.array([float(var.x) for var in self.var])
-        return float(self.var.x)
-
-    @property
-    def value(self) -> float:
-        """Get the value of the term corresponding to incumbent solution."""
-        return self._evaluate_func(x=self.x)
+    def __call__(self, query_point: QueryPoint, return_grad: bool = False) -> Union[float, tuple[float, np.ndarray]]:
+        x = self._get_input(query_point=query_point)
+        value = self._evaluate_func(x=x)
+        if return_grad:
+            return value, self._evaluate_grad(x=x)
+        return value
 
     @property
     def is_multivariable(self) -> bool:
         return not isinstance(self.var, mip.Var)
 
-    def generate_cut(self, query_point: Optional[dict[mip.Var, float]] = None) -> Optional[mip.LinExpr]:
-        """Generate a cutting plane for the term.
+    def generate_cut(self, query_point: QueryPoint = None) -> Optional[mip.LinExpr]:
 
-        If a cut is not required, return `None`.
-        """
+        # Evaluate term
+        fun, grad = self(query_point=query_point, return_grad=True)
 
-        # Extract variable value(s) from query point
-        if query_point is None:
-            x = self.x
-        else:
-            if self.is_multivariable:
-                x = np.array([query_point[var] for var in self.var])
-            else:
-                x = query_point[self.var]
-
-        # Evaluate function and gradient
-        fun = self._evaluate_func(x=x)
+        # If term is non-violated constraint, no cut is generated
         if self.is_constraint and fun <= self.tol:
             return
-        grad = self._evaluate_grad(x=x)
 
-        # Make expression for cut
+        # Otherwise, make expression for cut
+        x = self._get_input(query_point=query_point)
         if self.is_multivariable:
             return mip.xsum(grad * (np.array(self.var) - x)) + fun
         return grad * (self.var - x) + fun
 
     def _validate(self) -> None:
         pass
+
+    def _get_input(self, query_point: QueryPoint) -> Input:
+        if self.is_multivariable:
+            return np.array([query_point[var] for var in self.var])
+        return query_point[self.var]
 
     def _evaluate_func(self, x: Input) -> float:
         """Evaluate the function value."""

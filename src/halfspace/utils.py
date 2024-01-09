@@ -27,9 +27,9 @@ def check_scalar(
         assert isinstance(x, var_type)
     if lb is not None:
         if include_boundaries:
-            assert x >= lb
+            assert x >= lb, f"Variable '{name}' ({x}) is less than lower bound ({lb})."
         else:
-            assert x > lb
+            assert x > lb, f"Variable '{name}' ({x}) is less than or equal to lower bound ({lb})."
     if ub is not None:
         if include_boundaries:
             assert x <= ub
