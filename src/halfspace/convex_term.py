@@ -1,16 +1,18 @@
-from typing import Union, Callable, Optional
+from typing import Union, Callable, Optional, Iterable
 
 import mip
 import numpy as np
 
+from .utils import check_scalar
+
 QueryPoint = dict[mip.Var, float]
-Input = Union[float, list[float], np.ndarray]
+Input = Union[float, Iterable[float], np.ndarray]
 Var = Union[mip.Var, list[mip.Var], mip.LinExprTensor]
 Fun = Callable[[Input], float]
 Grad = Callable[[Input], Union[float, np.ndarray]]
 
 
-class NonlinearTerm:
+class ConvexTerm:
 
     def __init__(
         self,
@@ -18,8 +20,6 @@ class NonlinearTerm:
         func: Fun,
         grad: Grad,
         step_size: float = 1e-6,
-        feasibility_tol: float = 1e-4,
-        is_constraint: bool = False,
         name: str = "",
     ):
         """Nonlinear term constructor.
@@ -28,21 +28,28 @@ class NonlinearTerm:
             var:
             func:
             grad:
-            step_size: float
-            feasibility_tol: float,
-            is_constraint: bool, default=False
+            step_size: float, default=`1e-6`
             name: str, default=''
+                The name for the term.
         """
         self.var = var
         self.func = func
         self.grad = grad
         self.step_size = step_size
-        self.tol = feasibility_tol
-        self.is_constraint = is_constraint
         self.name = name
-        self._validate()
 
     def __call__(self, query_point: QueryPoint, return_grad: bool = False) -> Union[float, tuple[float, np.ndarray]]:
+        """Evaluate the term for a query point.
+
+        Args:
+            query_point:
+            return_grad: bool, default=`False`
+
+        Returns: float or tuple of float and array
+            If `return_grad=False`, then only the value of the term is returned. Conversely, if `return_grad=True`,
+            then a tuple is returned where the first element is the term's value and the second element is the term's
+            gradient.
+        """
         x = self._get_input(query_point=query_point)
         value = self._evaluate_func(x=x)
         if return_grad:
@@ -54,22 +61,11 @@ class NonlinearTerm:
         return not isinstance(self.var, mip.Var)
 
     def generate_cut(self, query_point: QueryPoint = None) -> Optional[mip.LinExpr]:
-
-        # Evaluate term
         fun, grad = self(query_point=query_point, return_grad=True)
-
-        # If term is non-violated constraint, no cut is generated
-        if self.is_constraint and fun <= self.tol:
-            return
-
-        # Otherwise, make expression for cut
         x = self._get_input(query_point=query_point)
         if self.is_multivariable:
             return mip.xsum(grad * (np.array(self.var) - x)) + fun
         return grad * (self.var - x) + fun
-
-    def _validate(self) -> None:
-        pass
 
     def _get_input(self, query_point: QueryPoint) -> Input:
         if self.is_multivariable:
@@ -80,7 +76,7 @@ class NonlinearTerm:
         """Evaluate the function value."""
         if isinstance(self.var, (mip.Var, mip.LinExprTensor)):
             return self.func(x)
-        if isinstance(self.var, list):
+        if isinstance(self.var, Iterable):
             return self.func(*x)
         raise NotImplementedError
 
@@ -90,7 +86,7 @@ class NonlinearTerm:
             return self._approximate_grad(x=x)
         if isinstance(self.var, (mip.Var, mip.LinExprTensor)):
             return self.grad(x)
-        if isinstance(self.var, list):
+        if isinstance(self.var, Iterable):
             return self.grad(*x)
         raise NotImplementedError
 
@@ -109,6 +105,3 @@ class NonlinearTerm:
             self._evaluate_func(x=x + self.step_size / 2)
             - self._evaluate_func(x=x - self.step_size / 2)
         ) / self.step_size
-
-
-

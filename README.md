@@ -37,6 +37,8 @@ $$
 This can be implemented as follows:
 
 ```python
+import numpy as np
+
 from halfspace import Model
 
 # Initialize model

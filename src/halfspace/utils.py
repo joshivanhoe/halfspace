@@ -24,7 +24,7 @@ def check_scalar(
     include_boundaries: bool = True,
 ) -> None:
     if var_type is not None:
-        assert isinstance(x, var_type)
+        assert isinstance(x, var_type), f"Variable '{name}' ({type(x)}) is not expected type ({var_type})."
     if lb is not None:
         if include_boundaries:
             assert x >= lb, f"Variable '{name}' ({x}) is less than lower bound ({lb})."
@@ -32,6 +32,6 @@ def check_scalar(
             assert x > lb, f"Variable '{name}' ({x}) is less than or equal to lower bound ({lb})."
     if ub is not None:
         if include_boundaries:
-            assert x <= ub
+            assert x <= ub, f"Variable '{name}' ({x}) is greater than lower bound ({ub})."
         else:
-            assert x < ub
+            assert x < ub, f"Variable '{name}' ({x}) is greater than or equal to lower bound ({ub})."
