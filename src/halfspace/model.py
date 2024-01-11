@@ -4,10 +4,8 @@ from typing import Optional, Iterable, Union
 import mip
 import numpy as np
 import pandas as pd
-import plotly.express as px
-from plotly.graph_objs import Figure
 
-from .convex_term import ConvexTerm, Var, Fun, Grad
+from .convex_term import ConvexTerm, Input, Var, Func, Grad
 from .utils import check_scalar, log_table_header, log_table_row
 
 Start = list[tuple[mip.Var, float]]
@@ -20,7 +18,7 @@ class Model:
             minimize: bool = True,
             max_gap: float = 1e-4,
             max_gap_abs: float = 1e-4,
-            feasibility_tol: float = 1e-4,
+            infeasibility_tol: float = 1e-4,
             step_size: float = 1e-6,
             smoothing: Optional[float] = .5,
             solver_name: Optional[str] = None,
@@ -30,18 +28,19 @@ class Model:
 
         Args:
             minimize: bool, default=`True`
-                Whether the objective should be minimized. If `False`, the objective will be maximized.
+                Whether the objective should be minimized. If `False`, the objective will be maximized - note that in
+                this case the objective must concave, not convex.
             max_gap: float, default=1e-4
-
+                The gap is calculates as `abs(best_objective - best_bound) / max(abs(best_objective), 1e-10)`. If the
             max_gap_abs: float, default=1e-4
 
-            feasibility_tol: float, default=1e-4
+            infeasibility_tol: float, default=1e-4
 
             step_size: float, default=1e-6
-                The step size used to numerically evaluate gradients
+                The step size used to numerically evaluate gradients.
 
             smoothing: float, default=.5
-                The
+                The smoothing parameter used to update the query point. If `None`, the query point will not be updated.
 
             solver_name: str or `None`, default=`None`
                 The MIP solver to use. Valid options. If `None`, the default solver will be selected.
@@ -51,7 +50,7 @@ class Model:
         self.minimize = minimize
         self.max_gap = max_gap
         self.max_gap_abs = max_gap_abs
-        self.feasibility_tol = feasibility_tol
+        self.infeasibility_tol = infeasibility_tol
         self.step_size = step_size
         self.smoothing = smoothing
         self.solver_name = solver_name
@@ -66,7 +65,7 @@ class Model:
             sense=mip.MINIMIZE if self.minimize else mip.MAXIMIZE,
         )
         self._model.verbose = 0
-        self._model.infeas_tol = self.feasibility_tol
+        self._model.infeas_tol = self.infeasibility_tol
         self._start: dict[mip.Var, float] = dict()
         self._objective_terms: list[ConvexTerm] = list()
         self._nonlinear_constraints: list[ConvexTerm] = list()
@@ -151,7 +150,7 @@ class Model:
     def add_nonlinear_constr(
             self,
             var: Var,
-            func: Fun,
+            func: Func,
             grad: Optional[Grad] = None,
             name: str = "",
     ) -> ConvexTerm:
@@ -162,6 +161,7 @@ class Model:
             func: callable
             grad: callable
             name: str, default=''
+                The name of the constraint.
 
         Returns: ConvexTerm
             The convex term representing the constraint.
@@ -179,7 +179,7 @@ class Model:
     def add_objective_term(
             self,
             var: Var,
-            func: Fun,
+            func: Func,
             grad: Optional[Grad] = None,
             name: str = "",
     ) -> ConvexTerm:
@@ -189,7 +189,9 @@ class Model:
             var: mip.Var or list of mip.Var or mip.LinExprTensor
             func: callable
             grad: callable
+                If `None`, the gradient will be approximated numerically using finite differences.
             name: str, default=''
+                The name of the term.
 
         Returns: ConvexTerm
             The objective term.
@@ -206,15 +208,17 @@ class Model:
 
     def optimize(
             self,
-            max_iters: int = 500,
+            max_iters: int = 100,
             max_iters_no_improvement: Optional[int] = None,
             max_seconds_per_iter: Optional[float] = None,
     ) -> mip.OptimizationStatus:
         """Optimize the model.
 
         Args:
-            max_iters: int, default=500
+            max_iters: int, default=100
+                The maximum number of iterations to run the search for.
             max_iters_no_improvement: int or `None`, default=`None`
+
             max_seconds_per_iter:  int or `None`, default=`None`
 
         Returns: mip.OptimizationStatus
@@ -233,7 +237,7 @@ class Model:
 
             # Add cuts for violated nonlinear constraints
             for constr in self.nonlinear_constrs:
-                if constr(query_point=query_point) > self.feasibility_tol:
+                if constr(query_point=query_point) > self.infeasibility_tol:
                     expr = constr.generate_cut(query_point=query_point)
                     self._model.add_constr(expr <= 0)
 
@@ -257,7 +261,7 @@ class Model:
             objective = sum(term(query_point=solution) for term in self.objective_terms)
             if (
                 self.minimize == (objective < self.best_objective)
-                and all(constr(solution) <= self.feasibility_tol for constr in self.nonlinear_constrs)
+                and all(constr(solution) <= self.infeasibility_tol for constr in self.nonlinear_constrs)
             ):
                 iters_no_improvement = 0
                 self._best_objective = objective
@@ -300,12 +304,23 @@ class Model:
                 return mip.OptimizationStatus.OPTIMAL
             if max_iters_no_improvement is not None:
                 if iters_no_improvement > max_iters_no_improvement:
-                    logging.info(
-                        f"Max iterations without improvement reached - terminating search early.")
+                    logging.info(f"Max iterations without improvement reached - terminating search early.")
                 return mip.OptimizationStatus.FEASIBLE
 
         logging.info(f"Max iterations reached - terminating search.")
-        return mip.OptimizationStatus.FEASIBLE
+        if self.best_solution:
+            return mip.OptimizationStatus.FEASIBLE
+        return mip.OptimizationStatus.NO_SOLUTION_FOUND
+
+    @property
+    def objective_terms(self) -> list[ConvexTerm]:
+        """Get the objective terms of the model."""
+        return self._objective_terms
+
+    @property
+    def nonlinear_constrs(self) -> list[ConvexTerm]:
+        """Get the nonlinear constraints of the model."""
+        return self._nonlinear_constraints
 
     @property
     def start(self) -> Start:
@@ -320,19 +335,19 @@ class Model:
         self._model.start = value
 
     @property
-    def objective_terms(self) -> list[ConvexTerm]:
-        """Get the objective terms of the model."""
-        return self._objective_terms
-
-    @property
-    def nonlinear_constrs(self) -> list[ConvexTerm]:
-        """Get the nonlinear constraints of the model."""
-        return self._nonlinear_constraints
-
-    @property
     def best_solution(self) -> dict[mip.Var, float]:
-        """Get the best solution."""
+        """Get the best solution (all variables)."""
         return self._best_solution
+
+    def best_value(self, x: Input) -> Union[float, np.ndarray]:
+        """Get the value one or more decision variables."""
+        if isinstance(x, mip.Var):
+            return self.best_solution[x]
+        if isinstance(x, mip.LinExprTensor):
+            return np.array([self.best_solution[var] for var in x.flatten()]).reshape(x.shape)
+        if isinstance(x, Iterable):
+            return np.array([self.best_solution[var] for var in x])
+        raise TypeError(f"Input of type '{type(x)}' not supported.")
 
     @property
     def best_objective(self) -> float:
@@ -364,30 +379,6 @@ class Model:
         """Create a linear expression from a summation."""
         return mip.xsum(terms=terms)
 
-    def plot_search(
-            self,
-            log_scale: bool = False,
-            show_gap: bool = False,
-            max_iters: Optional[int] = None
-    ) -> Figure:
-        """Plot the search.
-
-        Args:
-            log_scale: bool, default=False
-            show_gap: bool, default=False
-            max_iters: int or `None`, default=`None`
-
-        Returns: plotly Figure
-        """
-        df = self.search_log
-        if max_iters is not None:
-            df = df.iloc[:max_iters]
-        return px.line(
-            data_frame=df,
-            y="gap" if show_gap else ["best_objective", "best_bound"],
-            log_y=log_scale,
-        )
-
     def _validate_params(self) -> None:
         check_scalar(
             x=self.max_gap,
@@ -404,7 +395,7 @@ class Model:
             include_boundaries=False,
         )
         check_scalar(
-            x=self.feasibility_tol,
+            x=self.infeasibility_tol,
             name="feasibility_tol",
             var_type=float,
             lb=0.,

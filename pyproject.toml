@@ -1,0 +1,23 @@
+[project]
+name = "halfspace"
+version = "0.0.1"
+authors = [
+  { name="Joshua Ivanhoe", email="joshua.k.ivaneho@gmail.com" },
+]
+description = "Cutting-plane solver for mixed-integer convex optimization problems"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "mip>=1.15.0",
+    "numpy>=1.25.2",
+    "pandas>=2.0.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/joshivanhoe/halfspace"
+Issues = "https://github.com/joshivanhoe/halfspace/issues"
