@@ -2,6 +2,7 @@ from typing import Optional
 
 import mip
 import numpy as np
+import pandas as pd
 import pytest
 
 from halfspace import Model
@@ -22,6 +23,10 @@ def _check_solution(
         for x, expected_value in expected_solution.items():
             assert model.var_value(x=x) == pytest.approx(expected_value, abs=VAR_TOL)
     assert model.status == expected_status
+    if expected_status == mip.OptimizationStatus.OPTIMAL:
+        assert (model.gap <= model.max_gap or model.gap_abs <= model.max_gap_abs)
+    if expected_status in (mip.OptimizationStatus.OPTIMAL, mip.OptimizationStatus.FEASIBLE):
+        assert isinstance(model.search_log, pd.DataFrame)
 
 
 def test_single_variable_no_constraints():

@@ -413,7 +413,7 @@ class Model:
 
     @property
     def gap(self) -> float:
-        """Get the optimality gap."""
+        """Get the (relative) optimality gap."""
         return self.gap_abs / max(min(abs(self.objective_value), abs(self.best_bound)), 1e-10)
 
     @property
