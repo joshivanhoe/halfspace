@@ -1,11 +1,12 @@
+from typing import Optional
+
 import mip
+import numpy as np
 import pytest
 
 from halfspace import Model
 from halfspace.model import Var
 
-from typing import Optional
-import numpy as np
 VAR_TOL: float = 1e-2
 
 
