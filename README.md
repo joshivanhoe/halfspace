@@ -72,7 +72,9 @@ print(status, model.objective_value)
 
 ## How it works
 
-This implementation is based on the approach outlined in [Boyd & Vandenberghe (2008)](https://see.stanford.edu/materials/lsocoee364b/05-localization_methods_notes.pdf) - see Chapter 6. 
+This implementation is based on the approach outlined in [Boyd & Vandenberghe (2008)](https://see.stanford.edu/materials/lsocoee364b/05-localization_methods_notes.pdf) - see Chapter 6.
+
+The underlying idea is to solve the problem iteratively by solving a sequence of convex subproblems. At each iteration, we solve the convex subproblem:
 
 At each iteration, we add the objective cut:
 
@@ -90,17 +92,17 @@ $$x_{k+1} \leftarrow \theta x_{k} + (1 - \theta) x_{k + 1}$$
 ### Troubleshooting
 
 Q: The solution to my problem that the solver has output seems wrong. What are some common mistakes that could cause this?
-A: The cutting plane algorithm only works for convex programs and mixed-integer convex programs. Double-check that the formulation of your problem is indeed convex. 
+A: The cutting plane algorithm only works for convex programs and mixed-integer convex programs. Double-check that the formulation of your problem is indeed convex.
 Otherwise, if you're computing the gradients analytically, double-check that the formula is correct.
 
 Q: The solver is converging too slowly. What can I do to improve this?
-A: 
+A:
 
 ## Development
 
 ### Local installation
 
-Navigate to the halfspace directory and install 
+Navigate to the halfspace directory and install
 
 ```bash
 pip install -e .

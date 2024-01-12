@@ -16,9 +16,9 @@ def log_table_header(columns: Iterable[str], width: int = 15) -> None:
     Returns: None
     """
     columns = [f"{{:{width}}}".format(col) for col in columns]
-    line = '-{}-'.format("-".join("-" * len(col) for col in columns))
+    line = "-{}-".format("-".join("-" * len(col) for col in columns))
     logging.info(line)
-    logging.info('|{}|'.format("|".join(columns)))
+    logging.info("|{}|".format("|".join(columns)))
     logging.info(line)
 
 
@@ -35,8 +35,13 @@ def log_table_row(values: Iterable[Union[float, int]], width: int = 15) -> None:
 
     Returns: None
     """
-    values = [(f"{{:{width}}}" if isinstance(value, int) else f"{{:{width}.3e}}").format(value) for value in values]
-    logging.info('|{}|'.format("|".join(values)))
+    values = [
+        (f"{{:{width}}}" if isinstance(value, int) else f"{{:{width}.3e}}").format(
+            value
+        )
+        for value in values
+    ]
+    logging.info("|{}|".format("|".join(values)))
 
 
 def check_scalar(
@@ -66,14 +71,22 @@ def check_scalar(
     Returns: None
     """
     if var_type is not None:
-        assert isinstance(x, var_type), f"Variable '{name}' ({type(x)}) is not expected type ({var_type})."
+        assert isinstance(
+            x, var_type
+        ), f"Variable '{name}' ({type(x)}) is not expected type ({var_type})."
     if lb is not None:
         if include_boundaries:
             assert x >= lb, f"Variable '{name}' ({x}) is less than lower bound ({lb})."
         else:
-            assert x > lb, f"Variable '{name}' ({x}) is less than or equal to lower bound ({lb})."
+            assert (
+                x > lb
+            ), f"Variable '{name}' ({x}) is less than or equal to lower bound ({lb})."
     if ub is not None:
         if include_boundaries:
-            assert x <= ub, f"Variable '{name}' ({x}) is greater than lower bound ({ub})."
+            assert (
+                x <= ub
+            ), f"Variable '{name}' ({x}) is greater than lower bound ({ub})."
         else:
-            assert x < ub, f"Variable '{name}' ({x}) is greater than or equal to lower bound ({ub})."
+            assert (
+                x < ub
+            ), f"Variable '{name}' ({x}) is greater than or equal to lower bound ({ub})."

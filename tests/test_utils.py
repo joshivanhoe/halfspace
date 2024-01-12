@@ -13,7 +13,7 @@ def test_log_table_header(columns: Iterable[str], width: int):
     # TODO: add log checks
 
 
-@pytest.mark.parametrize("values", [[1, 1., 2e10, 3e-10]])
+@pytest.mark.parametrize("values", [[1, 1.0, 2e10, 3e-10]])
 @pytest.mark.parametrize("width", [10, 15])
 def test_log_table_row(values: Iterable[Union[float, int]], width: int):
     log_table_row(values=values, width=width)
@@ -33,16 +33,16 @@ def test_log_table_row(values: Iterable[Union[float, int]], width: int):
         (1, "x", int, 1, 2, False, pytest.raises(AssertionError)),
         (1, "x", int, -1, 0, True, pytest.raises(AssertionError)),
         (1, "x", int, 0, 1, False, pytest.raises(AssertionError)),
-    ]
+    ],
 )
 def test_check_scalar(
-        x: Any,
-        name: str,
-        var_type: Optional[Union[Type, tuple[Type, ...]]],
-        lb: Optional[Union[float, int]],
-        ub: Optional[Union[float, int]],
-        include_boundaries: bool,
-        expectation,
+    x: Any,
+    name: str,
+    var_type: Optional[Union[Type, tuple[Type, ...]]],
+    lb: Optional[Union[float, int]],
+    ub: Optional[Union[float, int]],
+    include_boundaries: bool,
+    expectation,
 ):
     with expectation:
         check_scalar(
@@ -53,4 +53,3 @@ def test_check_scalar(
             ub=ub,
             include_boundaries=include_boundaries,
         )
-

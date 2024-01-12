@@ -11,6 +11,7 @@ Grad = Callable[[Input], Union[float, np.ndarray]]
 
 
 class ConvexTerm:
+    """Convex term model used for generating cutting planes."""
 
     def __init__(
         self,
@@ -46,7 +47,9 @@ class ConvexTerm:
         self.step_size = step_size
         self.name = name
 
-    def __call__(self, query_point: QueryPoint, return_grad: bool = False) -> Union[float, tuple[float, np.ndarray]]:
+    def __call__(
+        self, query_point: QueryPoint, return_grad: bool = False
+    ) -> Union[float, tuple[float, np.ndarray]]:
         """Evaluate the term and (optionally) its gradient.
 
         Args:
@@ -114,13 +117,16 @@ class ConvexTerm:
         """Approximate the gradient of the function at point using the central finite difference method."""
         if self.is_multivariable:
             indexes = np.arange(len(x))
-            return np.array([
-                (
-                    self._evaluate_func(x=x + self.step_size / 2 * (indexes == i))
-                    - self._evaluate_func(x=x - self.step_size / 2 * (indexes == i))
-                ) / self.step_size
-                for i in indexes
-            ])
+            return np.array(
+                [
+                    (
+                        self._evaluate_func(x=x + self.step_size / 2 * (indexes == i))
+                        - self._evaluate_func(x=x - self.step_size / 2 * (indexes == i))
+                    )
+                    / self.step_size
+                    for i in indexes
+                ]
+            )
         return (
             self._evaluate_func(x=x + self.step_size / 2)
             - self._evaluate_func(x=x - self.step_size / 2)
