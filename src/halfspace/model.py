@@ -21,7 +21,7 @@ class Model:
             infeasibility_tol: float = 1e-4,
             step_size: float = 1e-6,
             smoothing: Optional[float] = .5,
-            solver_name: Optional[str] = None,
+            solver_name: Optional[str] = "cbc",
             log_freq: Optional[int] = 1,
     ):
         """Model constructor.
@@ -68,10 +68,11 @@ class Model:
         self._model.infeas_tol = self.infeasibility_tol
         self._start: dict[mip.Var, float] = dict()
         self._objective_terms: list[ConvexTerm] = list()
-        self._nonlinear_constraints: list[ConvexTerm] = list()
+        self._nonlinear_constrs: list[ConvexTerm] = list()
         self._best_solution: dict[mip.Var, float] = dict()
-        self._best_objective: float = (1 if self.minimize else -1) * mip.INF
-        self._best_bound: float = -self._best_objective
+        self._objective_value: float = (1 if self.minimize else -1) * mip.INF
+        self._best_bound: float = -self._objective_value
+        self._status: Optional[mip.OptimizationStatus] = None
         self._search_log: list[dict[str, float]] = list()
 
     def add_var(
@@ -173,7 +174,7 @@ class Model:
             step_size=self.step_size,
             name=name,
         )
-        self._nonlinear_constraints.append(term)
+        self._nonlinear_constrs.append(term)
         return term
 
     def add_objective_term(
@@ -254,20 +255,21 @@ class Model:
             # If no solution is found, exit solve and return status
             if status not in (mip.OptimizationStatus.OPTIMAL, mip.OptimizationStatus.FEASIBLE):
                 logging.info(f"Solve unsuccessful - exiting with optimization status: '{status.value}'.")
-                return status
+                self._status = status
+                return self.status
 
-            # Update best solution/objective and query point
+            # Update best solution/objective value and query point
             solution = {var: var.x for var in self._model.vars}
-            objective = sum(term(query_point=solution) for term in self.objective_terms)
+            objective_value_new = sum(term(query_point=solution) for term in self.objective_terms)
             if (
-                self.minimize == (objective < self.best_objective)
+                self.minimize == (objective_value_new < self.objective_value)
                 and all(constr(solution) <= self.infeasibility_tol for constr in self.nonlinear_constrs)
             ):
                 iters_no_improvement = 0
-                self._best_objective = objective
+                self._objective_value = objective_value_new
                 self._best_solution = solution
             else:
-                if np.isfinite(self.best_objective):
+                if np.isfinite(self.objective_value):
                     iters_no_improvement += 1
                 if self.smoothing is not None:
                     query_point = {
@@ -279,15 +281,15 @@ class Model:
 
             # Update best bound (clip values to prevent numerical errors from affecting termination logic)
             if self.minimize:
-                self._best_bound = np.clip(bound.x, a_min=self.best_bound, a_max=self.best_objective)
+                self._best_bound = np.clip(bound.x, a_min=self.best_bound, a_max=self.objective_value)
             else:
-                self._best_bound = np.clip(bound.x, a_min=self.best_objective, a_max=self.best_bound)
+                self._best_bound = np.clip(bound.x, a_min=self.objective_value, a_max=self.best_bound)
 
             # Update log
             self._search_log.append(
                 {
                     "iteration": i,
-                    "best_objective": self.best_objective,
+                    "objective_value": self.objective_value,
                     "best_bound": self.best_bound,
                     "gap": self.gap,
                 }
@@ -301,16 +303,45 @@ class Model:
             # Check early termination conditions
             if self.gap <= self.max_gap or self.gap_abs <= self.max_gap_abs:
                 logging.info(f"Optimality tolerance reached - terminating search early.")
-                return mip.OptimizationStatus.OPTIMAL
+                self._status = mip.OptimizationStatus.OPTIMAL
+                return self.status
             if max_iters_no_improvement is not None:
-                if iters_no_improvement > max_iters_no_improvement:
+                if iters_no_improvement >= max_iters_no_improvement:
                     logging.info(f"Max iterations without improvement reached - terminating search early.")
-                return mip.OptimizationStatus.FEASIBLE
+                    self._status = mip.OptimizationStatus.FEASIBLE
+                    return self.status
 
         logging.info(f"Max iterations reached - terminating search.")
         if self.best_solution:
-            return mip.OptimizationStatus.FEASIBLE
-        return mip.OptimizationStatus.NO_SOLUTION_FOUND
+            self._status = mip.OptimizationStatus.FEASIBLE
+        else:
+            self._status = mip.OptimizationStatus.NO_SOLUTION_FOUND
+        return self.status
+
+    def var_by_name(self, name: str) -> mip.Var:
+        """Get a variable by name."""
+        return self._model.var_by_name(name=name)
+
+    def var_value(self, x: Union[Input, str]) -> Union[float, np.ndarray]:
+        """Get the value one or more decision variables.
+
+        Args:
+            x: mip.Var or mip.LinExprTensor or str
+                The variable(s) to get the value of. This can be provided as a single variable, a tensor of variables
+                or the name of a variable.
+
+        Returns: float or np.ndarray
+            The value(s) of the variable(s).
+        """
+        if isinstance(x, str):
+            x = self.var_by_name(name=x)
+        if isinstance(x, mip.Var):
+            return self.best_solution[x]
+        if isinstance(x, mip.LinExprTensor):
+            return np.array([self.best_solution[var] for var in x.flatten()]).reshape(x.shape)
+        if isinstance(x, Iterable):
+            return np.array([self.best_solution[var] for var in x])
+        raise TypeError(f"Input of type '{type(x)}' not supported.")
 
     @property
     def objective_terms(self) -> list[ConvexTerm]:
@@ -318,9 +349,17 @@ class Model:
         return self._objective_terms
 
     @property
+    def linear_constrs(self) -> mip.ConstrList:
+        """Get the linear constraints of the model.
+
+        After the model is optimized, this will include the cuts added to the model.
+        """
+        return self._model.constrs
+
+    @property
     def nonlinear_constrs(self) -> list[ConvexTerm]:
         """Get the nonlinear constraints of the model."""
-        return self._nonlinear_constraints
+        return self._nonlinear_constrs
 
     @property
     def start(self) -> Start:
@@ -339,20 +378,10 @@ class Model:
         """Get the best solution (all variables)."""
         return self._best_solution
 
-    def best_value(self, x: Input) -> Union[float, np.ndarray]:
-        """Get the value one or more decision variables."""
-        if isinstance(x, mip.Var):
-            return self.best_solution[x]
-        if isinstance(x, mip.LinExprTensor):
-            return np.array([self.best_solution[var] for var in x.flatten()]).reshape(x.shape)
-        if isinstance(x, Iterable):
-            return np.array([self.best_solution[var] for var in x])
-        raise TypeError(f"Input of type '{type(x)}' not supported.")
-
     @property
-    def best_objective(self) -> float:
-        """Get the best objective value."""
-        return self._best_objective
+    def objective_value(self) -> float:
+        """Get the objective value of the best solution."""
+        return self._objective_value
 
     @property
     def best_bound(self) -> float:
@@ -362,12 +391,17 @@ class Model:
     @property
     def gap(self) -> float:
         """Get the optimality gap."""
-        return self.gap_abs / max(min(abs(self.best_objective), abs(self.best_bound)), 1e-10)
+        return self.gap_abs / max(min(abs(self.objective_value), abs(self.best_bound)), 1e-10)
 
     @property
     def gap_abs(self) -> float:
         """Get the absolute optimality gap."""
-        return abs(self.best_objective - self.best_bound)
+        return abs(self.objective_value - self.best_bound)
+
+    @property
+    def status(self) -> mip.OptimizationStatus:
+        """Get the status of the model."""
+        return self._status
 
     @property
     def search_log(self) -> pd.DataFrame:

@@ -51,21 +51,22 @@ y = model.add_var(var_type="B")  # add a binary variable
 z = model.add_var_tensor(shape=(5,), lb=0, ub=1)  # add a tensor of variables
 
 # Define objective terms (these are summed to create the objective)
-model.add_objective_term(var=x, func=lambda x: (x - 1)**2)  # add an objective term for one variable
-model.add_objective_term(var=[x, y], func=lambda x, y: np.exp(0.2 * x + y))  # add an objective term for multiple variables
-model.add_objective_term(var=z, func=lambda z: -sum((i + 1) * z[i] for i in range(5)))  # add an objective term for a tensor of variables
+model.add_objective_term(var=x, func=lambda x: (x - 1) ** 2)  # add an objective term for one variable
+model.add_objective_term(var=[x, y],
+                         func=lambda x, y: np.exp(0.2 * x + y))  # add an objective term for multiple variables
+model.add_objective_term(var=z, func=lambda z: -sum(
+    (i + 1) * z[i] for i in range(5)))  # add an objective term for a tensor of variables
 
 # Define constraints
-model.add_linear_constr(model.sum(z) <= y) # add a linear constraint
-model.add_nonlinear_constr(var=(x, y), func=lambda x, y: x**2 + y**2 - 1.25**2)  # add a nonlinear constraint
-
+model.add_linear_constr(model.sum(z) <= y)  # add a linear constraint
+model.add_nonlinear_constr(var=(x, y), func=lambda x, y: x ** 2 + y ** 2 - 1.25 ** 2)  # add a nonlinear constraint
 
 # Set initial query point (optional)
 model.start = [(x, 0), (y, 0)] + [(z[i], 0) for i in range(5)]
 
 # Solve model
 status = model.optimize()
-print(status, model.best_objective)
+print(status, model.objective_value)
 ```
 
 ## How it works

@@ -98,7 +98,7 @@ class ConvexTerm:
             return self.func(*x)
         raise TypeError(f"Input of type '{type(x)}' not supported.")
 
-    def _evaluate_grad(self, x: Input) -> np.ndarray:
+    def _evaluate_grad(self, x: Input) -> Union[float, np.ndarray]:
         """Evaluate the gradient."""
         if self.grad is None:
             return self._approximate_grad(x=x)
