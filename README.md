@@ -72,7 +72,7 @@ print(status, model.objective_value)
 
 ## How it works
 
-This implementation is based on the approach outlined in [Boyd & Vandenberghe (2008)](https://see.stanford.edu/materials/lsocoee364b/05-localization_methods_notes.pdf) - see Chapter 6.
+This implementation is based on the approach outlined in [Boyd & Vandenberghe (2008)](https://see.stanford.edu/materials/lsocoee364b/05-localization_methods_notes.pdf) - see Chapter 6. 
 
 At each iteration, we add the objective cut:
 
@@ -80,7 +80,11 @@ $$f_0(x_k) + \nabla f_0(x_k)^\top(x-x_k) \leq t$$
 
 If $f_i(x_k) > \varepsilon$, where $\varepsilon$ is the infeasibility tolerance, we also add the feasibility cut:
 
-$f_i(x_k) + \nabla f_i(x_k)^\top(x-x_k) \leq 0$$
+$$f_i(x_k) + \nabla f_i(x_k)^\top(x-x_k) \leq 0$$
+
+$$x_{k+1} = \arg\max_x f_k(x)$$
+
+$$x_{k+1} \leftarrow \theta x_{k} + (1 - \theta) x_{k + 1}$$
 
 
 ### Troubleshooting
