@@ -74,7 +74,7 @@ print(status, model.objective_value)
 
 This implementation is based on the approach outlined in [Boyd & Vandenberghe (2008)](https://see.stanford.edu/materials/lsocoee364b/05-localization_methods_notes.pdf) - see Chapter 6.
 
-The underlying idea is to solve the problem iteratively by solving a sequence of convex subproblems. At each iteration, we solve the convex subproblem:
+The underlying idea is to solve the problem iteratively, through sequence of approximating linear programs.
 
 At each iteration, we add the objective cut:
 
@@ -92,6 +92,7 @@ $$x_{k+1} \leftarrow \theta x_{k} + (1 - \theta) x_{k + 1}$$
 ### Troubleshooting
 
 Q: The solution to my problem that the solver has output seems wrong. What are some common mistakes that could cause this?
+
 A: The cutting plane algorithm only works for convex programs and mixed-integer convex programs. Double-check that the formulation of your problem is indeed convex.
 Otherwise, if you're computing the gradients analytically, double-check that the formula is correct.
 
@@ -100,18 +101,24 @@ A:
 
 ## Development
 
-### Local installation
 
-Navigate to the halfspace directory and install
+Clone the repository using `git`:
+
+```bash
+git clone https://github.com/joshivanhoe/halfspace
+
+````
+
+Then navigate to the cloned `halfspace` directory and install a locally editable version of the package using `pip`:
 
 ```bash
 pip install -e .
 ```
 
-### Running tests
+You can run the tests using `pytest` as follows:
 
 ```bash
-pytest
+pytest --cov=halfspace tests/
 ```
 
 ###
