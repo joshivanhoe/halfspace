@@ -12,6 +12,7 @@ Start = list[tuple[mip.Var, float]]
 
 
 class Model:
+    """Mixed-integer convex optimization model."""
 
     def __init__(
             self,
@@ -31,17 +32,16 @@ class Model:
                 Whether the objective should be minimized. If `False`, the objective will be maximized - note that in
                 this case the objective must concave, not convex.
             max_gap: float, default=1e-4
-                The gap is calculates as `abs(best_objective - best_bound) / max(abs(best_objective), 1e-10)`. If the
+                The maximum relative optimality gap allowed before the search is terminated.
             max_gap_abs: float, default=1e-4
-
+                The maximum absolute optimality gap allowed before the search is terminated.
             infeasibility_tol: float, default=1e-4
-
+                The maximum allowed constraint violation permitted for a solution to be considered feasible.
             step_size: float, default=1e-6
-                The step size used to numerically evaluate gradients.
-
+                The step size used to numerically evaluate gradients using the central finite difference method. Only
+                used when a function for analytically computing the gradient is not provided.
             smoothing: float, default=.5
                 The smoothing parameter used to update the query point. If `None`, the query point will not be updated.
-
             solver_name: str or `None`, default=`None`
                 The MIP solver to use. Valid options. If `None`, the default solver will be selected.
             log_freq: int or `None`, default = 1
@@ -85,10 +85,12 @@ class Model:
         """Add a decision variable to the model.
 
         Args:
-            lb: float
-                The lower bound for the decision variable. Must be finite and less than the upper bound.
-            ub: float
-                The upper bound for the decision variable. Must be finite and greater than the lower bound.
+            lb: float, default=`None`
+                The lower bound for the decision variable. Must be finite and less than the upper bound. Cannot be
+                `None` if `var_type` is 'C' or 'I'.
+            ub: float, default=`None`
+                The upper bound for the decision variable. Must be finite and greater than the lower bound. Cannot be
+                `None` if `var_type` is 'C' or 'I'.
             var_type: str, default='C'
                 The variable type. Valid options are 'C' (continuous), 'I' (integer) and 'B' (binary).
             name: str, default=''
@@ -114,9 +116,11 @@ class Model:
             shape: tuple of int
                 The shape of the tensor.
             lb: float
-                The lower bound for the decision variables. Must be finite and less than the upper bound.
+                The lower bound for the decision variables. Must be finite and less than the upper bound. Cannot be
+                `None` if `var_type` is 'C' or 'I'.
             ub: float
-                The upper bound for the decision variables. Must be finite and greater than the lower bound.
+                The upper bound for the decision variables. Must be finite and greater than the lower bound. Cannot be
+                `None` if `var_type` is 'C' or 'I'.
             var_type: str, default='C'
                 The variable type. Valid options are 'C' (continuous), 'I' (integer) and 'B' (binary).
             name: str, default=''
@@ -158,9 +162,17 @@ class Model:
         """Add a nonlinear constraint to the model.
 
         Args:
-            var: mip.Var or list of mip.Var or mip.LinExprTensor
-            func: callable
-            grad: callable
+            var: mip.Var or iterable of mip.Var or mip.LinExprTensor
+                The variable(s) included in the term. This can be provided in the form of a single  variable, an
+                iterable of multiple variables or a variable tensor.
+            func: callable mapping float(s) or array to float
+                A function for computing the term's value. This function should except one argument for each
+                variable in `var`. If `var` is a variable tensor, then the function should accept a single array.
+            grad: callable mapping float(s) or array to float or array, default=`None`
+                A function for computing the term's gradient. This function should except one argument for each
+                variable in `var`. If `var` is a variable tensor, then the function should accept a single array. If
+                `None`, then the gradient is approximated numerically.
+                using the central finite difference method.
             name: str, default=''
                 The name of the constraint.
 
@@ -187,10 +199,17 @@ class Model:
         """Add an objective term to the model.
 
         Args:
-            var: mip.Var or list of mip.Var or mip.LinExprTensor
-            func: callable
-            grad: callable
-                If `None`, the gradient will be approximated numerically using finite differences.
+            var: mip.Var or iterable of mip.Var or mip.LinExprTensor
+                The variable(s) included in the term. This can be provided in the form of a single  variable, an
+                iterable of multiple variables or a variable tensor.
+            func: callable mapping float(s) or array to float
+                A function for computing the term's value. This function should except one argument for each
+                variable in `var`. If `var` is a variable tensor, then the function should accept a single array.
+            grad: callable mapping float(s) or array to float or array, default=`None`
+                A function for computing the term's gradient. This function should except one argument for each
+                variable in `var`. If `var` is a variable tensor, then the function should accept a single array. If
+                `None`, then the gradient is approximated numerically.
+                using the central finite difference method.
             name: str, default=''
                 The name of the term.
 
@@ -219,8 +238,12 @@ class Model:
             max_iters: int, default=100
                 The maximum number of iterations to run the search for.
             max_iters_no_improvement: int or `None`, default=`None`
-
-            max_seconds_per_iter:  int or `None`, default=`None`
+                The maximum number of iterations to continue the search without improvement in the objective value,
+                once a feasible solution has been found. If `None`, then the search will continue until `max_iters`
+                regardless of lack of improvement in the objective value.
+            max_seconds_per_iter:  float or `None`, default=`None`
+                The maximum number of seconds allow the MIP solver to run for each iteration. If `None`, then the
+                MIP solver will run until its convergence criteria are met.
 
         Returns: mip.OptimizationStatus
             The status of the search.
@@ -323,7 +346,7 @@ class Model:
         return self._model.var_by_name(name=name)
 
     def var_value(self, x: Union[Input, str]) -> Union[float, np.ndarray]:
-        """Get the value one or more decision variables.
+        """Get the value one or more decision variables corresponding to the best solution.
 
         Args:
             x: mip.Var or mip.LinExprTensor or str

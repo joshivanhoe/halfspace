@@ -26,11 +26,13 @@ class ConvexTerm:
             var: mip.Var or iterable of mip.Var or mip.LinExprTensor
                 The variable(s) included in the term. This can be provided in the form of a single  variable, an
                 iterable of multiple variables or a variable tensor.
-            func: callable mapping input(s) to float
-                The function representing the term. For a single variable term, there should be a single float argument
-                multivariable term, there
-            grad: callable input to array, default=`None`
-                A function for computing the term's gradient. If `None`, then the gradient is approximated numerically
+            func: callable mapping float(s) or array to float
+                A function for computing the term's value. This function should except one argument for each
+                variable in `var`. If `var` is a variable tensor, then the function should accept a single array.
+            grad: callable mapping float(s) or array to float or array, default=`None`
+                A function for computing the term's gradient. This function should except one argument for each
+                variable in `var`. If `var` is a variable tensor, then the function should accept a single array. If
+                `None`, then the gradient is approximated numerically.
                 using the central finite difference method.
             step_size: float, default=`1e-6`
                 The step size used for numerical gradient approximation. If `grad` is provided, then this argument is
