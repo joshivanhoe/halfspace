@@ -1,17 +1,18 @@
 # `halfspace`
 
-`halfspace` is a light-weight Python module for modelling and solving convex optimization problems of the form:
+`halfspace` is a light-weight Python module for modelling and solving mixed-integer convex optimization problems of the form:
 
 $$
 \begin{align}
 \min ~& f_0(x), \\
 \text{s.t.} ~& f_i(x) \leq 0, && \forall i=1,...,m, \\
 & a_i^\top x = b_i,  && \forall i=1,...,p, \\
+& x_i \in \mathbb{Z}, && \forall i\in\mathcal{I}, \\
 & l \leq x \leq u,
 \end{align}
 $$
 
-where $f_0,...,f_m$ are convex functions. It is built on top of the high-performance Python `mip` module and uses a cutting plane algorithm to solve problems to provable optimality. Conveniently, this approach naturally extends to mix-integer problems, in which integrality constraints also apply to a subset of the decision variables.
+where $f_0,...,f_m$ are convex functions and $\mathcal{I}$ represents the subset of variables to which integrality constraints apply. It is built on top of the high-performance Python `mip` module and uses a cutting plane algorithm to solve problems to provable optimality.
 
 ## Quick start
 
