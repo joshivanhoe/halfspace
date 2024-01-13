@@ -12,7 +12,10 @@ $$
 \end{align}
 $$
 
-where $f_0,...,f_m$ are convex functions and $\mathcal{I}$ represents the subset of variables to which integrality constraints apply. It is built on top of the high-performance Python `mip` module and uses a cutting plane algorithm to solve problems to provable optimality.
+where $f_0,...,f_m$ are convex functions and $\mathcal{I}$ represents the subset of variables to which integrality constraints apply.
+It is built on top of the high-performance Python `mip` module and uses a cutting plane algorithm to solve problems to provable optimality.
+This implementation is based on the approach outlined in [Boyd & Vandenberghe (2008)](https://see.stanford.edu/materials/lsocoee364b/05-localization_methods_notes.pdf) - see Chapter 6.
+
 
 ## Quick start
 
@@ -70,34 +73,18 @@ status = model.optimize()
 print(status, model.objective_value)
 ```
 
-## How it works
-
-This implementation is based on the approach outlined in [Boyd & Vandenberghe (2008)](https://see.stanford.edu/materials/lsocoee364b/05-localization_methods_notes.pdf) - see Chapter 6.
-
-The underlying idea is to solve the problem iteratively, through sequence of approximating linear programs.
-
-At each iteration, we add the objective cut:
-
-$$f_0(x_k) + \nabla f_0(x_k)^\top(x-x_k) \leq t$$
-
-If $f_i(x_k) > \varepsilon$, where $\varepsilon$ is the infeasibility tolerance, we also add the feasibility cut:
-
-$$f_i(x_k) + \nabla f_i(x_k)^\top(x-x_k) \leq 0$$
-
-$$x_{k+1} = \arg\max_x f_k(x)$$
-
-$$x_{k+1} \leftarrow \theta x_{k} + (1 - \theta) x_{k + 1}$$
-
-
 ### Troubleshooting
+
+Q: The solver is converging too slowly. What can I do to improve this?
+- Improve the initial query point
+- Tune the update smoothing parameter
+-
 
 Q: The solution to my problem that the solver has output seems wrong. What are some common mistakes that could cause this?
 
 A: The cutting plane algorithm only works for convex programs and mixed-integer convex programs. Double-check that the formulation of your problem is indeed convex.
 Otherwise, if you're computing the gradients analytically, double-check that the formula is correct.
 
-Q: The solver is converging too slowly. What can I do to improve this?
-A:
 
 ## Development
 
@@ -109,13 +96,26 @@ git clone https://github.com/joshivanhoe/halfspace
 
 ````
 
-Then navigate to the cloned `halfspace` directory and install a locally editable version of the package using `pip`:
+Create a fresh virtual environment using `venv`:
+
+```bash
+python3.10 -m venv halfspace
+```
+
+Alternatively, this can be done using `conda`:
+
+```bash
+conda create -n halfspace python=3.10
+```
+
+Note that currently Python 3.10 is recommended.
+Activate the environment and navigate to the cloned `halfspace` directory. Install a locally editable version of the package using `pip`:
 
 ```bash
 pip install -e .
 ```
 
-You can run the tests using `pytest` as follows:
+To check the installation has worked, you can run the tests (with coverage metrics) using `pytest` as follows:
 
 ```bash
 pytest --cov=halfspace tests/
