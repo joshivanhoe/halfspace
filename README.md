@@ -1,6 +1,6 @@
 # `halfspace`
 
-`halfspace` is a light-weight Python module for modelling and solving mixed-integer convex optimization problems of the form:
+`halfspace` is an open-source, light-weight Python module for modelling and solving mixed-integer convex optimization problems of the form:
 
 $$
 \begin{align}
@@ -77,17 +77,21 @@ status = model.optimize()
 print(status, model.objective_value)
 ```
 
-### Troubleshooting
+## Troubleshooting
 
-Q: The solver is converging too slowly. What can I do to improve this?
-- Improve the initial query point
-- Tune the update smoothing parameter
--
+*Q: The solver is converging too slowly. What can I do to improve this?*
 
-Q: The solution to my problem that the solver has output seems wrong. What are some common mistakes that could cause this?
+A: Here are few tips to improve solve times: 
+- Improve the initial query point using problem-specific knowledge. In general, the closer the initial query point is to the optimal solution, the fewer iterations should be required for convergence. 
+- Tune the `smoothing` parameter, which affects query point updates. For some problems, increasing this parameter can dampen query point oscillation, thereby improving convergence. However, if this parameter is set too high, this can also slow down convergence as the updates become too conservative. Consequently, it may be necessary to experiment with a range of values.
+- If a feasible solution is 'good enough' for your application, specify the `max_iters_no_improvement` argument when you call the `optimize` method to prevent wasting time closing the optimality gap.
+- Review if any integrality constraints can be relaxed.
+
+
+*Q: The solution to my problem that the solver has output seems wrong. What are some common mistakes that could cause this?*
 
 A: The cutting plane algorithm only works for convex programs and mixed-integer convex programs. Double-check that the formulation of your problem is indeed convex.
-Otherwise, if you're computing the gradients analytically, double-check that the formula is correct.
+Otherwise, if you're computing the gradients analytically, also double-check that the formula is correct. If you believe erroneous behaviour is instead caused by a bug, please submit an [issue](https://github.com/joshivanhoe/halfspace/issues/new).
 
 
 ## Development
@@ -124,5 +128,9 @@ To check the installation has worked, you can run the tests (with coverage metri
 ```bash
 pytest --cov=halfspace tests/
 ```
+
+Contributions are welcome! To see our development priorities, refer to the [open issues](https://github.com/joshivanhoe/halfspace/issues). 
+Please submit a pull request with a clear description of the changes you've made.
+
 
 ###
