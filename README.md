@@ -56,10 +56,14 @@ z = model.add_var_tensor(shape=(5,), lb=0, ub=1)  # add a tensor of variables
 
 # Define objective terms (these are summed to create the objective)
 model.add_objective_term(var=x, func=lambda x: (x - 1) ** 2)  # add an objective term for one variable
-model.add_objective_term(var=[x, y],
-                         func=lambda x, y: np.exp(0.2 * x + y))  # add an objective term for multiple variables
-model.add_objective_term(var=z, func=lambda z: -sum(
-    (i + 1) * z[i] for i in range(5)))  # add an objective term for a tensor of variables
+model.add_objective_term(
+    var=[x, y],
+    func=lambda x, y: np.exp(0.2 * x + y),
+)  # add an objective term for multiple variables
+model.add_objective_term(
+    var=z,
+    func=lambda z: -sum((i + 1) * z[i] for i in range(5)),
+)  # add an objective term for a tensor of variables
 
 # Define constraints
 model.add_linear_constr(model.sum(z) <= y)  # add a linear constraint
