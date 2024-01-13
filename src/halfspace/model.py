@@ -22,7 +22,7 @@ class Model:
         infeasibility_tol: float = 1e-4,
         step_size: float = 1e-6,
         smoothing: Optional[float] = 0.5,
-        solver_name: Optional[str] = "cbc",
+        solver_name: Optional[str] = "CBC",
         log_freq: Optional[int] = 1,
     ):
         """Model constructor.
@@ -43,7 +43,7 @@ class Model:
             smoothing: float, default=.5
                 The smoothing parameter used to update the query point. If `None`, the query point will not be updated.
             solver_name: str or `None`, default=`None`
-                The MIP solver to use. Valid options. If `None`, the default solver will be selected.
+                The MIP solver to use. Valid options are 'CBC' and 'GUROBI'. Note that 'GUROBI' requires a license.
             log_freq: int or `None`, default = 1
                 The frequency with which logs are
         """
