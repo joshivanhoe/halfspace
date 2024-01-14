@@ -1,5 +1,5 @@
 [project]
-name = "halfspace"
+name = "half-space"
 version = "0.0.1"
 authors = [
   { name="Joshua Ivanhoe", email="joshua.k.ivanhoe@gmail.com" },
