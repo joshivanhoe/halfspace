@@ -22,8 +22,10 @@ This implementation is based on the approach outlined in [Boyd & Vandenberghe (2
 You can install `halfspace` using `pip` as follows:
 
 ```bash
-pip install halfspace
+pip install half-space
 ```
+
+Please note that the Pypi package name includes a hyphen.
 
 The modelling syntax for `halfspace` closely follows that of the `mip` module. As an illustrative example, let's consider the toy problem:
 
