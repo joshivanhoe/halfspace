@@ -22,10 +22,8 @@ This implementation is based on the approach outlined in [Boyd & Vandenberghe (2
 You can install `halfspace` using `pip` as follows:
 
 ```bash
-pip install half-space
+pip install halfspace-optimizer
 ```
-
-Please note that the Pypi package name includes a hyphen.
 
 The modelling syntax for `halfspace` closely follows that of the `mip` module. As an illustrative example, let's consider the toy problem:
 
@@ -83,8 +81,8 @@ print(status, model.objective_value)
 
 *Q: The solver is converging too slowly. What can I do to improve this?*
 
-A: Here are few tips to improve solve times: 
-- Improve the initial query point using problem-specific knowledge. In general, the closer the initial query point is to the optimal solution, the fewer iterations should be required for convergence. 
+A: Here are few tips to improve solve times:
+- Improve the initial query point using problem-specific knowledge. In general, the closer the initial query point is to the optimal solution, the fewer iterations should be required for convergence.
 - Tune the `smoothing` parameter, which affects query point updates. For some problems, increasing this parameter can dampen query point oscillation, thereby improving convergence. However, if this parameter is set too high, this can also slow down convergence as the updates become too conservative. Consequently, it may be necessary to experiment with a range of values.
 - If a feasible solution is 'good enough' for your application, specify the `max_iters_no_improvement` argument when you call the `optimize` method to prevent wasting time closing the optimality gap.
 - Review if any integrality constraints can be relaxed.
@@ -95,9 +93,7 @@ A: Here are few tips to improve solve times:
 A: The cutting plane algorithm only works for convex programs and mixed-integer convex programs. Double-check that the formulation of your problem is indeed convex.
 Otherwise, if you're computing the gradients analytically, also double-check that the formula is correct. If you believe erroneous behaviour is instead caused by a bug, please submit an [issue](https://github.com/joshivanhoe/halfspace/issues/new).
 
-
 ## Development
-
 
 Clone the repository using `git`:
 
@@ -131,8 +127,5 @@ To check the installation has worked, you can run the tests (with coverage metri
 pytest --cov=halfspace tests/
 ```
 
-Contributions are welcome! To see our development priorities, refer to the [open issues](https://github.com/joshivanhoe/halfspace/issues). 
+Contributions are welcome! To see our development priorities, refer to the [open issues](https://github.com/joshivanhoe/halfspace/issues).
 Please submit a pull request with a clear description of the changes you've made.
-
-
-###
