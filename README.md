@@ -1,3 +1,11 @@
+[![CI](https://github.com/joshivanhoe/halfspace/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Nixtla/statsforecast/actions/workflows/ci.yaml)
+[![Python](https://img.shields.io/pypi/pyversions/halfspace-optimizer)](https://pypi.org/project/halfspace-optimizer/)
+[![PyPi](https://img.shields.io/pypi/v/halfspace-optimizer?color=blue)](https://pypi.org/project/halfspace-optimizer/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/joshivanhoe/halfspace/blob/main/LICENSE)
+[![docs](https://img.shields.io/website-up-down-green-red/http/nixtla.github.io/statsforecast.svg?label=docs)](https://nixtla.github.io/statsforecast/)
+[![Downloads](https://pepy.tech/badge/halfspace-optimizer)](https://pepy.tech/project/statsforecast)
+
+
 # ✨halfspace✨
 
 `halfspace` is an open-source, light-weight Python module for modelling and solving mixed-integer convex optimization problems of the form:
