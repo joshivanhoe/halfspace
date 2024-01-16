@@ -3,6 +3,7 @@ requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
+dynamic = ["dependencies"]
 name = "halfspace-optimizer"
 version = "0.0.1"
 authors = [
@@ -17,15 +18,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = [
-    "mip>=1.15.0",
-    "numpy>=1.25.2",
-    "pandas>=2.0.3",
-    "pre-commit>=3.6.0",
-    "pytest>=7.4.4",
-    "pytest-cov>=4.1.0",
-    "tomli>=2.0.1",
-]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
 
 [project.urls]
 Homepage = "https://github.com/joshivanhoe/halfspace"
