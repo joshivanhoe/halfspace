@@ -1,13 +1,13 @@
-# `halfspace`
+# ✨halfspace✨
 
 `halfspace` is an open-source, light-weight Python module for modelling and solving mixed-integer convex optimization problems of the form:
 
 $$
 \begin{align}
-\min ~& f_0(x), \\
-\text{s.t.} ~& f_i(x) \leq 0, && \forall i=1,...,m, \\
-& a_i^\top x = b_i,  && \forall i=1,...,p, \\
-& x_i \in \mathbb{Z}, && \forall i\in\mathcal{I}, \\
+\min ~& f_0(x), \newline
+\text{s.t.} ~& f_i(x) \leq 0, && \forall i=1,...,m, \newline
+& a_i^\top x = b_i,  && \forall i=1,...,p, \newline
+& x_i \in \mathbb{Z}, && \forall i\in\mathcal{I}, \newline
 & l \leq x \leq u,
 \end{align}
 $$
@@ -29,12 +29,12 @@ The modelling syntax for `halfspace` closely follows that of the `mip` module. A
 
 $$
 \begin{align}
-\min_{x,y,z} ~& (x - 1)^2 + \exp(0.2x + y) + \sum_{i=1}^5 i z_i, \\
-\text{s.t.}  ~& \sum_{i=1}^5 z_i \leq y, \\
-& x^2 + y^2 \leq 1.25^2, \\
-& x\in[0, 1], \\
-& y\in \\{0, 1 \\}, \\
-& z\in[0, 1]^5. \\
+\min_{x,y,z} ~& (x - 1)^2 + \exp(0.2x + y) + \sum_{i=1}^5 i z_i, \newline
+\text{s.t.}  ~& \sum_{i=1}^5 z_i \leq y, \newline
+& x^2 + y^2 \leq 1.25^2, \newline
+& x\in[0, 1], \newline
+& y\in \\{0, 1 \\}, \newline
+& z\in[0, 1]^5. \newline
 \end{align}
 $$
 
@@ -42,7 +42,6 @@ This can be implemented as follows:
 
 ```python
 import numpy as np
-import logging
 
 from halfspace import Model
 
@@ -93,13 +92,23 @@ A: Here are few tips to improve solve times:
 A: The cutting plane algorithm only works for convex programs and mixed-integer convex programs. Double-check that the formulation of your problem is indeed convex.
 Otherwise, if you're computing the gradients analytically, also double-check that the formula is correct. If you believe erroneous behaviour is instead caused by a bug, please submit an [issue](https://github.com/joshivanhoe/halfspace/issues/new).
 
+*Q: How can I view the solver logs in real time?*
+
+Prior to calling `model.optimize()`, change the logging leve as follows:
+
+```python
+import logging
+logging.getLogger().setLevel(logging.INFO)
+```
+
+The logging frequency can be adjusted as desiredusing the model's `log_freq` attribute.
+
 ## Development
 
 Clone the repository using `git`:
 
 ```bash
 git clone https://github.com/joshivanhoe/halfspace
-
 ````
 
 Create a fresh virtual environment using `venv`:
