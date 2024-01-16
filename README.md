@@ -1,4 +1,4 @@
-[![CI](https://github.com/joshivanhoe/halfspace/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Nixtla/statsforecast/actions/workflows/ci.yaml)
+[![CI](https://github.com/joshivanhoe/halfspace/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/joshivanhoe/halfspace/actions/workflows/ci.yml)
 [![Version](https://img.shields.io/pypi/v/halfspace-optimizer?color=blue)](https://pypi.org/project/halfspace-optimizer/)
 
 
