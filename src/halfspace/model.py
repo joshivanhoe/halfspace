@@ -369,7 +369,9 @@ class Model:
         """Get a variable by name."""
         return self._model.var_by_name(name=name)
 
-    def var_value(self, x: Union[Input, str]) -> Union[float, np.ndarray]:
+    def var_value(
+        self, x: Union[mip.Var, mip.LinExprTensor, str]
+    ) -> Union[float, np.ndarray]:
         """Get the value one or more decision variables corresponding to the best solution.
 
         Args:
