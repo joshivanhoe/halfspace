@@ -53,9 +53,9 @@ from halfspace import Model
 model = Model()
 
 # Define variables
-x = model.add_var(lb=0, ub=1)  # add a variable
-y = model.add_var(var_type="B")  # add a binary variable
-z = model.add_var_tensor(shape=(5,), lb=0, ub=1)  # add a tensor of variables
+x = model.add_var(lb=0, ub=1, name="x")  # add a variable
+y = model.add_var(var_type="B", name="y")  # add a binary variable
+z = model.add_var_tensor(shape=(5,), lb=0, ub=1, name="z")  # add a tensor of variables
 
 # Define objective terms (these are summed to create the objective)
 model.add_objective_term(var=x, func=lambda x: (x - 1) ** 2)  # add an objective term for one variable
@@ -77,7 +77,9 @@ model.start = [(x, 0), (y, 0)] + [(z[i], 0) for i in range(5)]
 
 # Solve model
 status = model.optimize()
-print(status, model.objective_value)
+print(model.objective_value) # get the best objective value
+print(model.var_value(x))  # get the value of a variable directly
+print(model.var_value("y"))  # get the value of a variable by name
 ```
 
 ## Troubleshooting
@@ -115,20 +117,9 @@ Clone the repository using `git`:
 git clone https://github.com/joshivanhoe/halfspace
 ````
 
-Create a fresh virtual environment using `venv`:
-
-```bash
-python3.10 -m venv halfspace
-```
-
-Alternatively, this can be done using `conda`:
-
-```bash
-conda create -n halfspace python=3.10
-```
-
-Note that currently Python 3.10 is recommended.
-Activate the environment and navigate to the cloned `halfspace` directory. Install a locally editable version of the package using `pip`:
+Create a fresh virtual environment using `venv` or `conda`.
+Activate the environment and navigate to the cloned `halfspace` directory.
+Install a locally editable version of the package using `pip`:
 
 ```bash
 pip install -e .

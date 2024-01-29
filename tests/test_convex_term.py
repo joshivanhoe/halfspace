@@ -1,11 +1,30 @@
-from typing import Union
+from typing import Union, Optional
 
 import mip
 import numpy as np
 import pytest
 
 from halfspace import Model
-from halfspace.convex_term import ConvexTerm, QueryPoint
+from halfspace.convex_term import Func, FuncWithGrad, Grad, ConvexTerm, QueryPoint
+
+
+def _process_callbacks(
+    func: Func,
+    grad: Grad,
+    combine_grad: bool,
+    approximate_grad: bool,
+) -> tuple[Union[Func, FuncWithGrad], Optional[Union[Grad, bool]]]:
+    if combine_grad and approximate_grad:
+        raise ValueError
+    if combine_grad:
+
+        def func_with_grad(*args, **kwargs):
+            return func(*args, **kwargs), grad(*args, **kwargs)
+
+        return func_with_grad, True
+    if approximate_grad:
+        return func, None
+    return func, grad
 
 
 def _check_convex_term(
@@ -47,18 +66,27 @@ def model() -> Model:
         ({"x": 1}, 1, 2),
     ],
 )
-@pytest.mark.parametrize("approximate_grad", [True, False])
+@pytest.mark.parametrize(
+    ["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)]
+)
 def test_single_variable_term(
     model: Model,
     query_point: dict[str, float],
     expected_value: float,
     expected_grad: float,
+    combine_grad: bool,
     approximate_grad: bool,
 ):
+    func, grad = _process_callbacks(
+        func=lambda x: x**2,
+        grad=lambda x: 2 * x,
+        combine_grad=combine_grad,
+        approximate_grad=approximate_grad,
+    )
     term = ConvexTerm(
         var=model.var_by_name("x"),
-        func=lambda x: x**2,
-        grad=None if approximate_grad else lambda x: 2 * x,
+        func=func,
+        grad=grad,
     )
     _check_convex_term(
         term=term,
@@ -78,18 +106,27 @@ def test_single_variable_term(
         ({"x": 1, "y": 2}, 5, np.array([2, 4])),
     ],
 )
-@pytest.mark.parametrize("approximate_grad", [True, False])
+@pytest.mark.parametrize(
+    ["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)]
+)
 def test_multivariable_term(
     model: Model,
     query_point: dict[str, float],
     expected_value: float,
     expected_grad: float,
+    combine_grad: bool,
     approximate_grad: bool,
 ):
+    func, grad = _process_callbacks(
+        func=lambda x, y: x**2 + y**2,
+        grad=lambda x, y: np.array([2 * x, 2 * y]),
+        combine_grad=combine_grad,
+        approximate_grad=approximate_grad,
+    )
     term = ConvexTerm(
         var=(model.var_by_name("x"), model.var_by_name("y")),
-        func=lambda x_, y_: x_**2 + y_**2,
-        grad=None if approximate_grad else lambda x_, y_: np.array([2 * x_, 2 * y_]),
+        func=func,
+        grad=grad,
     )
     _check_convex_term(
         term=term,
@@ -109,19 +146,27 @@ def test_multivariable_term(
         ({"z_0": 1, "z_1": 2}, 5, np.array([2, 4])),
     ],
 )
-@pytest.mark.parametrize("approximate_grad", [True, False])
+@pytest.mark.parametrize(
+    ["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)]
+)
 def test_var_tensor_term(
     model: Model,
     query_point: dict[str, float],
     expected_value: float,
     expected_grad: float,
+    combine_grad: bool,
     approximate_grad: bool,
 ):
-    z = model.add_var_tensor(shape=(2,), lb=-10, ub=10, name="z")
+    func, grad = _process_callbacks(
+        func=lambda z: (z**2).sum(),
+        grad=lambda z: 2 * z,
+        combine_grad=combine_grad,
+        approximate_grad=approximate_grad,
+    )
     term = ConvexTerm(
-        var=z,
-        func=lambda z_: z_[0] ** 2 + z_[1] ** 2,
-        grad=None if approximate_grad else lambda z_: np.array([2 * z_[0], 2 * z_[1]]),
+        var=model.add_var_tensor(shape=(2,), lb=-10, ub=10, name="z"),
+        func=func,
+        grad=grad,
     )
     _check_convex_term(
         term=term,
