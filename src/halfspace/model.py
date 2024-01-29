@@ -5,7 +5,7 @@ import mip
 import numpy as np
 import pandas as pd
 
-from .convex_term import ConvexTerm, Input, Var, Func, Grad
+from .convex_term import ConvexTerm, Input, Var, Func, FuncWithGrad, Grad
 from .utils import check_scalar, log_table_header, log_table_row
 
 Start = list[tuple[mip.Var, float]]
@@ -155,8 +155,8 @@ class Model:
     def add_nonlinear_constr(
         self,
         var: Var,
-        func: Func,
-        grad: Optional[Grad] = None,
+        func: Union[Func, FuncWithGrad],
+        grad: Optional[Union[Grad, bool]] = None,
         name: str = "",
     ) -> ConvexTerm:
         """Add a nonlinear constraint to the model.
@@ -165,14 +165,16 @@ class Model:
             var: mip.Var or iterable of mip.Var or mip.LinExprTensor
                 The variable(s) included in the term. This can be provided in the form of a single  variable, an
                 iterable of multiple variables or a variable tensor.
-            func: callable mapping float(s) or array to float
+            func: callable
                 A function for computing the term's value. This function should except one argument for each
                 variable in `var`. If `var` is a variable tensor, then the function should accept a single array.
-            grad: callable mapping float(s) or array to float or array, default=`None`
+            grad: callable or bool, default=`None`
                 A function for computing the term's gradient. This function should except one argument for each
                 variable in `var`. If `var` is a variable tensor, then the function should accept a single array. If
-                `None`, then the gradient is approximated numerically.
-                using the central finite difference method.
+                `None`, then the gradient is approximated numerically using the central finite difference method. If
+                `grad` is instead a Boolean and is `True`, then `func` is assumed to return a tuple where the first
+                element is the function value and the second element is the gradient. This is useful when the gradient
+                is expensive to compute.
             name: str, default=''
                 The name of the constraint.
 
@@ -192,8 +194,8 @@ class Model:
     def add_objective_term(
         self,
         var: Var,
-        func: Func,
-        grad: Optional[Grad] = None,
+        func: Union[Func, FuncWithGrad],
+        grad: Optional[Union[Grad, bool]] = None,
         name: str = "",
     ) -> ConvexTerm:
         """Add an objective term to the model.
@@ -202,14 +204,16 @@ class Model:
             var: mip.Var or iterable of mip.Var or mip.LinExprTensor
                 The variable(s) included in the term. This can be provided in the form of a single  variable, an
                 iterable of multiple variables or a variable tensor.
-            func: callable mapping float(s) or array to float
+            func: callable
                 A function for computing the term's value. This function should except one argument for each
                 variable in `var`. If `var` is a variable tensor, then the function should accept a single array.
-            grad: callable mapping float(s) or array to float or array, default=`None`
+            grad: callable or bool, default=`None`
                 A function for computing the term's gradient. This function should except one argument for each
                 variable in `var`. If `var` is a variable tensor, then the function should accept a single array. If
-                `None`, then the gradient is approximated numerically.
-                using the central finite difference method.
+                `None`, then the gradient is approximated numerically using the central finite difference method. If
+                `grad` is instead a Boolean and is `True`, then `func` is assumed to return a tuple where the first
+                element is the function value and the second element is the gradient. This is useful when the gradient
+                is expensive to compute.
             name: str, default=''
                 The name of the term.
 

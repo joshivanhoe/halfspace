@@ -115,20 +115,9 @@ Clone the repository using `git`:
 git clone https://github.com/joshivanhoe/halfspace
 ````
 
-Create a fresh virtual environment using `venv`:
-
-```bash
-python3.10 -m venv halfspace
-```
-
-Alternatively, this can be done using `conda`:
-
-```bash
-conda create -n halfspace python=3.10
-```
-
-Note that currently Python 3.10 is recommended.
-Activate the environment and navigate to the cloned `halfspace` directory. Install a locally editable version of the package using `pip`:
+Create a fresh virtual environment using `venv` or `conda`.
+Activate the environment and navigate to the cloned `halfspace` directory.
+Install a locally editable version of the package using `pip`:
 
 ```bash
 pip install -e .
