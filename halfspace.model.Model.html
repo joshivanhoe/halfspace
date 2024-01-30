@@ -1,0 +1,2162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "DTD/xhtml1-strict.dtd">
+<html>
+  
+
+  <head>
+    
+    <title>halfspace.model.Model</title>
+    <meta name="generator" content="pydoctor 23.9.1"> 
+        
+    </meta>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1" />
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="apidocs.css" />
+    <link rel="stylesheet" type="text/css" href="extra.css" />
+</head>
+
+  <body>
+
+    
+
+    <nav class="navbar navbar-default mainnavbar">
+      
+  
+  <div class="container-fluid">
+
+
+    <div class="navbar-header">
+      
+      <div class="navlinks">
+        <span class="navbar-brand">
+          <a href="https://github.com/joshivanhoe/halfspace" class="projecthome">halfspace</a> <a href="index.html">API Documentation</a>
+        </span>
+
+        <a href="moduleIndex.html">
+          Modules
+        </a>
+
+        <a href="classIndex.html">
+          Classes
+        </a>
+
+        <a href="nameIndex.html">
+          Names
+        </a>
+
+        <div id="search-box-container">
+          <div class="input-group">
+            <input id="search-box" type="search" name="search-query" placeholder="Search..." aria-label="Search" minlength="2" class="form-control" autocomplete="off" />
+            
+            <span class="input-group-btn">
+              <a style="display: none;" class="btn btn-default" id="search-clear-button" title="Clear" onclick="clearSearch()"><img src="fonts/x-circle.svg" alt="Clear" /></a>
+              <a class="btn btn-default" id="search-help-button" title="Help" onclick="toggleSearchHelpText()"><img src="fonts/info.svg" alt="Help" /></a>
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="search-results-container" style="display: none;">
+        
+        <div id="search-buttons">
+          <span class="label label-default" id="search-docstrings-button">
+          <label class="checkbox-inline">
+            <input type="checkbox" id="toggle-search-in-docstrings-checkbox" value="false" onclick="toggleSearchInDocstrings()">
+              search in docstrings
+            </input>
+          </label>
+          </span>
+          
+        </div>
+        
+        <noscript>
+            <h1>Cannot search: JavaScript is not supported/enabled in your browser.</h1>
+        </noscript>
+
+        <div class="hint" id="search-help-box">
+          <p class="rst-last">
+      
+            Search bar offers the following options:
+            <ul>   
+                <li>
+                  <strong>Term presence.</strong> The below example searches for documents that 
+                    must contain “foo”, might contain “bar” and must not contain “baz”: <code>+foo bar -baz</code>
+                </li> 
+
+                <li>
+                  <strong>Wildcards.</strong> The below example searches for documents with words beginning with “foo”: <code>foo*</code>
+                </li> 
+
+                <li>
+                  <strong>Search in specific fields.</strong> The following search matches all objects 
+                  in "twisted.mail" that matches “search”: <code>+qname:twisted.mail.* +search</code>
+
+                  <p>
+                    Possible fields: 'name', 'qname' (fully qualified name), 'docstring', and 'kind'.
+                    Last two fields are only applicable if "search in docstrings" is enabled.
+                  </p>
+                </li>
+
+                <li>
+                  <strong>Fuzzy matches.</strong> The following search matches all documents 
+                  that have a word within 1 edit distance of “foo”: <code>foo~1</code>
+                </li>
+            </ul>
+
+          </p>
+        </div>
+
+        <div id="search-status"> </div>
+
+        <div class="warning" id="search-warn-box" style="display: none;">
+          <p class="rst-last"><span id="search-warn"></span></p>
+        </div>
+
+        <table id="search-results">
+          <!-- Filled dynamically by JS -->
+        </table>
+        
+        <div style="margin-top: 8px;">
+          <p>Results provided by <a href="https://lunrjs.com">Lunr.js</a></p>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+</nav>
+    
+    <div class="container-fluid">
+
+      <!-- Side navigation -->
+      <div class="sidebarcontainer" style="display: none;">
+        
+        <div class="sidebar"><nav class="sidebar">
+  
+
+  <div>
+
+      <div class="thingTitle">
+        <span>Class</span>
+        <code class="thisobject"><a href="halfspace.model.Model.html" class="internal-link" title="This class"><wbr></wbr>Model</a></code> 
+      </div>
+      
+      <div>
+        
+
+        
+         
+
+        
+        
+
+        <div class="childrenKindTitle">Methods</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#sum" class="internal-link" title="halfspace.model.Model.sum">sum</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#__init__" class="internal-link" title="halfspace.model.Model.__init__">__init__</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#add_linear_constr" class="internal-link" title="halfspace.model.Model.add_linear_constr">add<wbr></wbr>_linear<wbr></wbr>_constr</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#add_nonlinear_constr" class="internal-link" title="halfspace.model.Model.add_nonlinear_constr">add<wbr></wbr>_nonlinear<wbr></wbr>_constr</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#add_objective_term" class="internal-link" title="halfspace.model.Model.add_objective_term">add<wbr></wbr>_objective<wbr></wbr>_term</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#add_var" class="internal-link" title="halfspace.model.Model.add_var">add<wbr></wbr>_var</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#add_var_tensor" class="internal-link" title="halfspace.model.Model.add_var_tensor">add<wbr></wbr>_var<wbr></wbr>_tensor</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#optimize" class="internal-link" title="halfspace.model.Model.optimize">optimize</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#reset" class="internal-link" title="halfspace.model.Model.reset">reset</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#start.setter" class="internal-link" title="halfspace.model.Model.start.setter">start<wbr></wbr>.setter</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#var_by_name" class="internal-link" title="halfspace.model.Model.var_by_name">var<wbr></wbr>_by<wbr></wbr>_name</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#var_value" class="internal-link" title="halfspace.model.Model.var_value">var<wbr></wbr>_value</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_validate_bounds" class="internal-link" title="halfspace.model.Model._validate_bounds">_validate<wbr></wbr>_bounds</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_validate_params" class="internal-link" title="halfspace.model.Model._validate_params">_validate<wbr></wbr>_params</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+
+        <div class="childrenKindTitle">Attributes</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#infeasibility_tol" class="internal-link" title="halfspace.model.Model.infeasibility_tol">infeasibility<wbr></wbr>_tol</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#log_freq" class="internal-link" title="halfspace.model.Model.log_freq">log<wbr></wbr>_freq</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#max_gap" class="internal-link" title="halfspace.model.Model.max_gap">max<wbr></wbr>_gap</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#max_gap_abs" class="internal-link" title="halfspace.model.Model.max_gap_abs">max<wbr></wbr>_gap<wbr></wbr>_abs</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#minimize" class="internal-link" title="halfspace.model.Model.minimize">minimize</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#smoothing" class="internal-link" title="halfspace.model.Model.smoothing">smoothing</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#solver_name" class="internal-link" title="halfspace.model.Model.solver_name">solver<wbr></wbr>_name</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#step_size" class="internal-link" title="halfspace.model.Model.step_size">step<wbr></wbr>_size</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#best_bound" class="internal-link" title="halfspace.model.Model.best_bound">best<wbr></wbr>_bound</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#best_solution" class="internal-link" title="halfspace.model.Model.best_solution">best<wbr></wbr>_solution</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#gap" class="internal-link" title="halfspace.model.Model.gap">gap</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#gap_abs" class="internal-link" title="halfspace.model.Model.gap_abs">gap<wbr></wbr>_abs</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#linear_constrs" class="internal-link" title="halfspace.model.Model.linear_constrs">linear<wbr></wbr>_constrs</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#nonlinear_constrs" class="internal-link" title="halfspace.model.Model.nonlinear_constrs">nonlinear<wbr></wbr>_constrs</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#objective_terms" class="internal-link" title="halfspace.model.Model.objective_terms">objective<wbr></wbr>_terms</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#objective_value" class="internal-link" title="halfspace.model.Model.objective_value">objective<wbr></wbr>_value</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#search_log" class="internal-link" title="halfspace.model.Model.search_log">search<wbr></wbr>_log</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#start" class="internal-link" title="halfspace.model.Model.start">start</a></code>
+            </div>
+        
+
+    </li><li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#status" class="internal-link" title="halfspace.model.Model.status">status</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_best_bound" class="internal-link" title="halfspace.model.Model._best_bound">_best<wbr></wbr>_bound</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_best_solution" class="internal-link" title="halfspace.model.Model._best_solution">_best<wbr></wbr>_solution</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_model" class="internal-link" title="halfspace.model.Model._model">_model</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_nonlinear_constrs" class="internal-link" title="halfspace.model.Model._nonlinear_constrs">_nonlinear<wbr></wbr>_constrs</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_objective_terms" class="internal-link" title="halfspace.model.Model._objective_terms">_objective<wbr></wbr>_terms</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_objective_value" class="internal-link" title="halfspace.model.Model._objective_value">_objective<wbr></wbr>_value</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_search_log" class="internal-link" title="halfspace.model.Model._search_log">_search<wbr></wbr>_log</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_start" class="internal-link" title="halfspace.model.Model._start">_start</a></code>
+            </div>
+        
+
+    </li><li class="private">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="#_status" class="internal-link" title="halfspace.model.Model._status">_status</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+        
+      </div>
+  </div><div>
+
+      <div class="thingTitle">
+        <span>Module</span>
+        <code><a href="halfspace.model.html" class="internal-link" title="The parent of this class">model</a></code> 
+      </div>
+      
+      <div>
+        
+
+        
+         
+
+        <div class="childrenKindTitle">Classes</div>
+        <ul>
+    
+    <li class=" thisobject">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="halfspace.model.Model.html" class="internal-link" title="halfspace.model.Model"><wbr></wbr>Model</a></code>
+            </div>
+        
+
+    </li>
+</ul>
+
+        
+         
+
+        
+         
+
+        <div class="childrenKindTitle">Variables</div>
+        <ul>
+    
+    <li class="">
+        
+        
+        
+
+        
+            <div class="itemName"><code><a href="halfspace.model.html#Start" class="internal-link" title="halfspace.model.Start"><wbr></wbr>Start</a></code>
+            </div>
+        
+
+    </li>
+</ul> 
+
+        
+         
+        
+      </div>
+  </div>
+
+</nav>
+        </div>
+        <div id="collapseSideBar">
+          <a class="btn btn-link" onclick="toggleSideBarCollapse()" title="Toggle Sidebar Collapse">
+          </a>
+        </div> 
+        <script src="sidebartoggle.js" type="text/javascript"></script>
+       
+      </div>
+
+      <div id="main" class="">
+        
+
+        
+
+        <div class="page-header">
+          <h1 class="class"><code><code><a href="index.html" class="internal-link">halfspace</a></code><wbr></wbr>.<code><a href="halfspace.model.html" class="internal-link" title="halfspace.model">model</a></code><wbr></wbr>.<code><a href="halfspace.model.Model.html" class="internal-link" title="halfspace.model.Model">Model</a></code></code></h1>
+          <div id="showPrivate">
+            <button class="btn btn-link" onclick="togglePrivate()">Toggle Private API</button>
+          </div>
+        </div>
+
+        <div class="categoryHeader">
+          class documentation
+        </div>
+
+        <div class="extrasDocstring">
+          <p class="class-signature"><code><span class="py-keyword">class</span> <span class="py-defname">Model</span>: <a href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L14" class="sourceLink">(source)</a></code></p><p>Constructor: <code><a href="#__init__" class="internal-link" title="halfspace.model.Model.__init__">Model(minimize, max_gap, max_gap_abs, infeasibility_tol, ...)</a></code></p>
+          <p><a href="classIndex.html#halfspace.model.Model">View In Hierarchy</a></p>
+        </div>
+
+        <div class="moduleDocstring">
+          <div><p>Mixed-integer convex optimization model.</p></div>
+        </div>
+
+        <div id="splitTables">
+          <table class="children sortable" id="id5">
+  
+  
+  <tr class="staticmethod">
+    
+    <td>Static Method</td>
+    <td><code><a href="#sum" class="internal-link" title="halfspace.model.Model.sum">sum</a></code></td>
+    <td>Create a linear expression from a summation.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#__init__" class="internal-link" title="halfspace.model.Model.__init__">__init__</a></code></td>
+    <td>Model constructor.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#add_linear_constr" class="internal-link" title="halfspace.model.Model.add_linear_constr">add<wbr></wbr>_linear<wbr></wbr>_constr</a></code></td>
+    <td>Add a linear constraint to the model.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#add_nonlinear_constr" class="internal-link" title="halfspace.model.Model.add_nonlinear_constr">add<wbr></wbr>_nonlinear<wbr></wbr>_constr</a></code></td>
+    <td>Add a nonlinear constraint to the model.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#add_objective_term" class="internal-link" title="halfspace.model.Model.add_objective_term">add<wbr></wbr>_objective<wbr></wbr>_term</a></code></td>
+    <td>Add an objective term to the model.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#add_var" class="internal-link" title="halfspace.model.Model.add_var">add<wbr></wbr>_var</a></code></td>
+    <td>Add a decision variable to the model.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#add_var_tensor" class="internal-link" title="halfspace.model.Model.add_var_tensor">add<wbr></wbr>_var<wbr></wbr>_tensor</a></code></td>
+    <td>Add a tensor of decision variables to the model.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#optimize" class="internal-link" title="halfspace.model.Model.optimize">optimize</a></code></td>
+    <td>Optimize the model.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#reset" class="internal-link" title="halfspace.model.Model.reset">reset</a></code></td>
+    <td>Reset the model.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#start.setter" class="internal-link" title="halfspace.model.Model.start.setter">start<wbr></wbr>.setter</a></code></td>
+    <td>Set the starting solution or partial solution, provided as tuple of (variable, value) pairs.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#var_by_name" class="internal-link" title="halfspace.model.Model.var_by_name">var<wbr></wbr>_by<wbr></wbr>_name</a></code></td>
+    <td>Get a variable by name.</td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><code><a href="#var_value" class="internal-link" title="halfspace.model.Model.var_value">var<wbr></wbr>_value</a></code></td>
+    <td>Get the value one or more decision variables corresponding to the best solution.</td>
+  </tr><tr class="instancevariable">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#infeasibility_tol" class="internal-link" title="halfspace.model.Model.infeasibility_tol">infeasibility<wbr></wbr>_tol</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#log_freq" class="internal-link" title="halfspace.model.Model.log_freq">log<wbr></wbr>_freq</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#max_gap" class="internal-link" title="halfspace.model.Model.max_gap">max<wbr></wbr>_gap</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#max_gap_abs" class="internal-link" title="halfspace.model.Model.max_gap_abs">max<wbr></wbr>_gap<wbr></wbr>_abs</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#minimize" class="internal-link" title="halfspace.model.Model.minimize">minimize</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#smoothing" class="internal-link" title="halfspace.model.Model.smoothing">smoothing</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#solver_name" class="internal-link" title="halfspace.model.Model.solver_name">solver<wbr></wbr>_name</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#step_size" class="internal-link" title="halfspace.model.Model.step_size">step<wbr></wbr>_size</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="property">
+    
+    <td>Property</td>
+    <td><code><a href="#best_bound" class="internal-link" title="halfspace.model.Model.best_bound">best<wbr></wbr>_bound</a></code></td>
+    <td>Get the best bound.</td>
+  </tr><tr class="property">
+    
+    <td>Property</td>
+    <td><code><a href="#best_solution" class="internal-link" title="halfspace.model.Model.best_solution">best<wbr></wbr>_solution</a></code></td>
+    <td>Get the best solution (all variables).</td>
+  </tr><tr class="property">
+    
+    <td>Property</td>
+    <td><code><a href="#gap" class="internal-link" title="halfspace.model.Model.gap">gap</a></code></td>
+    <td>Get the (relative) optimality gap.</td>
+  </tr><tr class="property">
+    
+    <td>Property</td>
+    <td><code><a href="#gap_abs" class="internal-link" title="halfspace.model.Model.gap_abs">gap<wbr></wbr>_abs</a></code></td>
+    <td>Get the absolute optimality gap.</td>
+  </tr><tr class="property">
+    
+    <td>Property</td>
+    <td><code><a href="#linear_constrs" class="internal-link" title="halfspace.model.Model.linear_constrs">linear<wbr></wbr>_constrs</a></code></td>
+    <td>Get the linear constraints of the model.</td>
+  </tr><tr class="property">
+    
+    <td>Property</td>
+    <td><code><a href="#nonlinear_constrs" class="internal-link" title="halfspace.model.Model.nonlinear_constrs">nonlinear<wbr></wbr>_constrs</a></code></td>
+    <td>Get the nonlinear constraints of the model.</td>
+  </tr><tr class="property">
+    
+    <td>Property</td>
+    <td><code><a href="#objective_terms" class="internal-link" title="halfspace.model.Model.objective_terms">objective<wbr></wbr>_terms</a></code></td>
+    <td>Get the objective terms of the model.</td>
+  </tr><tr class="property">
+    
+    <td>Property</td>
+    <td><code><a href="#objective_value" class="internal-link" title="halfspace.model.Model.objective_value">objective<wbr></wbr>_value</a></code></td>
+    <td>Get the objective value of the best solution.</td>
+  </tr><tr class="property">
+    
+    <td>Property</td>
+    <td><code><a href="#search_log" class="internal-link" title="halfspace.model.Model.search_log">search<wbr></wbr>_log</a></code></td>
+    <td>Get the search log.</td>
+  </tr><tr class="property">
+    
+    <td>Property</td>
+    <td><code><a href="#start" class="internal-link" title="halfspace.model.Model.start">start</a></code></td>
+    <td>Get the starting solution or partial solution provided.</td>
+  </tr><tr class="property">
+    
+    <td>Property</td>
+    <td><code><a href="#status" class="internal-link" title="halfspace.model.Model.status">status</a></code></td>
+    <td>Get the status of the model.</td>
+  </tr><tr class="staticmethod private">
+    
+    <td>Static Method</td>
+    <td><code><a href="#_validate_bounds" class="internal-link" title="halfspace.model.Model._validate_bounds">_validate<wbr></wbr>_bounds</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><code><a href="#_validate_params" class="internal-link" title="halfspace.model.Model._validate_params">_validate<wbr></wbr>_params</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_best_bound" class="internal-link" title="halfspace.model.Model._best_bound">_best<wbr></wbr>_bound</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_best_solution" class="internal-link" title="halfspace.model.Model._best_solution">_best<wbr></wbr>_solution</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_model" class="internal-link" title="halfspace.model.Model._model">_model</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_nonlinear_constrs" class="internal-link" title="halfspace.model.Model._nonlinear_constrs">_nonlinear<wbr></wbr>_constrs</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_objective_terms" class="internal-link" title="halfspace.model.Model._objective_terms">_objective<wbr></wbr>_terms</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_objective_value" class="internal-link" title="halfspace.model.Model._objective_value">_objective<wbr></wbr>_value</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_search_log" class="internal-link" title="halfspace.model.Model._search_log">_search<wbr></wbr>_log</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_start" class="internal-link" title="halfspace.model.Model._start">_start</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="instancevariable private">
+    
+    <td>Instance Variable</td>
+    <td><code><a href="#_status" class="internal-link" title="halfspace.model.Model._status">_status</a></code></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr>
+</table>
+          
+
+            
+        </div>
+
+        <div id="childList">
+          <div class="basestaticmethod">
+  
+  
+  <a name="halfspace.model.Model.sum">
+    
+  </a>
+  <a name="sum">
+    
+  </a>
+  <div class="functionHeader">
+    
+    @<a href="https://docs.python.org/3/library/functions.html#staticmethod" class="intersphinx-link">staticmethod</a><br />
+    <span class="py-keyword">def</span> <span class="py-defname">sum</span><span class="function-signature">(terms: <code><a href="https://docs.python.org/3/library/typing.html#typing.Iterable" class="intersphinx-link">Iterable</a>[<wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr>mip.Var, <wbr></wbr>mip.LinExpr]]</code>) -&gt; <code>mip.LinExpr</code></span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L464">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#sum" title="halfspace.model.Model.sum">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Create a linear expression from a summation.</p></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="halfspace.model.Model.__init__">
+    
+  </a>
+  <a name="__init__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span> <span class="py-defname">__init__</span><span class="function-signature">(self, minimize: <code><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a></code> = <a href="https://docs.python.org/3/library/constants.html#True" class="intersphinx-link">True</a>, max_gap: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code> = 0.0001, max_gap_abs: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code> = 0.0001, infeasibility_tol: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code> = 0.0001, step_size: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code> = 1e-06, smoothing: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code> = 0.5, solver_name: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a>]</code> = <span class="rst-variable-quote">'</span><span class="rst-variable-string">CBC</span><span class="rst-variable-quote">'</span>, log_freq: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#int" class="intersphinx-link">int</a>]</code> = 1)</span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L17">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#__init__" title="halfspace.model.Model.__init__">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Model constructor.</p><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">minimize:</span><code><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a></code></td><td class="fieldArgDesc">bool, default=`True`
+Whether the objective should be minimized. If <code><a href="https://docs.python.org/3/library/constants.html#False" class="intersphinx-link">False</a></code>, the objective will be maximized - note that in
+this case the objective must concave, not convex.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">max<wbr></wbr>_gap:</span><code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code></td><td class="fieldArgDesc">float, default=1e-4
+The maximum relative optimality gap allowed before the search is terminated.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">max<wbr></wbr>_gap<wbr></wbr>_abs:</span><code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code></td><td class="fieldArgDesc">float, default=1e-4
+The maximum absolute optimality gap allowed before the search is terminated.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">infeasibility<wbr></wbr>_tol:</span><code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code></td><td class="fieldArgDesc">float, default=1e-4
+The maximum allowed constraint violation permitted for a solution to be considered feasible.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">step<wbr></wbr>_size:</span><code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code></td><td class="fieldArgDesc">float, default=1e-6
+The step size used to numerically evaluate gradients using the central finite difference method. Only
+used when a function for analytically computing the gradient is not provided.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">smoothing:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code></td><td class="fieldArgDesc">float, default=.5
+The smoothing parameter used to update the query point. If <code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, the query point will not be updated.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">solver<wbr></wbr>_name:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a>]</code></td><td class="fieldArgDesc">str or <code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, default=`None`
+The MIP solver to use. Valid options are 'CBC' and 'GUROBI'. Note that 'GUROBI' requires a license.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">log<wbr></wbr>_freq:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#int" class="intersphinx-link">int</a>]</code></td><td class="fieldArgDesc">int or <code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, default = 1
+The frequency with which logs are</td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="halfspace.model.Model.add_linear_constr">
+    
+  </a>
+  <a name="add_linear_constr">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span> <span class="py-defname">add_linear_constr</span><span class="function-signature">(self, constraint: <code>mip.LinExpr</code>, name: <code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code> = <span class="rst-variable-quote">'</span><span class="rst-variable-string"></span><span class="rst-variable-quote">'</span>) -&gt; <code>mip.Constr</code></span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L141">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#add_linear_constr" title="halfspace.model.Model.add_linear_constr">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Add a linear constraint to the model.</p>
+<dl class="rst-docutils">
+<dt>Returns: mip.Constr</dt>
+<dd>The constraint expression.</dd>
+</dl>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">constraint:</span><code>mip.LinExpr</code></td><td class="fieldArgDesc">mip.LinExpr
+The linear constraint.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">name:</span><code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code></td><td class="fieldArgDesc">str, default=''
+The name of the constraint.</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code>mip.Constr</code></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="halfspace.model.Model.add_nonlinear_constr">
+    
+  </a>
+  <a name="add_nonlinear_constr">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span> <span class="py-defname">add_nonlinear_constr</span><span class="function-signature">(self, var: <code><a href="halfspace.convex_term.html#Var" class="internal-link" title="halfspace.convex_term.Var">Var</a></code>, func: <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Func" class="internal-link" title="halfspace.convex_term.Func">Func</a>, <wbr></wbr><a href="halfspace.convex_term.html#FuncWithGrad" class="internal-link" title="halfspace.convex_term.FuncWithGrad">FuncWithGrad</a>]</code>, grad: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Grad" class="internal-link" title="halfspace.convex_term.Grad">Grad</a>, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a>]]</code> = <a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a>, name: <code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code> = <span class="rst-variable-quote">'</span><span class="rst-variable-string"></span><span class="rst-variable-quote">'</span>) -&gt; <code><a href="halfspace.convex_term.ConvexTerm.html" class="internal-link" title="halfspace.convex_term.ConvexTerm">ConvexTerm</a></code></span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L155">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#add_nonlinear_constr" title="halfspace.model.Model.add_nonlinear_constr">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Add a nonlinear constraint to the model.</p>
+<dl class="rst-docutils">
+<dt>Returns: ConvexTerm</dt>
+<dd>The convex term representing the constraint.</dd>
+</dl>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">var:</span><code><a href="halfspace.convex_term.html#Var" class="internal-link" title="halfspace.convex_term.Var">Var</a></code></td><td class="fieldArgDesc">mip.Var or iterable of mip.Var or mip.LinExprTensor
+The variable(s) included in the term. This can be provided in the form of a single  variable, an
+iterable of multiple variables or a variable tensor.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">func:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Func" class="internal-link" title="halfspace.convex_term.Func">Func</a>, <wbr></wbr><a href="halfspace.convex_term.html#FuncWithGrad" class="internal-link" title="halfspace.convex_term.FuncWithGrad">FuncWithGrad</a>]</code></td><td class="fieldArgDesc">callable
+A function for computing the term's value. This function should except one argument for each
+variable in <code>var</code>. If <code>var</code> is a variable tensor, then the function should accept a single array.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">grad:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Grad" class="internal-link" title="halfspace.convex_term.Grad">Grad</a>, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a>]]</code></td><td class="fieldArgDesc">callable or bool, default=`None`
+A function for computing the term's gradient. This function should except one argument for each
+variable in <code>var</code>. If <code>var</code> is a variable tensor, then the function should accept a single array. If
+<code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, then the gradient is approximated numerically using the central finite difference method. If
+<code>grad</code> is instead a Boolean and is <code><a href="https://docs.python.org/3/library/constants.html#True" class="intersphinx-link">True</a></code>, then <code>func</code> is assumed to return a tuple where the first
+element is the function value and the second element is the gradient. This is useful when the gradient
+is expensive to compute.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">name:</span><code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code></td><td class="fieldArgDesc">str, default=''
+The name of the constraint.</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code><a href="halfspace.convex_term.ConvexTerm.html" class="internal-link" title="halfspace.convex_term.ConvexTerm">ConvexTerm</a></code></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="halfspace.model.Model.add_objective_term">
+    
+  </a>
+  <a name="add_objective_term">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span> <span class="py-defname">add_objective_term</span><span class="function-signature">(self, var: <code><a href="halfspace.convex_term.html#Var" class="internal-link" title="halfspace.convex_term.Var">Var</a></code>, func: <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Func" class="internal-link" title="halfspace.convex_term.Func">Func</a>, <wbr></wbr><a href="halfspace.convex_term.html#FuncWithGrad" class="internal-link" title="halfspace.convex_term.FuncWithGrad">FuncWithGrad</a>]</code>, grad: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Grad" class="internal-link" title="halfspace.convex_term.Grad">Grad</a>, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a>]]</code> = <a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a>, name: <code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code> = <span class="rst-variable-quote">'</span><span class="rst-variable-string"></span><span class="rst-variable-quote">'</span>) -&gt; <code><a href="halfspace.convex_term.ConvexTerm.html" class="internal-link" title="halfspace.convex_term.ConvexTerm">ConvexTerm</a></code></span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L194">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#add_objective_term" title="halfspace.model.Model.add_objective_term">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Add an objective term to the model.</p>
+<dl class="rst-docutils">
+<dt>Returns: ConvexTerm</dt>
+<dd>The objective term.</dd>
+</dl>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">var:</span><code><a href="halfspace.convex_term.html#Var" class="internal-link" title="halfspace.convex_term.Var">Var</a></code></td><td class="fieldArgDesc">mip.Var or iterable of mip.Var or mip.LinExprTensor
+The variable(s) included in the term. This can be provided in the form of a single  variable, an
+iterable of multiple variables or a variable tensor.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">func:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Func" class="internal-link" title="halfspace.convex_term.Func">Func</a>, <wbr></wbr><a href="halfspace.convex_term.html#FuncWithGrad" class="internal-link" title="halfspace.convex_term.FuncWithGrad">FuncWithGrad</a>]</code></td><td class="fieldArgDesc">callable
+A function for computing the term's value. This function should except one argument for each
+variable in <code>var</code>. If <code>var</code> is a variable tensor, then the function should accept a single array.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">grad:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Grad" class="internal-link" title="halfspace.convex_term.Grad">Grad</a>, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a>]]</code></td><td class="fieldArgDesc">callable or bool, default=`None`
+A function for computing the term's gradient. This function should except one argument for each
+variable in <code>var</code>. If <code>var</code> is a variable tensor, then the function should accept a single array. If
+<code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, then the gradient is approximated numerically using the central finite difference method. If
+<code>grad</code> is instead a Boolean and is <code><a href="https://docs.python.org/3/library/constants.html#True" class="intersphinx-link">True</a></code>, then <code>func</code> is assumed to return a tuple where the first
+element is the function value and the second element is the gradient. This is useful when the gradient
+is expensive to compute.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">name:</span><code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code></td><td class="fieldArgDesc">str, default=''
+The name of the term.</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code><a href="halfspace.convex_term.ConvexTerm.html" class="internal-link" title="halfspace.convex_term.ConvexTerm">ConvexTerm</a></code></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="halfspace.model.Model.add_var">
+    
+  </a>
+  <a name="add_var">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span> <span class="py-defname">add_var</span><span class="function-signature">(self, lb: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code> = <a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a>, ub: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code> = <a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a>, var_type: <code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code> = mip.CONTINUOUS, name: <code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code> = <span class="rst-variable-quote">'</span><span class="rst-variable-string"></span><span class="rst-variable-quote">'</span>) -&gt; <code>mip.Var</code></span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L78">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#add_var" title="halfspace.model.Model.add_var">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Add a decision variable to the model.</p>
+<dl class="rst-docutils">
+<dt>Returns: mip.Var</dt>
+<dd>The decision variable.</dd>
+</dl>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">lb:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code></td><td class="fieldArgDesc">float, default=`None`
+The lower bound for the decision variable. Must be finite and less than the upper bound. Cannot be
+<code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code> if <code>var_type</code> is 'C' or 'I'.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">ub:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code></td><td class="fieldArgDesc">float, default=`None`
+The upper bound for the decision variable. Must be finite and greater than the lower bound. Cannot be
+<code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code> if <code>var_type</code> is 'C' or 'I'.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">var<wbr></wbr>_type:</span><code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code></td><td class="fieldArgDesc">str, default='C'
+The variable type. Valid options are 'C' (continuous), 'I' (integer) and 'B' (binary).</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">name:</span><code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code></td><td class="fieldArgDesc">str, default=''
+The name of the decision variable.</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code>mip.Var</code></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="halfspace.model.Model.add_var_tensor">
+    
+  </a>
+  <a name="add_var_tensor">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span> <span class="py-defname">add_var_tensor</span><span class="function-signature">(self, shape: <code><a href="https://docs.python.org/3/library/stdtypes.html#tuple" class="intersphinx-link">tuple</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#int" class="intersphinx-link">int</a>, <wbr></wbr><span class="rst-variable-ellipsis">...</span>]</code>, lb: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code> = <a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a>, ub: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code> = <a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a>, var_type: <code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code> = mip.CONTINUOUS, name: <code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code> = <span class="rst-variable-quote">'</span><span class="rst-variable-string"></span><span class="rst-variable-quote">'</span>) -&gt; <code>mip.LinExprTensor</code></span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L105">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#add_var_tensor" title="halfspace.model.Model.add_var_tensor">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Add a tensor of decision variables to the model.</p>
+<dl class="rst-docutils">
+<dt>Returns: mip.LinExprTensor</dt>
+<dd>The tensor of decision variables.</dd>
+</dl>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">shape:</span><code><a href="https://docs.python.org/3/library/stdtypes.html#tuple" class="intersphinx-link">tuple</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#int" class="intersphinx-link">int</a>, <wbr></wbr><span class="rst-variable-ellipsis">...</span>]</code></td><td class="fieldArgDesc">tuple of int
+The shape of the tensor.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">lb:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code></td><td class="fieldArgDesc">float
+The lower bound for the decision variables. Must be finite and less than the upper bound. Cannot be
+<code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code> if <code>var_type</code> is 'C' or 'I'.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">ub:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code></td><td class="fieldArgDesc">float
+The upper bound for the decision variables. Must be finite and greater than the lower bound. Cannot be
+<code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code> if <code>var_type</code> is 'C' or 'I'.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">var<wbr></wbr>_type:</span><code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code></td><td class="fieldArgDesc">str, default='C'
+The variable type. Valid options are 'C' (continuous), 'I' (integer) and 'B' (binary).</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">name:</span><code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code></td><td class="fieldArgDesc">str, default=''
+The name of the decision variable.</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code>mip.LinExprTensor</code></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="halfspace.model.Model.optimize">
+    
+  </a>
+  <a name="optimize">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span> <span class="py-defname">optimize</span><span class="function-signature">(self, max_iters: <code><a href="https://docs.python.org/3/library/functions.html#int" class="intersphinx-link">int</a></code> = 100, max_iters_no_improvement: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#int" class="intersphinx-link">int</a>]</code> = <a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a>, max_seconds_per_iter: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code> = <a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a>) -&gt; <code>mip.OptimizationStatus</code></span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L233">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#optimize" title="halfspace.model.Model.optimize">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Optimize the model.</p>
+<dl class="rst-docutils">
+<dt>Returns: mip.OptimizationStatus</dt>
+<dd>The status of the search.</dd>
+</dl>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">max<wbr></wbr>_iters:</span><code><a href="https://docs.python.org/3/library/functions.html#int" class="intersphinx-link">int</a></code></td><td class="fieldArgDesc">int, default=100
+The maximum number of iterations to run the search for.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">max<wbr></wbr>_iters<wbr></wbr>_no<wbr></wbr>_improvement:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#int" class="intersphinx-link">int</a>]</code></td><td class="fieldArgDesc">int or <code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, default=`None`
+The maximum number of iterations to continue the search without improvement in the objective value,
+once a feasible solution has been found. If <code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, then the search will continue until <code>max_iters</code>
+regardless of lack of improvement in the objective value.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">max<wbr></wbr>_seconds<wbr></wbr>_per<wbr></wbr>_iter:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code></td><td class="fieldArgDesc">float or <code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, default=`None`
+The maximum number of seconds allow the MIP solver to run for each iteration. If <code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, then the
+MIP solver will run until its convergence criteria are met.</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code>mip.OptimizationStatus</code></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="halfspace.model.Model.reset">
+    
+  </a>
+  <a name="reset">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span> <span class="py-defname">reset</span><span class="function-signature">(self)</span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L61">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#reset" title="halfspace.model.Model.reset">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Reset the model.</p></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="halfspace.model.Model.start.setter">
+    
+  </a>
+  <a name="start.setter">
+    
+  </a>
+  <div class="functionHeader">
+    
+    @<a href="#start.setter" class="internal-link" title="halfspace.model.Model.start.setter">start.setter</a><br />
+    <span class="py-keyword">def</span> <span class="py-defname">start</span><span class="function-signature">(self, value: <code><a href="halfspace.model.html#Start" class="internal-link" title="halfspace.model.Start">Start</a></code>)</span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L420">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#start.setter" title="halfspace.model.Model.start.setter">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Set the starting solution or partial solution, provided as tuple of (variable, value) pairs.</p></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="halfspace.model.Model.var_by_name">
+    
+  </a>
+  <a name="var_by_name">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span> <span class="py-defname">var_by_name</span><span class="function-signature">(self, name: <code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code>) -&gt; <code>mip.Var</code></span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L368">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#var_by_name" title="halfspace.model.Model.var_by_name">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Get a variable by name.</p></div>
+  </div>
+</div><div class="basemethod">
+  
+  
+  <a name="halfspace.model.Model.var_value">
+    
+  </a>
+  <a name="var_value">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span> <span class="py-defname">var_value</span><span class="function-signature">(self, x: <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr>mip.Var, <wbr></wbr>mip.LinExprTensor, <wbr></wbr><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a>]</code>) -&gt; <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr>np.ndarray]</code></span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L372">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#var_value" title="halfspace.model.Model.var_value">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>Get the value one or more decision variables corresponding to the best solution.</p>
+<dl class="rst-docutils">
+<dt>Returns: float or np.ndarray</dt>
+<dd>The value(s) of the variable(s).</dd>
+</dl>
+<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">x:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr>mip.Var, <wbr></wbr>mip.LinExprTensor, <wbr></wbr><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a>]</code></td><td class="fieldArgDesc">mip.Var or mip.LinExprTensor or str
+The variable(s) to get the value of. This can be provided as a single variable, a tensor of variables
+or the name of a variable.</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr>np.ndarray]</code></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table></div>
+  </div>
+</div><div class="baseinstancevariable">
+  
+  
+  <a name="halfspace.model.Model.infeasibility_tol">
+    
+  </a>
+  <a name="infeasibility_tol">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">infeasibility_tol</span> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L53">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#infeasibility_tol" title="halfspace.model.Model.infeasibility_tol">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable">
+  
+  
+  <a name="halfspace.model.Model.log_freq">
+    
+  </a>
+  <a name="log_freq">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">log_freq</span> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L57">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#log_freq" title="halfspace.model.Model.log_freq">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable">
+  
+  
+  <a name="halfspace.model.Model.max_gap">
+    
+  </a>
+  <a name="max_gap">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">max_gap</span> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L51">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#max_gap" title="halfspace.model.Model.max_gap">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable">
+  
+  
+  <a name="halfspace.model.Model.max_gap_abs">
+    
+  </a>
+  <a name="max_gap_abs">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">max_gap_abs</span> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L52">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#max_gap_abs" title="halfspace.model.Model.max_gap_abs">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable">
+  
+  
+  <a name="halfspace.model.Model.minimize">
+    
+  </a>
+  <a name="minimize">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">minimize</span> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L50">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#minimize" title="halfspace.model.Model.minimize">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable">
+  
+  
+  <a name="halfspace.model.Model.smoothing">
+    
+  </a>
+  <a name="smoothing">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">smoothing</span> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L55">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#smoothing" title="halfspace.model.Model.smoothing">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable">
+  
+  
+  <a name="halfspace.model.Model.solver_name">
+    
+  </a>
+  <a name="solver_name">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">solver_name</span> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L56">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#solver_name" title="halfspace.model.Model.solver_name">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable">
+  
+  
+  <a name="halfspace.model.Model.step_size">
+    
+  </a>
+  <a name="step_size">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">step_size</span> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L54">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#step_size" title="halfspace.model.Model.step_size">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseproperty">
+  
+  
+  <a name="halfspace.model.Model.best_bound">
+    
+  </a>
+  <a name="best_bound">
+    
+  </a>
+  <div class="functionHeader">
+    @<a href="https://docs.python.org/3/library/functions.html#property" class="intersphinx-link">property</a><br />
+    <span class="py-defname">best_bound</span>: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L437">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#best_bound" title="halfspace.model.Model.best_bound">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p>Get the best bound.</p></div>
+    
+  </div>
+</div><div class="baseproperty">
+  
+  
+  <a name="halfspace.model.Model.best_solution">
+    
+  </a>
+  <a name="best_solution">
+    
+  </a>
+  <div class="functionHeader">
+    @<a href="https://docs.python.org/3/library/functions.html#property" class="intersphinx-link">property</a><br />
+    <span class="py-defname">best_solution</span>: <code><a href="https://docs.python.org/3/library/stdtypes.html#dict" class="intersphinx-link">dict</a>[<wbr></wbr>mip.Var, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L427">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#best_solution" title="halfspace.model.Model.best_solution">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p>Get the best solution (all variables).</p></div>
+    
+  </div>
+</div><div class="baseproperty">
+  
+  
+  <a name="halfspace.model.Model.gap">
+    
+  </a>
+  <a name="gap">
+    
+  </a>
+  <div class="functionHeader">
+    @<a href="https://docs.python.org/3/library/functions.html#property" class="intersphinx-link">property</a><br />
+    <span class="py-defname">gap</span>: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L442">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#gap" title="halfspace.model.Model.gap">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p>Get the (relative) optimality gap.</p></div>
+    
+  </div>
+</div><div class="baseproperty">
+  
+  
+  <a name="halfspace.model.Model.gap_abs">
+    
+  </a>
+  <a name="gap_abs">
+    
+  </a>
+  <div class="functionHeader">
+    @<a href="https://docs.python.org/3/library/functions.html#property" class="intersphinx-link">property</a><br />
+    <span class="py-defname">gap_abs</span>: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L449">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#gap_abs" title="halfspace.model.Model.gap_abs">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p>Get the absolute optimality gap.</p></div>
+    
+  </div>
+</div><div class="baseproperty">
+  
+  
+  <a name="halfspace.model.Model.linear_constrs">
+    
+  </a>
+  <a name="linear_constrs">
+    
+  </a>
+  <div class="functionHeader">
+    @<a href="https://docs.python.org/3/library/functions.html#property" class="intersphinx-link">property</a><br />
+    <span class="py-defname">linear_constrs</span>: <code>mip.ConstrList</code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L402">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#linear_constrs" title="halfspace.model.Model.linear_constrs">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p>Get the linear constraints of the model.</p>
+<p>After the model is optimized, this will include the cuts added to the model.</p>
+</div>
+    
+  </div>
+</div><div class="baseproperty">
+  
+  
+  <a name="halfspace.model.Model.nonlinear_constrs">
+    
+  </a>
+  <a name="nonlinear_constrs">
+    
+  </a>
+  <div class="functionHeader">
+    @<a href="https://docs.python.org/3/library/functions.html#property" class="intersphinx-link">property</a><br />
+    <span class="py-defname">nonlinear_constrs</span>: <code><a href="https://docs.python.org/3/library/stdtypes.html#list" class="intersphinx-link">list</a>[<wbr></wbr><a href="halfspace.convex_term.ConvexTerm.html" class="internal-link" title="halfspace.convex_term.ConvexTerm">ConvexTerm</a>]</code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L410">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#nonlinear_constrs" title="halfspace.model.Model.nonlinear_constrs">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p>Get the nonlinear constraints of the model.</p></div>
+    
+  </div>
+</div><div class="baseproperty">
+  
+  
+  <a name="halfspace.model.Model.objective_terms">
+    
+  </a>
+  <a name="objective_terms">
+    
+  </a>
+  <div class="functionHeader">
+    @<a href="https://docs.python.org/3/library/functions.html#property" class="intersphinx-link">property</a><br />
+    <span class="py-defname">objective_terms</span>: <code><a href="https://docs.python.org/3/library/stdtypes.html#list" class="intersphinx-link">list</a>[<wbr></wbr><a href="halfspace.convex_term.ConvexTerm.html" class="internal-link" title="halfspace.convex_term.ConvexTerm">ConvexTerm</a>]</code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L397">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#objective_terms" title="halfspace.model.Model.objective_terms">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p>Get the objective terms of the model.</p></div>
+    
+  </div>
+</div><div class="baseproperty">
+  
+  
+  <a name="halfspace.model.Model.objective_value">
+    
+  </a>
+  <a name="objective_value">
+    
+  </a>
+  <div class="functionHeader">
+    @<a href="https://docs.python.org/3/library/functions.html#property" class="intersphinx-link">property</a><br />
+    <span class="py-defname">objective_value</span>: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L432">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#objective_value" title="halfspace.model.Model.objective_value">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p>Get the objective value of the best solution.</p></div>
+    
+  </div>
+</div><div class="baseproperty">
+  
+  
+  <a name="halfspace.model.Model.search_log">
+    
+  </a>
+  <a name="search_log">
+    
+  </a>
+  <div class="functionHeader">
+    @<a href="https://docs.python.org/3/library/functions.html#property" class="intersphinx-link">property</a><br />
+    <span class="py-defname">search_log</span>: <code>pd.DataFrame</code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L459">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#search_log" title="halfspace.model.Model.search_log">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p>Get the search log.</p></div>
+    
+  </div>
+</div><div class="baseproperty">
+  
+  
+  <a name="halfspace.model.Model.start">
+    
+  </a>
+  <a name="start">
+    
+  </a>
+  <div class="functionHeader">
+    @<a href="https://docs.python.org/3/library/functions.html#property" class="intersphinx-link">property</a><br />
+    <span class="py-defname">start</span>: <code><a href="halfspace.model.html#Start" class="internal-link" title="halfspace.model.Start">Start</a></code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L415">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#start" title="halfspace.model.Model.start">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p>Get the starting solution or partial solution provided.</p></div>
+    
+  </div>
+</div><div class="baseproperty">
+  
+  
+  <a name="halfspace.model.Model.status">
+    
+  </a>
+  <a name="status">
+    
+  </a>
+  <div class="functionHeader">
+    @<a href="https://docs.python.org/3/library/functions.html#property" class="intersphinx-link">property</a><br />
+    <span class="py-defname">status</span>: <code>mip.OptimizationStatus</code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L454">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#status" title="halfspace.model.Model.status">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p>Get the status of the model.</p></div>
+    
+  </div>
+</div><div class="basestaticmethod private">
+  
+  
+  <a name="halfspace.model.Model._validate_bounds">
+    
+  </a>
+  <a name="_validate_bounds">
+    
+  </a>
+  <div class="functionHeader">
+    
+    @<a href="https://docs.python.org/3/library/functions.html#staticmethod" class="intersphinx-link">staticmethod</a><br />
+    <span class="py-keyword">def</span> <span class="py-defname">_validate_bounds</span><span class="function-signature">(lb: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code>, ub: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code>, var_type: <code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code>) -&gt; <code><a href="https://docs.python.org/3/library/stdtypes.html#tuple" class="intersphinx-link">tuple</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code></span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L509">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_validate_bounds" title="halfspace.model.Model._validate_bounds">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+  </div>
+</div><div class="basemethod private">
+  
+  
+  <a name="halfspace.model.Model._validate_params">
+    
+  </a>
+  <a name="_validate_params">
+    
+  </a>
+  <div class="functionHeader">
+    
+    
+    <span class="py-keyword">def</span> <span class="py-defname">_validate_params</span><span class="function-signature">(self)</span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L469">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_validate_params" title="halfspace.model.Model._validate_params">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="halfspace.model.Model._best_bound">
+    
+  </a>
+  <a name="_best_bound">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_best_bound</span>: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L74">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_best_bound" title="halfspace.model.Model._best_bound">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="halfspace.model.Model._best_solution">
+    
+  </a>
+  <a name="_best_solution">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_best_solution</span>: <code><a href="https://docs.python.org/3/library/stdtypes.html#dict" class="intersphinx-link">dict</a>[<wbr></wbr>mip.Var, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L72">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_best_solution" title="halfspace.model.Model._best_solution">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="halfspace.model.Model._model">
+    
+  </a>
+  <a name="_model">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_model</span>: <code>mip.Model</code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L63">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_model" title="halfspace.model.Model._model">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="halfspace.model.Model._nonlinear_constrs">
+    
+  </a>
+  <a name="_nonlinear_constrs">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_nonlinear_constrs</span>: <code><a href="https://docs.python.org/3/library/stdtypes.html#list" class="intersphinx-link">list</a>[<wbr></wbr><a href="halfspace.convex_term.ConvexTerm.html" class="internal-link" title="halfspace.convex_term.ConvexTerm">ConvexTerm</a>]</code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L71">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_nonlinear_constrs" title="halfspace.model.Model._nonlinear_constrs">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="halfspace.model.Model._objective_terms">
+    
+  </a>
+  <a name="_objective_terms">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_objective_terms</span>: <code><a href="https://docs.python.org/3/library/stdtypes.html#list" class="intersphinx-link">list</a>[<wbr></wbr><a href="halfspace.convex_term.ConvexTerm.html" class="internal-link" title="halfspace.convex_term.ConvexTerm">ConvexTerm</a>]</code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L70">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_objective_terms" title="halfspace.model.Model._objective_terms">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="halfspace.model.Model._objective_value">
+    
+  </a>
+  <a name="_objective_value">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_objective_value</span>: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L73">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_objective_value" title="halfspace.model.Model._objective_value">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="halfspace.model.Model._search_log">
+    
+  </a>
+  <a name="_search_log">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_search_log</span>: <code><a href="https://docs.python.org/3/library/stdtypes.html#list" class="intersphinx-link">list</a>[<wbr></wbr><a href="https://docs.python.org/3/library/stdtypes.html#dict" class="intersphinx-link">dict</a>[<wbr></wbr><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a>, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]]</code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L76">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_search_log" title="halfspace.model.Model._search_log">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="halfspace.model.Model._start">
+    
+  </a>
+  <a name="_start">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_start</span>: <code><a href="https://docs.python.org/3/library/stdtypes.html#dict" class="intersphinx-link">dict</a>[<wbr></wbr>mip.Var, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>]</code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L69">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_start" title="halfspace.model.Model._start">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div><div class="baseinstancevariable private">
+  
+  
+  <a name="halfspace.model.Model._status">
+    
+  </a>
+  <a name="_status">
+    
+  </a>
+  <div class="functionHeader">
+    
+    <span class="py-defname">_status</span>: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr>mip.OptimizationStatus]</code> =
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/model.py#L75">
+      
+      (source)
+    </a>
+    <a class="headerLink" href="#_status" title="halfspace.model.Model._status">
+      
+      
+      ¶
+    </a>
+  </div>
+  <div class="functionBody">
+    
+    <div><p class="undocumented">Undocumented</p></div>
+    
+  </div>
+</div>
+        </div>
+      
+      </div>
+    </div>
+
+    <footer class="navbar navbar-default">
+
+  
+  <div class="container">
+    <a href="index.html">API Documentation</a> for <a href="https://github.com/joshivanhoe/halfspace" class="projecthome">halfspace</a>,
+  generated by <a href="https://github.com/twisted/pydoctor/">pydoctor</a>
+    23.9.1 at 2024-01-30 11:21:48.
+  </div>
+
+  <!-- Search related scripts needs to be loaded at the end of HTML 
+    parsing not to introduce overhead and display HTML data asap -->
+  <script src="ajax.js" type="text/javascript"></script>
+  <script src="searchlib.js" type="text/javascript"></script>
+  <script src="search.js" type="text/javascript"></script>
+
+</footer>
+  
+    <script src="pydoctor.js" type="text/javascript"></script>
+
+  </body>
+</html>
