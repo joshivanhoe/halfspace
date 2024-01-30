@@ -33,7 +33,7 @@ The modelling syntax for `halfspace` closely follows that of the `mip` module. A
 
 $$
 \begin{align}
-\min_{x,y,z} ~& (x - 1)^2 + \exp(0.2x + y) + \sum_{i=1}^5 i z_i, \newline
+\min_{x,y,z} ~& (x - 1)^2 + \exp(0.2x + y) - \sum_{i=1}^5 i z_i, \newline
 \text{s.t.}  ~& \sum_{i=1}^5 z_i \leq y, \newline
 & x^2 + y^2 \leq 1.25^2, \newline
 & x\in[0, 1], \newline
