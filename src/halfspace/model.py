@@ -228,12 +228,12 @@ class Model:
         """Optimize the model.
 
         Args:
-            max_iters: he maximum number of iterations to run the search for.
-            max_iters_no_improvement: he maximum number of iterations to continue the search without improvement in the
-            objective value, once a feasible solution has been found. If `None`, then the search will continue until
-            `max_iters` regardless of lack of improvement in the objective value.
+            max_iters: The maximum number of iterations to run the search for.
+            max_iters_no_improvement: The maximum number of iterations to continue the search without improvement in
+                the objective value, once a feasible solution has been found. If `None`, then the search will continue
+                until `max_iters` regardless of lack of improvement in the objective value.
             max_seconds_per_iter: The maximum number of seconds allow the MIP solver to run for each iteration. If
-            `None`, then the MIP solver will run until its convergence criteria are met.
+                `None`, then the MIP solver will run until its convergence criteria are met.
 
         Returns:
             The status of the search.
