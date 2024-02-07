@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 
 from halfspace import Model
-from halfspace.convex_term import Func, FuncWithGrad, Grad, ConvexTerm, QueryPoint
+from halfspace.convex_term import Func, FuncGrad, Grad, ConvexTerm, QueryPoint
 
 
 def _process_callbacks(
@@ -13,7 +13,7 @@ def _process_callbacks(
     grad: Grad,
     combine_grad: bool,
     approximate_grad: bool,
-) -> tuple[Union[Func, FuncWithGrad], Optional[Union[Grad, bool]]]:
+) -> tuple[Union[Func, FuncGrad], Optional[Union[Grad, bool]]]:
     if combine_grad and approximate_grad:
         raise ValueError
     if combine_grad:
