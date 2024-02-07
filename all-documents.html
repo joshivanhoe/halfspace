@@ -147,7 +147,7 @@
             <div class="type">Module</div>
             <div class="kind">Module</div>
             <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">No module docstring; 0/6 type alias, 1/1 class documented</span></div>
+            <div class="summary">This module implements the ConvexTerm class.</div>
           </li><li id="halfspace.model">
             
             <div class="fullName">halfspace<wbr></wbr>.model</div>
@@ -155,7 +155,7 @@
             <div class="type">Module</div>
             <div class="kind">Module</div>
             <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">No module docstring; 0/1 type alias, 1/1 class documented</span></div>
+            <div class="summary">This module implements the Model class.</div>
           </li><li id="halfspace.utils">
             
             <div class="fullName">halfspace<wbr></wbr>.utils</div>
@@ -196,10 +196,10 @@
             <div class="kind">Type Alias</div>
             <div class="privacy">PUBLIC</div>
             <div class="summary"><span class="undocumented">Undocumented</span></div>
-          </li><li id="halfspace.convex_term.FuncWithGrad">
+          </li><li id="halfspace.convex_term.FuncGrad">
             
-            <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Func<wbr></wbr>With<wbr></wbr>Grad</div>
-            <div class="url">halfspace.convex_term.html#FuncWithGrad</div>
+            <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Func<wbr></wbr>Grad</div>
+            <div class="url">halfspace.convex_term.html#FuncGrad</div>
             <div class="type">Attribute</div>
             <div class="kind">Type Alias</div>
             <div class="privacy">PUBLIC</div>
@@ -220,6 +220,46 @@
             <div class="kind">Class</div>
             <div class="privacy">PUBLIC</div>
             <div class="summary">Convex term model used for generating cutting planes.</div>
+          </li><li id="halfspace.convex_term.ConvexTerm.var">
+            
+            <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Convex<wbr></wbr>Term<wbr></wbr>.var</div>
+            <div class="url">halfspace.convex_term.ConvexTerm.html#var</div>
+            <div class="type">Attribute</div>
+            <div class="kind">Instance Variable</div>
+            <div class="privacy">PUBLIC</div>
+            <div class="summary">The variable(s) included in the term. This can be provided in the form of a single  variable, an iterable of multiple variables or a variable tensor.</div>
+          </li><li id="halfspace.convex_term.ConvexTerm.func">
+            
+            <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Convex<wbr></wbr>Term<wbr></wbr>.func</div>
+            <div class="url">halfspace.convex_term.ConvexTerm.html#func</div>
+            <div class="type">Attribute</div>
+            <div class="kind">Instance Variable</div>
+            <div class="privacy">PUBLIC</div>
+            <div class="summary">A function for computing the term's value. This function should except one argument for each variable in <code><a href="halfspace.convex_term.ConvexTerm.html#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code>. If <code><a href="halfspace.convex_term.ConvexTerm.html#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code> is a variable tensor, then the function should accept a single array.</div>
+          </li><li id="halfspace.convex_term.ConvexTerm.grad">
+            
+            <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Convex<wbr></wbr>Term<wbr></wbr>.grad</div>
+            <div class="url">halfspace.convex_term.ConvexTerm.html#grad</div>
+            <div class="type">Attribute</div>
+            <div class="kind">Instance Variable</div>
+            <div class="privacy">PUBLIC</div>
+            <div class="summary">A function for computing the term's gradient. This function should except one argument for each variable in <code><a href="halfspace.convex_term.ConvexTerm.html#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code>. If <code><a href="halfspace.convex_term.ConvexTerm.html#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code> is a variable tensor, then the function should accept a single array. If <code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, then the gradient is approximated numerically using the central finite difference method...</div>
+          </li><li id="halfspace.convex_term.ConvexTerm.step_size">
+            
+            <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Convex<wbr></wbr>Term<wbr></wbr>.step<wbr></wbr>_size</div>
+            <div class="url">halfspace.convex_term.ConvexTerm.html#step_size</div>
+            <div class="type">Attribute</div>
+            <div class="kind">Instance Variable</div>
+            <div class="privacy">PUBLIC</div>
+            <div class="summary">The step size used for numerical gradient approximation. If <code><a href="halfspace.convex_term.ConvexTerm.html#grad" class="internal-link" title="halfspace.convex_term.ConvexTerm.grad">grad</a></code> is provided, then this argument is ignored.</div>
+          </li><li id="halfspace.convex_term.ConvexTerm.name">
+            
+            <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Convex<wbr></wbr>Term<wbr></wbr>.name</div>
+            <div class="url">halfspace.convex_term.ConvexTerm.html#name</div>
+            <div class="type">Attribute</div>
+            <div class="kind">Instance Variable</div>
+            <div class="privacy">PUBLIC</div>
+            <div class="summary">The name for the term.</div>
           </li><li id="halfspace.convex_term.ConvexTerm.__init__">
             
             <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Convex<wbr></wbr>Term<wbr></wbr>.__init__</div>
@@ -228,46 +268,6 @@
             <div class="kind">Method</div>
             <div class="privacy">PUBLIC</div>
             <div class="summary">Convex term constructor.</div>
-          </li><li id="halfspace.convex_term.ConvexTerm.var">
-            
-            <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Convex<wbr></wbr>Term<wbr></wbr>.var</div>
-            <div class="url">halfspace.convex_term.ConvexTerm.html#var</div>
-            <div class="type">Attribute</div>
-            <div class="kind">Instance Variable</div>
-            <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">Undocumented</span></div>
-          </li><li id="halfspace.convex_term.ConvexTerm.func">
-            
-            <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Convex<wbr></wbr>Term<wbr></wbr>.func</div>
-            <div class="url">halfspace.convex_term.ConvexTerm.html#func</div>
-            <div class="type">Attribute</div>
-            <div class="kind">Instance Variable</div>
-            <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">Undocumented</span></div>
-          </li><li id="halfspace.convex_term.ConvexTerm.grad">
-            
-            <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Convex<wbr></wbr>Term<wbr></wbr>.grad</div>
-            <div class="url">halfspace.convex_term.ConvexTerm.html#grad</div>
-            <div class="type">Attribute</div>
-            <div class="kind">Instance Variable</div>
-            <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">Undocumented</span></div>
-          </li><li id="halfspace.convex_term.ConvexTerm.step_size">
-            
-            <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Convex<wbr></wbr>Term<wbr></wbr>.step<wbr></wbr>_size</div>
-            <div class="url">halfspace.convex_term.ConvexTerm.html#step_size</div>
-            <div class="type">Attribute</div>
-            <div class="kind">Instance Variable</div>
-            <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">Undocumented</span></div>
-          </li><li id="halfspace.convex_term.ConvexTerm.name">
-            
-            <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Convex<wbr></wbr>Term<wbr></wbr>.name</div>
-            <div class="url">halfspace.convex_term.ConvexTerm.html#name</div>
-            <div class="type">Attribute</div>
-            <div class="kind">Instance Variable</div>
-            <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">Undocumented</span></div>
           </li><li id="halfspace.convex_term.ConvexTerm.__call__">
             
             <div class="fullName">halfspace<wbr></wbr>.convex<wbr></wbr>_term<wbr></wbr>.<wbr></wbr>Convex<wbr></wbr>Term<wbr></wbr>.__call__</div>
@@ -364,14 +364,6 @@
             <div class="kind">Class</div>
             <div class="privacy">PUBLIC</div>
             <div class="summary">Mixed-integer convex optimization model.</div>
-          </li><li id="halfspace.model.Model.__init__">
-            
-            <div class="fullName">halfspace<wbr></wbr>.model<wbr></wbr>.<wbr></wbr>Model<wbr></wbr>.__init__</div>
-            <div class="url">halfspace.model.Model.html#__init__</div>
-            <div class="type">Function</div>
-            <div class="kind">Method</div>
-            <div class="privacy">PUBLIC</div>
-            <div class="summary">Model constructor.</div>
           </li><li id="halfspace.model.Model.minimize">
             
             <div class="fullName">halfspace<wbr></wbr>.model<wbr></wbr>.<wbr></wbr>Model<wbr></wbr>.minimize</div>
@@ -379,7 +371,7 @@
             <div class="type">Attribute</div>
             <div class="kind">Instance Variable</div>
             <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">Undocumented</span></div>
+            <div class="summary">Whether the objective should be minimized. If <code><a href="https://docs.python.org/3/library/constants.html#False" class="intersphinx-link">False</a></code>, the objective will be maximized - note that in this case the objective must concave, not convex.</div>
           </li><li id="halfspace.model.Model.max_gap">
             
             <div class="fullName">halfspace<wbr></wbr>.model<wbr></wbr>.<wbr></wbr>Model<wbr></wbr>.max<wbr></wbr>_gap</div>
@@ -387,7 +379,7 @@
             <div class="type">Attribute</div>
             <div class="kind">Instance Variable</div>
             <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">Undocumented</span></div>
+            <div class="summary">The maximum relative optimality gap allowed before the search is terminated.</div>
           </li><li id="halfspace.model.Model.max_gap_abs">
             
             <div class="fullName">halfspace<wbr></wbr>.model<wbr></wbr>.<wbr></wbr>Model<wbr></wbr>.max<wbr></wbr>_gap<wbr></wbr>_abs</div>
@@ -395,7 +387,7 @@
             <div class="type">Attribute</div>
             <div class="kind">Instance Variable</div>
             <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">Undocumented</span></div>
+            <div class="summary">The maximum absolute optimality gap allowed before the search is terminated.</div>
           </li><li id="halfspace.model.Model.infeasibility_tol">
             
             <div class="fullName">halfspace<wbr></wbr>.model<wbr></wbr>.<wbr></wbr>Model<wbr></wbr>.infeasibility<wbr></wbr>_tol</div>
@@ -403,7 +395,7 @@
             <div class="type">Attribute</div>
             <div class="kind">Instance Variable</div>
             <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">Undocumented</span></div>
+            <div class="summary">The maximum allowed constraint violation permitted for a solution to be considered feasible.</div>
           </li><li id="halfspace.model.Model.step_size">
             
             <div class="fullName">halfspace<wbr></wbr>.model<wbr></wbr>.<wbr></wbr>Model<wbr></wbr>.step<wbr></wbr>_size</div>
@@ -411,7 +403,7 @@
             <div class="type">Attribute</div>
             <div class="kind">Instance Variable</div>
             <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">Undocumented</span></div>
+            <div class="summary">The step size used to numerically evaluate gradients using the central finite difference method. Only used when a function for analytically computing the gradient is not provided.</div>
           </li><li id="halfspace.model.Model.smoothing">
             
             <div class="fullName">halfspace<wbr></wbr>.model<wbr></wbr>.<wbr></wbr>Model<wbr></wbr>.smoothing</div>
@@ -419,7 +411,7 @@
             <div class="type">Attribute</div>
             <div class="kind">Instance Variable</div>
             <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">Undocumented</span></div>
+            <div class="summary">The smoothing parameter used to update the query point. If <code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, the query point will not be updated.</div>
           </li><li id="halfspace.model.Model.solver_name">
             
             <div class="fullName">halfspace<wbr></wbr>.model<wbr></wbr>.<wbr></wbr>Model<wbr></wbr>.solver<wbr></wbr>_name</div>
@@ -427,7 +419,7 @@
             <div class="type">Attribute</div>
             <div class="kind">Instance Variable</div>
             <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">Undocumented</span></div>
+            <div class="summary">The MIP solver to use. Valid options are 'CBC' and 'GUROBI'. Note that 'GUROBI' requires a license.</div>
           </li><li id="halfspace.model.Model.log_freq">
             
             <div class="fullName">halfspace<wbr></wbr>.model<wbr></wbr>.<wbr></wbr>Model<wbr></wbr>.log<wbr></wbr>_freq</div>
@@ -435,7 +427,15 @@
             <div class="type">Attribute</div>
             <div class="kind">Instance Variable</div>
             <div class="privacy">PUBLIC</div>
-            <div class="summary"><span class="undocumented">Undocumented</span></div>
+            <div class="summary">The frequency with which logs are</div>
+          </li><li id="halfspace.model.Model.__init__">
+            
+            <div class="fullName">halfspace<wbr></wbr>.model<wbr></wbr>.<wbr></wbr>Model<wbr></wbr>.__init__</div>
+            <div class="url">halfspace.model.Model.html#__init__</div>
+            <div class="type">Function</div>
+            <div class="kind">Method</div>
+            <div class="privacy">PUBLIC</div>
+            <div class="summary">Optimization model constructor.</div>
           </li><li id="halfspace.model.Model.reset">
             
             <div class="fullName">halfspace<wbr></wbr>.model<wbr></wbr>.<wbr></wbr>Model<wbr></wbr>.reset</div>

@@ -357,7 +357,7 @@
         
 
         
-            <div class="itemName"><code><a href="halfspace.convex_term.html#FuncWithGrad" class="internal-link" title="halfspace.convex_term.FuncWithGrad"><wbr></wbr>Func<wbr></wbr>With<wbr></wbr>Grad</a></code>
+            <div class="itemName"><code><a href="halfspace.convex_term.html#FuncGrad" class="internal-link" title="halfspace.convex_term.FuncGrad"><wbr></wbr>Func<wbr></wbr>Grad</a></code>
             </div>
         
 
@@ -437,7 +437,7 @@
         </div>
 
         <div class="extrasDocstring">
-          <p class="class-signature"><code><span class="py-keyword">class</span> <span class="py-defname">ConvexTerm</span>: <a href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L14" class="sourceLink">(source)</a></code></p><p>Constructor: <code><a href="#__init__" class="internal-link" title="halfspace.convex_term.ConvexTerm.__init__">ConvexTerm(var, func, grad, step_size, name)</a></code></p>
+          <p class="class-signature"><code><span class="py-keyword">class</span> <span class="py-defname">ConvexTerm</span>: <a href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L20" class="sourceLink">(source)</a></code></p><p>Constructor: <code><a href="#__init__" class="internal-link" title="halfspace.convex_term.ConvexTerm.__init__">ConvexTerm(var, func, grad, step_size, name)</a></code></p>
           <p><a href="classIndex.html#halfspace.convex_term.ConvexTerm">View In Hierarchy</a></p>
         </div>
 
@@ -468,27 +468,27 @@
     
     <td>Instance Variable</td>
     <td><code><a href="#func" class="internal-link" title="halfspace.convex_term.ConvexTerm.func">func</a></code></td>
-    <td><span class="undocumented">Undocumented</span></td>
+    <td>A function for computing the term's value. This function should except one argument for each variable in <code><a href="halfspace.convex_term.ConvexTerm.html#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code>. If <code><a href="halfspace.convex_term.ConvexTerm.html#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code> is a variable tensor, then the function should accept a single array.</td>
   </tr><tr class="instancevariable">
     
     <td>Instance Variable</td>
     <td><code><a href="#grad" class="internal-link" title="halfspace.convex_term.ConvexTerm.grad">grad</a></code></td>
-    <td><span class="undocumented">Undocumented</span></td>
+    <td>A function for computing the term's gradient. This function should except one argument for each variable in <code><a href="halfspace.convex_term.ConvexTerm.html#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code>. If <code><a href="halfspace.convex_term.ConvexTerm.html#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code> is a variable tensor, then the function should accept a single array. If <code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, then the gradient is approximated numerically using the central finite difference method...</td>
   </tr><tr class="instancevariable">
     
     <td>Instance Variable</td>
     <td><code><a href="#name" class="internal-link" title="halfspace.convex_term.ConvexTerm.name">name</a></code></td>
-    <td><span class="undocumented">Undocumented</span></td>
+    <td>The name for the term.</td>
   </tr><tr class="instancevariable">
     
     <td>Instance Variable</td>
     <td><code><a href="#step_size" class="internal-link" title="halfspace.convex_term.ConvexTerm.step_size">step<wbr></wbr>_size</a></code></td>
-    <td><span class="undocumented">Undocumented</span></td>
+    <td>The step size used for numerical gradient approximation. If <code><a href="halfspace.convex_term.ConvexTerm.html#grad" class="internal-link" title="halfspace.convex_term.ConvexTerm.grad">grad</a></code> is provided, then this argument is ignored.</td>
   </tr><tr class="instancevariable">
     
     <td>Instance Variable</td>
     <td><code><a href="#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code></td>
-    <td><span class="undocumented">Undocumented</span></td>
+    <td>The variable(s) included in the term. This can be provided in the form of a single  variable, an iterable of multiple variables or a variable tensor.</td>
   </tr><tr class="property">
     
     <td>Property</td>
@@ -535,7 +535,7 @@
     
     
     <span class="py-keyword">def</span> <span class="py-defname">__call__</span><span class="function-signature">(self, query_point: <code><a href="halfspace.convex_term.html#QueryPoint" class="internal-link" title="halfspace.convex_term.QueryPoint">QueryPoint</a></code>, return_grad: <code><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a></code> = <a href="https://docs.python.org/3/library/constants.html#False" class="intersphinx-link">False</a>) -&gt; <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr><a href="https://docs.python.org/3/library/stdtypes.html#tuple" class="intersphinx-link">tuple</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr>np.ndarray]]]</code></span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L53">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L62">
       
       (source)
     </a>
@@ -547,16 +547,9 @@
   </div>
   <div class="docstring functionBody">
     
-    <div><p>Evaluate the term and (optionally) its gradient.</p>
-<dl class="rst-docutils">
-<dt>Returns: float or tuple of float and array</dt>
-<dd>If <code>return_grad=False</code>, then only the value of the term is returned. Conversely, if <code>return_grad=True</code>,
+    <div><p>Evaluate the term and (optionally) its gradient.</p><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">query<wbr></wbr>_point:</span><code><a href="halfspace.convex_term.html#QueryPoint" class="internal-link" title="halfspace.convex_term.QueryPoint">QueryPoint</a></code></td><td class="fieldArgDesc">The query point at which the term is evaluated.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">return<wbr></wbr>_grad:</span><code><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a></code></td><td class="fieldArgDesc">Whether to return the term's gradient.</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr><a href="https://docs.python.org/3/library/stdtypes.html#tuple" class="intersphinx-link">tuple</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr>np.ndarray]]]</code></td><td class="fieldArgDesc">If <code>return_grad=False</code>, then only the value of the term is returned. Conversely, if <code>return_grad=True</code>,
 then a tuple is returned where the first element is the term's value and the second element is the term's
-gradient.</dd>
-</dl>
-<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">query<wbr></wbr>_point:</span><code><a href="halfspace.convex_term.html#QueryPoint" class="internal-link" title="halfspace.convex_term.QueryPoint">QueryPoint</a></code></td><td class="fieldArgDesc">dict mapping mip.Var to float
-The query point at which the term is evaluated.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">return<wbr></wbr>_grad:</span><code><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a></code></td><td class="fieldArgDesc">bool, default=`False`
-Whether to return the term's gradient.</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr><a href="https://docs.python.org/3/library/stdtypes.html#tuple" class="intersphinx-link">tuple</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr>np.ndarray]]]</code></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table></div>
+gradient.</td></tr></table></div>
   </div>
 </div><div class="basemethod">
   
@@ -570,8 +563,8 @@ Whether to return the term's gradient.</td></tr><tr class="fieldStart"><td class
   <div class="functionHeader">
     
     
-    <span class="py-keyword">def</span> <span class="py-defname">__init__</span><span class="function-signature">(self, var: <code><a href="halfspace.convex_term.html#Var" class="internal-link" title="halfspace.convex_term.Var">Var</a></code>, func: <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Func" class="internal-link" title="halfspace.convex_term.Func">Func</a>, <wbr></wbr><a href="halfspace.convex_term.html#FuncWithGrad" class="internal-link" title="halfspace.convex_term.FuncWithGrad">FuncWithGrad</a>]</code>, grad: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Grad" class="internal-link" title="halfspace.convex_term.Grad">Grad</a>, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a>]]</code> = <a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a>, step_size: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code> = 1e-06, name: <code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code> = <span class="rst-variable-quote">'</span><span class="rst-variable-string"></span><span class="rst-variable-quote">'</span>)</span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L17">
+    <span class="py-keyword">def</span> <span class="py-defname">__init__</span><span class="function-signature">(self, var: <code><a href="halfspace.convex_term.html#Var" class="internal-link" title="halfspace.convex_term.Var">Var</a></code>, func: <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Func" class="internal-link" title="halfspace.convex_term.Func">Func</a>, <wbr></wbr><a href="halfspace.convex_term.html#FuncGrad" class="internal-link" title="halfspace.convex_term.FuncGrad">FuncGrad</a>]</code>, grad: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Grad" class="internal-link" title="halfspace.convex_term.Grad">Grad</a>, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a>]]</code> = <a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a>, step_size: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code> = 1e-06, name: <code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code> = <span class="rst-variable-quote">'</span><span class="rst-variable-string"></span><span class="rst-variable-quote">'</span>)</span>:
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L39">
       
       (source)
     </a>
@@ -583,20 +576,7 @@ Whether to return the term's gradient.</td></tr><tr class="fieldStart"><td class
   </div>
   <div class="docstring functionBody">
     
-    <div><p>Convex term constructor.</p><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">var:</span><code><a href="halfspace.convex_term.html#Var" class="internal-link" title="halfspace.convex_term.Var">Var</a></code></td><td class="fieldArgDesc">mip.Var or iterable of mip.Var or mip.LinExprTensor
-The variable(s) included in the term. This can be provided in the form of a single  variable, an
-iterable of multiple variables or a variable tensor.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">func:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Func" class="internal-link" title="halfspace.convex_term.Func">Func</a>, <wbr></wbr><a href="halfspace.convex_term.html#FuncWithGrad" class="internal-link" title="halfspace.convex_term.FuncWithGrad">FuncWithGrad</a>]</code></td><td class="fieldArgDesc">callable
-A function for computing the term's value. This function should except one argument for each
-variable in <code><a href="#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code>. If <code><a href="#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code> is a variable tensor, then the function should accept a single array.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">grad:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Grad" class="internal-link" title="halfspace.convex_term.Grad">Grad</a>, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a>]]</code></td><td class="fieldArgDesc">callable or bool, default=`None`
-A function for computing the term's gradient. This function should except one argument for each
-variable in <code><a href="#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code>. If <code><a href="#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code> is a variable tensor, then the function should accept a single array. If
-<code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, then the gradient is approximated numerically using the central finite difference method. If
-<code><a href="#grad" class="internal-link" title="halfspace.convex_term.ConvexTerm.grad">grad</a></code> is instead a Boolean and is <code><a href="https://docs.python.org/3/library/constants.html#True" class="intersphinx-link">True</a></code>, then <code><a href="#func" class="internal-link" title="halfspace.convex_term.ConvexTerm.func">func</a></code> is assumed to return a tuple where the first
-element is the function value and the second element is the gradient. This is useful when the gradient
-is expensive to compute.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">step<wbr></wbr>_size:</span><code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code></td><td class="fieldArgDesc">float, default=`1e-6`
-The step size used for numerical gradient approximation. If <code><a href="#grad" class="internal-link" title="halfspace.convex_term.ConvexTerm.grad">grad</a></code> is provided, then this argument is
-ignored.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">name:</span><code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code></td><td class="fieldArgDesc">str, default=''
-The name for the term.</td></tr></table></div>
+    <div><p>Convex term constructor.</p><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">var:</span><code><a href="halfspace.convex_term.html#Var" class="internal-link" title="halfspace.convex_term.Var">Var</a></code></td><td class="fieldArgDesc">The value of the <code><a href="#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code> attribute.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">func:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Func" class="internal-link" title="halfspace.convex_term.Func">Func</a>, <wbr></wbr><a href="halfspace.convex_term.html#FuncGrad" class="internal-link" title="halfspace.convex_term.FuncGrad">FuncGrad</a>]</code></td><td class="fieldArgDesc">The value of the <code><a href="#func" class="internal-link" title="halfspace.convex_term.ConvexTerm.func">func</a></code> attribute.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">grad:</span><code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Grad" class="internal-link" title="halfspace.convex_term.Grad">Grad</a>, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a>]]</code></td><td class="fieldArgDesc">The value of the <code><a href="#grad" class="internal-link" title="halfspace.convex_term.ConvexTerm.grad">grad</a></code> attribute.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">step<wbr></wbr>_size:</span><code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code></td><td class="fieldArgDesc">The value of the <code><a href="#step_size" class="internal-link" title="halfspace.convex_term.ConvexTerm.step_size">step_size</a></code> attribute. Must be positive.</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">name:</span><code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code></td><td class="fieldArgDesc">The value of the <code><a href="#name" class="internal-link" title="halfspace.convex_term.ConvexTerm.name">name</a></code> attribute.</td></tr></table></div>
   </div>
 </div><div class="basemethod">
   
@@ -611,7 +591,7 @@ The name for the term.</td></tr></table></div>
     
     
     <span class="py-keyword">def</span> <span class="py-defname">generate_cut</span><span class="function-signature">(self, query_point: <code><a href="halfspace.convex_term.html#QueryPoint" class="internal-link" title="halfspace.convex_term.QueryPoint">QueryPoint</a></code>) -&gt; <code>mip.LinExpr</code></span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L82">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L89">
       
       (source)
     </a>
@@ -623,13 +603,8 @@ The name for the term.</td></tr></table></div>
   </div>
   <div class="docstring functionBody">
     
-    <div><p>Generate a cutting plane for the term.</p>
-<dl class="rst-docutils">
-<dt>Returns: mip.LinExpr</dt>
-<dd>The linear constraint representing the cutting plane.</dd>
-</dl>
-<table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">query<wbr></wbr>_point:</span><code><a href="halfspace.convex_term.html#QueryPoint" class="internal-link" title="halfspace.convex_term.QueryPoint">QueryPoint</a></code></td><td class="fieldArgDesc">dict mapping mip.Var to float
-The query point for which the cutting plane is generated.</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code>mip.LinExpr</code></td><td class="fieldArgDesc"><span class="undocumented">Undocumented</span></td></tr></table></div>
+    <div><p>Generate a cutting plane for the term.</p><table class="fieldTable"><tr class="fieldStart"><td class="fieldName" colspan="2">Parameters</td></tr><tr><td class="fieldArgContainer"><span class="fieldArg">query<wbr></wbr>_point:</span><code><a href="halfspace.convex_term.html#QueryPoint" class="internal-link" title="halfspace.convex_term.QueryPoint">QueryPoint</a></code></td><td class="fieldArgDesc">dict mapping mip.Var to float
+The query point for which the cutting plane is generated.</td></tr><tr class="fieldStart"><td class="fieldName" colspan="2">Returns</td></tr><tr><td class="fieldArgContainer"><code>mip.LinExpr</code></td><td class="fieldArgDesc">The linear constraint representing the cutting plane.</td></tr></table></div>
   </div>
 </div><div class="baseinstancevariable">
   
@@ -643,7 +618,7 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
   <div class="functionHeader">
     
     <span class="py-defname">func</span> =
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L48">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L25">
       
       (source)
     </a>
@@ -655,7 +630,8 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
   </div>
   <div class="functionBody">
     
-    <div><p class="undocumented">Undocumented</p></div>
+    <div><p>A function for computing the term's value. This function should except one argument for each
+variable in <code><a href="#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code>. If <code><a href="#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code> is a variable tensor, then the function should accept a single array.</p></div>
     
   </div>
 </div><div class="baseinstancevariable">
@@ -670,7 +646,7 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
   <div class="functionHeader">
     
     <span class="py-defname">grad</span> =
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L49">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L27">
       
       (source)
     </a>
@@ -682,7 +658,12 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
   </div>
   <div class="functionBody">
     
-    <div><p class="undocumented">Undocumented</p></div>
+    <div><p>A function for computing the term's gradient. This function should except one argument for each
+variable in <code><a href="#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code>. If <code><a href="#var" class="internal-link" title="halfspace.convex_term.ConvexTerm.var">var</a></code> is a variable tensor, then the function should accept a single array. If
+<code><a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a></code>, then the gradient is approximated numerically using the central finite difference method. If
+<code><a href="#grad" class="internal-link" title="halfspace.convex_term.ConvexTerm.grad">grad</a></code> is instead a Boolean and is <code><a href="https://docs.python.org/3/library/constants.html#True" class="intersphinx-link">True</a></code>, then <code><a href="#func" class="internal-link" title="halfspace.convex_term.ConvexTerm.func">func</a></code> is assumed to return a tuple where the first
+element is the function value and the second element is the gradient. This is useful when the gradient
+is expensive to compute.</p></div>
     
   </div>
 </div><div class="baseinstancevariable">
@@ -697,7 +678,7 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
   <div class="functionHeader">
     
     <span class="py-defname">name</span> =
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L51">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L35">
       
       (source)
     </a>
@@ -709,7 +690,7 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
   </div>
   <div class="functionBody">
     
-    <div><p class="undocumented">Undocumented</p></div>
+    <div><p>The name for the term.</p></div>
     
   </div>
 </div><div class="baseinstancevariable">
@@ -724,7 +705,7 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
   <div class="functionHeader">
     
     <span class="py-defname">step_size</span> =
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L50">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L33">
       
       (source)
     </a>
@@ -736,7 +717,8 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
   </div>
   <div class="functionBody">
     
-    <div><p class="undocumented">Undocumented</p></div>
+    <div><p>The step size used for numerical gradient approximation. If <code><a href="#grad" class="internal-link" title="halfspace.convex_term.ConvexTerm.grad">grad</a></code> is provided, then this argument
+is ignored.</p></div>
     
   </div>
 </div><div class="baseinstancevariable">
@@ -751,7 +733,7 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
   <div class="functionHeader">
     
     <span class="py-defname">var</span> =
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L47">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L23">
       
       (source)
     </a>
@@ -763,7 +745,8 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
   </div>
   <div class="functionBody">
     
-    <div><p class="undocumented">Undocumented</p></div>
+    <div><p>The variable(s) included in the term. This can be provided in the form of a single  variable, an
+iterable of multiple variables or a variable tensor.</p></div>
     
   </div>
 </div><div class="baseproperty">
@@ -778,7 +761,7 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
   <div class="functionHeader">
     @<a href="https://docs.python.org/3/library/functions.html#property" class="intersphinx-link">property</a><br />
     <span class="py-defname">is_multivariable</span>: <code><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a></code> =
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L77">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L84">
       
       (source)
     </a>
@@ -806,7 +789,7 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
     
     
     <span class="py-keyword">def</span> <span class="py-defname">_approximate_grad</span><span class="function-signature">(self, x: <code><a href="halfspace.convex_term.html#Input" class="internal-link" title="halfspace.convex_term.Input">Input</a></code>) -&gt; <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr>np.ndarray]</code></span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L126">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L133">
       
       (source)
     </a>
@@ -833,7 +816,7 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
     
     
     <span class="py-keyword">def</span> <span class="py-defname">_evaluate_func</span><span class="function-signature">(self, x: <code><a href="halfspace.convex_term.html#Input" class="internal-link" title="halfspace.convex_term.Input">Input</a></code>) -&gt; <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr><a href="https://docs.python.org/3/library/stdtypes.html#tuple" class="intersphinx-link">tuple</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr>np.ndarray]]]</code></span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L103">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L110">
       
       (source)
     </a>
@@ -862,7 +845,7 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
     
     
     <span class="py-keyword">def</span> <span class="py-defname">_evaluate_grad</span><span class="function-signature">(self, x: <code><a href="halfspace.convex_term.html#Input" class="internal-link" title="halfspace.convex_term.Input">Input</a></code>) -&gt; <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr>np.ndarray]</code></span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L116">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L123">
       
       (source)
     </a>
@@ -889,7 +872,7 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
     
     
     <span class="py-keyword">def</span> <span class="py-defname">_get_input</span><span class="function-signature">(self, query_point: <code><a href="halfspace.convex_term.html#QueryPoint" class="internal-link" title="halfspace.convex_term.QueryPoint">QueryPoint</a></code>) -&gt; <code><a href="halfspace.convex_term.html#Input" class="internal-link" title="halfspace.convex_term.Input">Input</a></code></span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/0584530c3c821c3f42d906a677d5f49c637322fa/src/halfspace/convex_term.py#L98">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L105">
       
       (source)
     </a>
@@ -915,7 +898,7 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
   <div class="container">
     <a href="index.html">API Documentation</a> for <a href="https://github.com/joshivanhoe/halfspace" class="projecthome">halfspace</a>,
   generated by <a href="https://github.com/twisted/pydoctor/">pydoctor</a>
-    23.9.1 at 2024-01-30 11:21:48.
+    23.9.1 at 2024-02-07 11:41:02.
   </div>
 
   <!-- Search related scripts needs to be loaded at the end of HTML 
