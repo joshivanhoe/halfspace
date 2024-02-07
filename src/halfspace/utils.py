@@ -1,4 +1,7 @@
+"""Utility functions for the `halfspace` package."""
+
 import logging
+
 from typing import Union, Iterable, Optional, Any, Type
 
 
