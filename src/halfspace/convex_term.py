@@ -1,23 +1,45 @@
+"""This module implements the ConvexTerm class.
+
+It provides a modular framework for generating cutting planes.
+"""
+
 from typing import Union, Callable, Optional, Iterable
 
 import mip
 import numpy as np
 
+
 QueryPoint = dict[mip.Var, float]
 Var = Union[mip.Var, Iterable[mip.Var], mip.LinExprTensor]
 Input = Union[float, Iterable[float], np.ndarray]
 Func = Callable[[Input], float]
-FuncWithGrad = Callable[[Input], tuple[float, Union[float, np.ndarray]]]
+FuncGrad = Callable[[Input], tuple[float, Union[float, np.ndarray]]]
 Grad = Callable[[Input], Union[float, np.ndarray]]
 
 
 class ConvexTerm:
-    """Convex term model used for generating cutting planes."""
+    """Convex term model used for generating cutting planes.
+
+    Attributes:
+        var: The variable(s) included in the term. This can be provided in the form of a single  variable, an
+            iterable of multiple variables or a variable tensor.
+        func: A function for computing the term's value. This function should except one argument for each
+            variable in `var`. If `var` is a variable tensor, then the function should accept a single array.
+        grad: A function for computing the term's gradient. This function should except one argument for each
+            variable in `var`. If `var` is a variable tensor, then the function should accept a single array. If
+            `None`, then the gradient is approximated numerically using the central finite difference method. If
+            `grad` is instead a Boolean and is `True`, then `func` is assumed to return a tuple where the first
+            element is the function value and the second element is the gradient. This is useful when the gradient
+            is expensive to compute.
+        step_size: The step size used for numerical gradient approximation. If `grad` is provided, then this argument
+            is ignored.
+        name: The name for the term.
+    """
 
     def __init__(
         self,
         var: Var,
-        func: Union[Func, FuncWithGrad],
+        func: Union[Func, FuncGrad],
         grad: Optional[Union[Grad, bool]] = None,
         step_size: float = 1e-6,
         name: str = "",
@@ -25,24 +47,11 @@ class ConvexTerm:
         """Convex term constructor.
 
         Args:
-            var: mip.Var or iterable of mip.Var or mip.LinExprTensor
-                The variable(s) included in the term. This can be provided in the form of a single  variable, an
-                iterable of multiple variables or a variable tensor.
-            func: callable
-                A function for computing the term's value. This function should except one argument for each
-                variable in `var`. If `var` is a variable tensor, then the function should accept a single array.
-            grad: callable or bool, default=`None`
-                A function for computing the term's gradient. This function should except one argument for each
-                variable in `var`. If `var` is a variable tensor, then the function should accept a single array. If
-                `None`, then the gradient is approximated numerically using the central finite difference method. If
-                `grad` is instead a Boolean and is `True`, then `func` is assumed to return a tuple where the first
-                element is the function value and the second element is the gradient. This is useful when the gradient
-                is expensive to compute.
-            step_size: float, default=`1e-6`
-                The step size used for numerical gradient approximation. If `grad` is provided, then this argument is
-                ignored.
-            name: str, default=''
-                The name for the term.
+            var: The value of the `var` attribute.
+            func: The value of the `func` attribute.
+            grad: The value of the `grad` attribute.
+            step_size: The value of the `step_size` attribute. Must be positive.
+            name: The value of the `name` attribute.
         """
         self.var = var
         self.func = func
@@ -56,12 +65,10 @@ class ConvexTerm:
         """Evaluate the term and (optionally) its gradient.
 
         Args:
-            query_point: dict mapping mip.Var to float
-                The query point at which the term is evaluated.
-            return_grad: bool, default=`False`
-                Whether to return the term's gradient.
+            query_point: The query point at which the term is evaluated.
+            return_grad: Whether to return the term's gradient.
 
-        Returns: float or tuple of float and array
+        Returns:
             If `return_grad=False`, then only the value of the term is returned. Conversely, if `return_grad=True`,
             then a tuple is returned where the first element is the term's value and the second element is the term's
             gradient.
@@ -86,7 +93,7 @@ class ConvexTerm:
             query_point: dict mapping mip.Var to float
                 The query point for which the cutting plane is generated.
 
-        Returns: mip.LinExpr
+        Returns:
             The linear constraint representing the cutting plane.
         """
         fun, grad = self(query_point=query_point, return_grad=True)
