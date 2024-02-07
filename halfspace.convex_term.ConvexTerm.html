@@ -437,7 +437,7 @@
         </div>
 
         <div class="extrasDocstring">
-          <p class="class-signature"><code><span class="py-keyword">class</span> <span class="py-defname">ConvexTerm</span>: <a href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L20" class="sourceLink">(source)</a></code></p><p>Constructor: <code><a href="#__init__" class="internal-link" title="halfspace.convex_term.ConvexTerm.__init__">ConvexTerm(var, func, grad, step_size, name)</a></code></p>
+          <p class="class-signature"><code><span class="py-keyword">class</span> <span class="py-defname">ConvexTerm</span>: <a href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L20" class="sourceLink">(source)</a></code></p><p>Constructor: <code><a href="#__init__" class="internal-link" title="halfspace.convex_term.ConvexTerm.__init__">ConvexTerm(var, func, grad, step_size, name)</a></code></p>
           <p><a href="classIndex.html#halfspace.convex_term.ConvexTerm">View In Hierarchy</a></p>
         </div>
 
@@ -535,7 +535,7 @@
     
     
     <span class="py-keyword">def</span> <span class="py-defname">__call__</span><span class="function-signature">(self, query_point: <code><a href="halfspace.convex_term.html#QueryPoint" class="internal-link" title="halfspace.convex_term.QueryPoint">QueryPoint</a></code>, return_grad: <code><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a></code> = <a href="https://docs.python.org/3/library/constants.html#False" class="intersphinx-link">False</a>) -&gt; <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr><a href="https://docs.python.org/3/library/stdtypes.html#tuple" class="intersphinx-link">tuple</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr>np.ndarray]]]</code></span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L62">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L62">
       
       (source)
     </a>
@@ -564,7 +564,7 @@ gradient.</td></tr></table></div>
     
     
     <span class="py-keyword">def</span> <span class="py-defname">__init__</span><span class="function-signature">(self, var: <code><a href="halfspace.convex_term.html#Var" class="internal-link" title="halfspace.convex_term.Var">Var</a></code>, func: <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Func" class="internal-link" title="halfspace.convex_term.Func">Func</a>, <wbr></wbr><a href="halfspace.convex_term.html#FuncGrad" class="internal-link" title="halfspace.convex_term.FuncGrad">FuncGrad</a>]</code>, grad: <code><a href="https://docs.python.org/3/library/typing.html#typing.Optional" class="intersphinx-link">Optional</a>[<wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="halfspace.convex_term.html#Grad" class="internal-link" title="halfspace.convex_term.Grad">Grad</a>, <wbr></wbr><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a>]]</code> = <a href="https://docs.python.org/3/library/constants.html#None" class="intersphinx-link">None</a>, step_size: <code><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a></code> = 1e-06, name: <code><a href="https://docs.python.org/3/library/stdtypes.html#str" class="intersphinx-link">str</a></code> = <span class="rst-variable-quote">'</span><span class="rst-variable-string"></span><span class="rst-variable-quote">'</span>)</span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L39">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L39">
       
       (source)
     </a>
@@ -591,7 +591,7 @@ gradient.</td></tr></table></div>
     
     
     <span class="py-keyword">def</span> <span class="py-defname">generate_cut</span><span class="function-signature">(self, query_point: <code><a href="halfspace.convex_term.html#QueryPoint" class="internal-link" title="halfspace.convex_term.QueryPoint">QueryPoint</a></code>) -&gt; <code>mip.LinExpr</code></span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L89">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L89">
       
       (source)
     </a>
@@ -618,7 +618,7 @@ The query point for which the cutting plane is generated.</td></tr><tr class="fi
   <div class="functionHeader">
     
     <span class="py-defname">func</span> =
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L25">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L25">
       
       (source)
     </a>
@@ -646,7 +646,7 @@ variable in <code><a href="#var" class="internal-link" title="halfspace.convex_t
   <div class="functionHeader">
     
     <span class="py-defname">grad</span> =
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L27">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L27">
       
       (source)
     </a>
@@ -678,7 +678,7 @@ is expensive to compute.</p></div>
   <div class="functionHeader">
     
     <span class="py-defname">name</span> =
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L35">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L35">
       
       (source)
     </a>
@@ -705,7 +705,7 @@ is expensive to compute.</p></div>
   <div class="functionHeader">
     
     <span class="py-defname">step_size</span> =
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L33">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L33">
       
       (source)
     </a>
@@ -733,7 +733,7 @@ is ignored.</p></div>
   <div class="functionHeader">
     
     <span class="py-defname">var</span> =
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L23">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L23">
       
       (source)
     </a>
@@ -761,7 +761,7 @@ iterable of multiple variables or a variable tensor.</p></div>
   <div class="functionHeader">
     @<a href="https://docs.python.org/3/library/functions.html#property" class="intersphinx-link">property</a><br />
     <span class="py-defname">is_multivariable</span>: <code><a href="https://docs.python.org/3/library/functions.html#bool" class="intersphinx-link">bool</a></code> =
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L84">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L84">
       
       (source)
     </a>
@@ -789,7 +789,7 @@ iterable of multiple variables or a variable tensor.</p></div>
     
     
     <span class="py-keyword">def</span> <span class="py-defname">_approximate_grad</span><span class="function-signature">(self, x: <code><a href="halfspace.convex_term.html#Input" class="internal-link" title="halfspace.convex_term.Input">Input</a></code>) -&gt; <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr>np.ndarray]</code></span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L133">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L133">
       
       (source)
     </a>
@@ -816,7 +816,7 @@ iterable of multiple variables or a variable tensor.</p></div>
     
     
     <span class="py-keyword">def</span> <span class="py-defname">_evaluate_func</span><span class="function-signature">(self, x: <code><a href="halfspace.convex_term.html#Input" class="internal-link" title="halfspace.convex_term.Input">Input</a></code>) -&gt; <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr><a href="https://docs.python.org/3/library/stdtypes.html#tuple" class="intersphinx-link">tuple</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr>np.ndarray]]]</code></span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L110">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L110">
       
       (source)
     </a>
@@ -845,7 +845,7 @@ iterable of multiple variables or a variable tensor.</p></div>
     
     
     <span class="py-keyword">def</span> <span class="py-defname">_evaluate_grad</span><span class="function-signature">(self, x: <code><a href="halfspace.convex_term.html#Input" class="internal-link" title="halfspace.convex_term.Input">Input</a></code>) -&gt; <code><a href="https://docs.python.org/3/library/typing.html#typing.Union" class="intersphinx-link">Union</a>[<wbr></wbr><a href="https://docs.python.org/3/library/functions.html#float" class="intersphinx-link">float</a>, <wbr></wbr>np.ndarray]</code></span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L123">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L123">
       
       (source)
     </a>
@@ -872,7 +872,7 @@ iterable of multiple variables or a variable tensor.</p></div>
     
     
     <span class="py-keyword">def</span> <span class="py-defname">_get_input</span><span class="function-signature">(self, query_point: <code><a href="halfspace.convex_term.html#QueryPoint" class="internal-link" title="halfspace.convex_term.QueryPoint">QueryPoint</a></code>) -&gt; <code><a href="halfspace.convex_term.html#Input" class="internal-link" title="halfspace.convex_term.Input">Input</a></code></span>:
-    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f1d20b3cdb45c2c0b35bb549772b34b9fb0dcf04/src/halfspace/convex_term.py#L105">
+    <a class="sourceLink" href="https://github.com/joshivanhoe/halfspace/tree/f9d8aac28a5dc91b1eb37a6ba2f2aa17185c7cc9/src/halfspace/convex_term.py#L105">
       
       (source)
     </a>
@@ -898,7 +898,7 @@ iterable of multiple variables or a variable tensor.</p></div>
   <div class="container">
     <a href="index.html">API Documentation</a> for <a href="https://github.com/joshivanhoe/halfspace" class="projecthome">halfspace</a>,
   generated by <a href="https://github.com/twisted/pydoctor/">pydoctor</a>
-    23.9.1 at 2024-02-07 11:41:02.
+    23.9.1 at 2024-02-07 11:47:50.
   </div>
 
   <!-- Search related scripts needs to be loaded at the end of HTML 
