@@ -18,8 +18,9 @@ $$
 
 where $f_0,...,f_m$ are convex functions and $\mathcal{I}$ represents the subset of variables to which integrality constraints apply.
 It is built on top of the high-performance Python `mip` module and uses a cutting plane algorithm to solve problems to provable optimality.
-This implementation is based on the approach outlined in [Boyd & Vandenberghe (2008)](https://see.stanford.edu/materials/lsocoee364b/05-localization_methods_notes.pdf) - see Chapter 6.
+This implementation is based on the approach outlined in Chapter 6 of [Boyd & Vandenberghe (2008)](https://see.stanford.edu/materials/lsocoee364b/05-localization_methods_notes.pdf).
 
+Full API documentation can be found [here](https://joshivanhoe.github.io/halfspace/).
 
 ## Quick start
 
