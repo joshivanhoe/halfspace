@@ -1,5 +1,3 @@
-from typing import Optional
-
 import mip
 import numpy as np
 import pandas as pd
@@ -13,8 +11,8 @@ VAR_TOL: float = 1e-2
 
 def _check_solution(
     model: Model,
-    expected_objective_value: Optional[float],
-    expected_solution: Optional[dict[Var, float]],
+    expected_objective_value: float | None = None,
+    expected_solution: dict[Var, float] | None = None,
     expected_status: mip.OptimizationStatus = mip.OptimizationStatus.OPTIMAL,
 ):
     if expected_objective_value is not None:
@@ -124,12 +122,7 @@ def test_multivariable_linear_constraint_infeasible():
     )
     model.add_linear_constr(x + y >= 3)
     model.optimize()
-    _check_solution(
-        model=model,
-        expected_objective_value=None,
-        expected_solution=None,
-        expected_status=mip.OptimizationStatus.INFEASIBLE,
-    )
+    _check_solution(model=model, expected_status=mip.OptimizationStatus.INFEASIBLE)
 
 
 def test_multivariable_nonlinear_constraint():
@@ -159,9 +152,4 @@ def test_multivariable_nonlinear_constraint_infeasible():
     )
     model.add_nonlinear_constr(var=(x, y), func=lambda x, y: np.exp(x + y) + 1)
     model.optimize()
-    _check_solution(
-        model=model,
-        expected_objective_value=None,
-        expected_solution=None,
-        expected_status=mip.OptimizationStatus.INFEASIBLE,
-    )
+    _check_solution(model=model, expected_status=mip.OptimizationStatus.INFEASIBLE)

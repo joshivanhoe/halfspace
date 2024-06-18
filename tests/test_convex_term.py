@@ -1,5 +1,3 @@
-from typing import Union, Optional
-
 import mip
 import numpy as np
 import pytest
@@ -13,7 +11,7 @@ def _process_callbacks(
     grad: Grad,
     combine_grad: bool,
     approximate_grad: bool,
-) -> tuple[Union[Func, FuncGrad], Optional[Union[Grad, bool]]]:
+) -> tuple[Func | FuncGrad, Grad | bool | None]:
     if combine_grad and approximate_grad:
         raise ValueError
     if combine_grad:
@@ -30,7 +28,7 @@ def _process_callbacks(
 def _check_convex_term(
     term: ConvexTerm,
     expected_value: float,
-    expected_grad: Union[float, np.ndarray],
+    expected_grad: float | np.ndarray,
     expected_is_multivariable: bool,
     query_point: QueryPoint,
 ):

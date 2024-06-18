@@ -1,5 +1,6 @@
 from contextlib import nullcontext as does_not_raise
-from typing import Union, Iterable, Any, Optional, Type
+from numbers import Real
+from typing import Iterable, Any, Type
 
 import pytest
 
@@ -15,7 +16,7 @@ def test_log_table_header(columns: Iterable[str], width: int):
 
 @pytest.mark.parametrize("values", [[1, 1.0, 2e10, 3e-10]])
 @pytest.mark.parametrize("width", [10, 15])
-def test_log_table_row(values: Iterable[Union[float, int]], width: int):
+def test_log_table_row(values: Iterable[Real], width: int):
     log_table_row(values=values, width=width)
     # TODO: add log checks
 
@@ -38,9 +39,9 @@ def test_log_table_row(values: Iterable[Union[float, int]], width: int):
 def test_check_scalar(
     x: Any,
     name: str,
-    var_type: Optional[Union[Type, tuple[Type, ...]]],
-    lb: Optional[Union[float, int]],
-    ub: Optional[Union[float, int]],
+    var_type: Type | tuple[Type, ...] | None,
+    lb: Real | None,
+    ub: Real | None,
     include_boundaries: bool,
     expectation,
 ):

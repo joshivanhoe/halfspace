@@ -1,27 +1,45 @@
-[build-system]
-requires = ["setuptools >= 61.0"]
-build-backend = "setuptools.build_meta"
-
-[project]
+[tool.poetry]
 name = "halfspace-optimizer"
-version = "0.1.1"
-authors = [
-  { name="Joshua Ivanhoe", email="joshua.k.ivanhoe@gmail.com" },
-]
+version = "0.1.2"
 description = "Cutting-plane solver for mixed-integer convex optimization problems"
+license ="MIT"
+authors = [
+    "Joshua Ivanhoe <joshua.k.ivanhoe@gmail.com>"
+]
 readme = "README.md"
-license = {file = "LICENSE"}
-requires-python = ">=3.9,<3.12"
+repository = "https://github.com/joshivanhoe/halfspace"
+documentation = "https://joshivanhoe.github.io/halfspace/"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dynamic = ["dependencies"]
+packages = [
+    { include = "halfspace", from = "src" }
+]
 
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+mip = ">=1.15.0"
+numpy = ">=1.25.2"
+pandas = ">=2.0.3"
 
-[project.urls]
-Homepage = "https://github.com/joshivanhoe/halfspace"
-Issues = "https://github.com/joshivanhoe/halfspace/issues"
+[tool.poetry.group.dev.dependencies]
+black = "*"
+flake8 = "*"
+pre-commit = "*"
+tomli = "*"
+
+[tool.poetry.group.test.dependencies]
+mypy = "*"
+pytest = "*"
+pytest-cov = "*"
+
+[tool.poetry.group.docs]
+optional = true
+[tool.poetry.group.docs.dependencies]
+sphinx = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

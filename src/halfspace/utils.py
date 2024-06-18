@@ -1,8 +1,8 @@
 """Utility functions for the `halfspace` package."""
 
 import logging
-
-from typing import Union, Iterable, Optional, Any, Type
+from numbers import Real, Integral
+from typing import Iterable, Any, Type
 
 
 def log_table_header(columns: Iterable[str], width: int = 15) -> None:
@@ -25,7 +25,7 @@ def log_table_header(columns: Iterable[str], width: int = 15) -> None:
     logging.info(line)
 
 
-def log_table_row(values: Iterable[Union[float, int]], width: int = 15) -> None:
+def log_table_row(values: Iterable[Real], width: int = 15) -> None:
     """Log a table row.
 
     Logging level is set to `logging.INFO`.
@@ -39,7 +39,7 @@ def log_table_row(values: Iterable[Union[float, int]], width: int = 15) -> None:
     Returns: None
     """
     values = [
-        (f"{{:{width}}}" if isinstance(value, int) else f"{{:{width}.3e}}").format(
+        (f"{{:{width}}}" if isinstance(value, Integral) else f"{{:{width}.3e}}").format(
             value
         )
         for value in values
@@ -50,9 +50,9 @@ def log_table_row(values: Iterable[Union[float, int]], width: int = 15) -> None:
 def check_scalar(
     x: Any,
     name: str,
-    var_type: Optional[Union[Type, tuple[Type, ...]]] = None,
-    lb: Optional[Union[float, int]] = None,
-    ub: Optional[Union[float, int]] = None,
+    var_type: Type | tuple[Type, ...] | None = None,
+    lb: Integral | None = None,
+    ub: Integral | None = None,
     include_boundaries: bool = True,
 ) -> None:
     """Check that a scalar satisfies certain conditions.

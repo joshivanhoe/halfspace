@@ -4,7 +4,7 @@ It provides users with a general purpose API for modelling and solving mixed-int
 """
 
 import logging
-from typing import Optional, Iterable, Union
+from typing import Iterable
 
 import mip
 import numpy as np
@@ -40,9 +40,9 @@ class Model:
         max_gap_abs: float = 1e-4,
         infeasibility_tol: float = 1e-4,
         step_size: float = 1e-6,
-        smoothing: Optional[float] = 0.5,
-        solver_name: Optional[str] = "CBC",
-        log_freq: Optional[int] = 1,
+        smoothing: float | None = 0.5,
+        solver_name: str | None = "CBC",
+        log_freq: int | None = 1,
     ):
         """Optimization model constructor.
 
@@ -81,13 +81,13 @@ class Model:
         self._best_solution: dict[mip.Var, float] = dict()
         self._objective_value: float = (1 if self.minimize else -1) * mip.INF
         self._best_bound: float = -self._objective_value
-        self._status: Optional[mip.OptimizationStatus] = None
+        self._status: mip.OptimizationStatus | None = None
         self._search_log: list[dict[str, float]] = list()
 
     def add_var(
         self,
-        lb: Optional[float] = None,
-        ub: Optional[float] = None,
+        lb: float | None = None,
+        ub: float | None = None,
         var_type: str = mip.CONTINUOUS,
         name: str = "",
     ) -> mip.Var:
@@ -110,8 +110,8 @@ class Model:
     def add_var_tensor(
         self,
         shape: tuple[int, ...],
-        lb: Optional[float] = None,
-        ub: Optional[float] = None,
+        lb: float | None = None,
+        ub: float | None = None,
         var_type: str = mip.CONTINUOUS,
         name: str = "",
     ) -> mip.LinExprTensor:
@@ -152,8 +152,8 @@ class Model:
     def add_nonlinear_constr(
         self,
         var: Var,
-        func: Union[Func, FuncGrad],
-        grad: Optional[Union[Grad, bool]] = None,
+        func: Func | FuncGrad,
+        grad: Grad | bool | None = None,
         name: str = "",
     ) -> ConvexTerm:
         """Add a nonlinear constraint to the model.
@@ -187,8 +187,8 @@ class Model:
     def add_objective_term(
         self,
         var: Var,
-        func: Union[Func, FuncGrad],
-        grad: Optional[Union[Grad, bool]] = None,
+        func: Func | FuncGrad,
+        grad: Grad | bool | None = None,
         name: str = "",
     ) -> ConvexTerm:
         """Add an objective term to the model.
@@ -222,8 +222,8 @@ class Model:
     def optimize(
         self,
         max_iters: int = 100,
-        max_iters_no_improvement: Optional[int] = None,
-        max_seconds_per_iter: Optional[float] = None,
+        max_iters_no_improvement: int | None = None,
+        max_seconds_per_iter: float | None = None,
     ) -> mip.OptimizationStatus:
         """Optimize the model.
 
@@ -355,9 +355,7 @@ class Model:
         """Get a variable by name."""
         return self._model.var_by_name(name=name)
 
-    def var_value(
-        self, x: Union[mip.Var, mip.LinExprTensor, str]
-    ) -> Union[float, np.ndarray]:
+    def var_value(self, x: mip.Var | mip.LinExprTensor | str) -> float | np.ndarray:
         """Get the value one or more decision variables corresponding to the best solution.
 
         Args:
@@ -448,7 +446,7 @@ class Model:
         return pd.DataFrame(self._search_log).set_index("iteration")
 
     @staticmethod
-    def sum(terms: Iterable[Union[mip.Var, mip.LinExpr]]) -> mip.LinExpr:
+    def sum(terms: Iterable[mip.Var | mip.LinExpr]) -> mip.LinExpr:
         """Create a linear expression from a summation."""
         return mip.xsum(terms=terms)
 

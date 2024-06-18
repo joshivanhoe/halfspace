@@ -3,18 +3,17 @@
 It provides a modular framework for generating cutting planes.
 """
 
-from typing import Union, Callable, Optional, Iterable
+from typing import Callable, Iterable
 
 import mip
 import numpy as np
 
-
 QueryPoint = dict[mip.Var, float]
-Var = Union[mip.Var, Iterable[mip.Var], mip.LinExprTensor]
-Input = Union[float, Iterable[float], np.ndarray]
+Var = mip.Var | Iterable[mip.Var] | mip.LinExprTensor
+Input = float | Iterable[float] | np.ndarray
 Func = Callable[[Input], float]
-FuncGrad = Callable[[Input], tuple[float, Union[float, np.ndarray]]]
-Grad = Callable[[Input], Union[float, np.ndarray]]
+FuncGrad = Callable[[Input], tuple[float, float | np.ndarray]]
+Grad = Callable[[Input], float | np.ndarray]
 
 
 class ConvexTerm:
@@ -39,8 +38,8 @@ class ConvexTerm:
     def __init__(
         self,
         var: Var,
-        func: Union[Func, FuncGrad],
-        grad: Optional[Union[Grad, bool]] = None,
+        func: Func | FuncGrad,
+        grad: Grad | bool | None = None,
         step_size: float = 1e-6,
         name: str = "",
     ):
@@ -61,7 +60,7 @@ class ConvexTerm:
 
     def __call__(
         self, query_point: QueryPoint, return_grad: bool = False
-    ) -> Union[float, tuple[float, Union[float, np.ndarray]]]:
+    ) -> float | tuple[float, float | np.ndarray]:
         """Evaluate the term and (optionally) its gradient.
 
         Args:
@@ -107,9 +106,7 @@ class ConvexTerm:
             return np.array([query_point[var] for var in self.var])
         return query_point[self.var]
 
-    def _evaluate_func(
-        self, x: Input
-    ) -> Union[float, tuple[float, Union[float, np.ndarray]]]:
+    def _evaluate_func(self, x: Input) -> float | tuple[float, float | np.ndarray]:
         """Evaluate the function value.
 
         If `grad=True`, then both the value of the function and it's gradient are returned.
@@ -120,7 +117,7 @@ class ConvexTerm:
             return self.func(*x)
         raise TypeError(f"Input of type '{type(x)}' not supported.")
 
-    def _evaluate_grad(self, x: Input) -> Union[float, np.ndarray]:
+    def _evaluate_grad(self, x: Input) -> float | np.ndarray:
         """Evaluate the gradient."""
         if not self.grad:
             return self._approximate_grad(x=x)
@@ -130,7 +127,7 @@ class ConvexTerm:
             return self.grad(*x)
         raise TypeError(f"Input of type '{type(x)}' not supported.")
 
-    def _approximate_grad(self, x: Input) -> Union[float, np.ndarray]:
+    def _approximate_grad(self, x: Input) -> float | np.ndarray:
         """Approximate the gradient of the function at point using the central finite difference method."""
         if self.is_multivariable:
             indexes = np.arange(len(x))
