@@ -19,19 +19,19 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.12"
+python = ">=3.10,<=3.12"
 mip = ">=1.15.0"
 numpy = ">=1.25.2"
 pandas = ">=2.0.3"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
+mypy = "*"
 flake8 = "*"
 pre-commit = "*"
 tomli = "*"
 
 [tool.poetry.group.test.dependencies]
-mypy = "*"
 pytest = "*"
 pytest-cov = "*"
 

@@ -43,7 +43,7 @@ class Model:
         smoothing: float | None = 0.5,
         solver_name: str | None = "CBC",
         log_freq: int | None = 1,
-    ):
+    ) -> None:
         """Optimization model constructor.
 
         Args:
@@ -86,8 +86,8 @@ class Model:
 
     def add_var(
         self,
-        lb: float | None = None,
-        ub: float | None = None,
+        lb: float | int = 0,
+        ub: float | int = mip.INF,
         var_type: str = mip.CONTINUOUS,
         name: str = "",
     ) -> mip.Var:
@@ -110,8 +110,8 @@ class Model:
     def add_var_tensor(
         self,
         shape: tuple[int, ...],
-        lb: float | None = None,
-        ub: float | None = None,
+        lb: float | int = 0,
+        ub: float | int = mip.INF,
         var_type: str = mip.CONTINUOUS,
         name: str = "",
     ) -> mip.LinExprTensor:
@@ -454,14 +454,14 @@ class Model:
         check_scalar(
             x=self.max_gap,
             name="max_gap",
-            lb=0.0,
+            lb=0,
             var_type=float,
             include_boundaries=False,
         )
         check_scalar(
             x=self.max_gap_abs,
             name="max_gap_abs",
-            lb=0.0,
+            lb=0,
             var_type=float,
             include_boundaries=False,
         )
@@ -469,7 +469,7 @@ class Model:
             x=self.infeasibility_tol,
             name="feasibility_tol",
             var_type=float,
-            lb=0.0,
+            lb=0,
             include_boundaries=False,
         )
         if self.smoothing is not None:
@@ -477,8 +477,8 @@ class Model:
                 x=self.smoothing,
                 name="smoothing",
                 var_type=float,
-                lb=0.0,
-                ub=1.0,
+                lb=0,
+                ub=1,
                 include_boundaries=False,
             )
         if self.log_freq is not None:
@@ -491,7 +491,9 @@ class Model:
             )
 
     @staticmethod
-    def _validate_bounds(lb: float, ub: float, var_type: str) -> tuple[float, float]:
+    def _validate_bounds(
+        lb: float | int, ub: float | int, var_type: str
+    ) -> tuple[float | int, float | int]:
         if var_type == mip.BINARY:
             lb, ub = 0, 1
         else:

@@ -1,8 +1,9 @@
 """Utility functions for the `halfspace` package."""
 
 import logging
-from numbers import Real, Integral
 from typing import Iterable, Any, Type
+
+import numpy as np
 
 
 def log_table_header(columns: Iterable[str], width: int = 15) -> None:
@@ -25,7 +26,7 @@ def log_table_header(columns: Iterable[str], width: int = 15) -> None:
     logging.info(line)
 
 
-def log_table_row(values: Iterable[Real], width: int = 15) -> None:
+def log_table_row(values: Iterable[float | int], width: int = 15) -> None:
     """Log a table row.
 
     Logging level is set to `logging.INFO`.
@@ -38,21 +39,21 @@ def log_table_row(values: Iterable[Real], width: int = 15) -> None:
 
     Returns: None
     """
-    values = [
-        (f"{{:{width}}}" if isinstance(value, Integral) else f"{{:{width}.3e}}").format(
+    values_ = [
+        (f"{{:{width}}}" if isinstance(value, int) else f"{{:{width}.3e}}").format(
             value
         )
         for value in values
     ]
-    logging.info("|{}|".format("|".join(values)))
+    logging.info("|{}|".format("|".join(values_)))
 
 
 def check_scalar(
     x: Any,
     name: str,
     var_type: Type | tuple[Type, ...] | None = None,
-    lb: Integral | None = None,
-    ub: Integral | None = None,
+    lb: float | int | None = None,
+    ub: float | int | None = None,
     include_boundaries: bool = True,
 ) -> None:
     """Check that a scalar satisfies certain conditions.
@@ -93,3 +94,10 @@ def check_scalar(
             assert (
                 x < ub
             ), f"Variable '{name}' ({x}) is greater than or equal to lower bound ({ub})."
+
+
+def standard_basis_vector(i: int, n_dim: int) -> np.ndarray:
+    """Return the ith standard basis vector in R^n."""
+    x = np.zeros(n_dim)
+    x[i] = 1
+    return x

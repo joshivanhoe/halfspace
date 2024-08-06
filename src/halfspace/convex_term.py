@@ -4,16 +4,19 @@ It provides a modular framework for generating cutting planes.
 """
 
 from typing import Callable, Iterable
+from typing import TypeAlias, Literal, overload
 
 import mip
 import numpy as np
 
-QueryPoint = dict[mip.Var, float]
-Var = mip.Var | Iterable[mip.Var] | mip.LinExprTensor
-Input = float | Iterable[float] | np.ndarray
-Func = Callable[[Input], float]
-FuncGrad = Callable[[Input], tuple[float, float | np.ndarray]]
-Grad = Callable[[Input], float | np.ndarray]
+from .utils import standard_basis_vector
+
+QueryPoint: TypeAlias = dict[mip.Var, float]
+Var: TypeAlias = mip.Var | Iterable[mip.Var] | mip.LinExprTensor
+Input: TypeAlias = float | Iterable[float] | np.ndarray
+Func: TypeAlias = Callable[[Input], float]
+FuncGrad: TypeAlias = Callable[[Input], tuple[float, float | np.ndarray]]
+Grad: TypeAlias = Callable[[Input], float | np.ndarray]
 
 
 class ConvexTerm:
@@ -42,7 +45,7 @@ class ConvexTerm:
         grad: Grad | bool | None = None,
         step_size: float = 1e-6,
         name: str = "",
-    ):
+    ) -> None:
         """Convex term constructor.
 
         Args:
@@ -57,6 +60,18 @@ class ConvexTerm:
         self.grad = grad
         self.step_size = step_size
         self.name = name
+
+    @overload
+    def __call__(
+        self, query_point: QueryPoint, return_grad: Literal[False] = False
+    ) -> float:
+        ...
+
+    @overload
+    def __call__(
+        self, query_point: QueryPoint, return_grad: Literal[True] = True
+    ) -> tuple[float, float | np.ndarray]:
+        ...
 
     def __call__(
         self, query_point: QueryPoint, return_grad: bool = False
@@ -95,11 +110,11 @@ class ConvexTerm:
         Returns:
             The linear constraint representing the cutting plane.
         """
-        fun, grad = self(query_point=query_point, return_grad=True)
+        func, grad = self(query_point=query_point, return_grad=True)
         x = self._get_input(query_point=query_point)
         if self.is_multivariable:
-            return mip.xsum(grad * (np.array(self.var) - x)) + fun
-        return grad * (self.var - x) + fun
+            return mip.xsum(grad * (np.array(self.var) - x)) + func
+        return grad * (self.var - x) + func
 
     def _get_input(self, query_point: QueryPoint) -> Input:
         if self.is_multivariable:
@@ -130,17 +145,15 @@ class ConvexTerm:
     def _approximate_grad(self, x: Input) -> float | np.ndarray:
         """Approximate the gradient of the function at point using the central finite difference method."""
         if self.is_multivariable:
-            indexes = np.arange(len(x))
-            return np.array(
-                [
-                    (
-                        self._evaluate_func(x=x + self.step_size / 2 * (indexes == i))
-                        - self._evaluate_func(x=x - self.step_size / 2 * (indexes == i))
-                    )
-                    / self.step_size
-                    for i in indexes
-                ]
-            )
+            n_dim = len(x)
+            grad = np.zeros(n_dim)
+            for i in range(n_dim):
+                e_i = standard_basis_vector(i=i, n_dim=n_dim)
+                grad[i] = (
+                    self._evaluate_func(x=x + self.step_size / 2 * e_i)
+                    - self._evaluate_func(x=x - self.step_size / 2 * e_i)
+                ) / self.step_size
+            return grad
         return (
             self._evaluate_func(x=x + self.step_size / 2)
             - self._evaluate_func(x=x - self.step_size / 2)
