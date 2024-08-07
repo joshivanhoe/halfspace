@@ -33,9 +33,7 @@ def _check_convex_term(
     query_point: QueryPoint,
 ):
     # Check evaluation without gradient
-    assert term(query_point=query_point, return_grad=False) == pytest.approx(
-        expected_value
-    )
+    assert term(query_point=query_point, return_grad=False) == pytest.approx(expected_value)
 
     # Check evaluation with gradient
     value, grad = term(query_point=query_point, return_grad=True)
@@ -64,9 +62,7 @@ def model() -> Model:
         ({"x": 1}, 1, 2),
     ],
 )
-@pytest.mark.parametrize(
-    ["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)]
-)
+@pytest.mark.parametrize(["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)])
 def test_single_variable_term(
     model: Model,
     query_point: dict[str, float],
@@ -91,9 +87,7 @@ def test_single_variable_term(
         expected_value=expected_value,
         expected_grad=expected_grad,
         expected_is_multivariable=False,
-        query_point={
-            model.var_by_name(name=name): value for name, value in query_point.items()
-        },
+        query_point={model.var_by_name(name=name): value for name, value in query_point.items()},
     )
 
 
@@ -104,9 +98,7 @@ def test_single_variable_term(
         ({"x": 1, "y": 2}, 5, np.array([2, 4])),
     ],
 )
-@pytest.mark.parametrize(
-    ["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)]
-)
+@pytest.mark.parametrize(["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)])
 def test_multivariable_term(
     model: Model,
     query_point: dict[str, float],
@@ -131,9 +123,7 @@ def test_multivariable_term(
         expected_value=expected_value,
         expected_grad=expected_grad,
         expected_is_multivariable=True,
-        query_point={
-            model.var_by_name(name=name): value for name, value in query_point.items()
-        },
+        query_point={model.var_by_name(name=name): value for name, value in query_point.items()},
     )
 
 
@@ -144,9 +134,7 @@ def test_multivariable_term(
         ({"z_0": 1, "z_1": 2}, 5, np.array([2, 4])),
     ],
 )
-@pytest.mark.parametrize(
-    ["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)]
-)
+@pytest.mark.parametrize(["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)])
 def test_var_tensor_term(
     model: Model,
     query_point: dict[str, float],
@@ -171,7 +159,5 @@ def test_var_tensor_term(
         expected_value=expected_value,
         expected_grad=expected_grad,
         expected_is_multivariable=True,
-        query_point={
-            model.var_by_name(name=name): value for name, value in query_point.items()
-        },
+        query_point={model.var_by_name(name=name): value for name, value in query_point.items()},
     )

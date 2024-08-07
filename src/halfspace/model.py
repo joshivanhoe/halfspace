@@ -243,13 +243,10 @@ class Model:
         self._model.objective = bound
 
         # Initialize search
-        query_point = {
-            x: self._start.get(x) or (x.lb + x.ub) / 2 for x in self._model.vars
-        }
+        query_point = {x: self._start.get(x) or (x.lb + x.ub) / 2 for x in self._model.vars}
         iters_no_improvement = 0
 
         for i in range(max_iters):
-
             # Add cuts for violated nonlinear constraints
             for constr in self.nonlinear_constrs:
                 if constr(query_point=query_point) > self.infeasibility_tol:
@@ -257,10 +254,7 @@ class Model:
                     self._model.add_constr(expr <= 0)
 
             # Add objective cut
-            expr = mip.xsum(
-                term.generate_cut(query_point=query_point)
-                for term in self.objective_terms
-            )
+            expr = mip.xsum(term.generate_cut(query_point=query_point) for term in self.objective_terms)
             if self.minimize:
                 self._model.add_constr(bound >= expr)
             else:
@@ -274,20 +268,15 @@ class Model:
                 mip.OptimizationStatus.OPTIMAL,
                 mip.OptimizationStatus.FEASIBLE,
             ):
-                logging.info(
-                    f"Solve unsuccessful - exiting with optimization status: '{status.value}'."
-                )
+                logging.info(f"Solve unsuccessful - exiting with optimization status: '{status.value}'.")
                 self._status = status
                 return self.status
 
             # Update best solution/objective value and query point
             solution = {var: var.x for var in self._model.vars}
-            objective_value_new = sum(
-                term(query_point=solution) for term in self.objective_terms
-            )
+            objective_value_new = sum(term(query_point=solution) for term in self.objective_terms)
             if self.minimize == (objective_value_new < self.objective_value) and all(
-                constr(solution) <= self.infeasibility_tol
-                for constr in self.nonlinear_constrs
+                constr(solution) <= self.infeasibility_tol for constr in self.nonlinear_constrs
             ):
                 iters_no_improvement = 0
                 self._objective_value = objective_value_new
@@ -297,8 +286,7 @@ class Model:
                     iters_no_improvement += 1
                 if self.smoothing is not None:
                     query_point = {
-                        var: self.smoothing * query_point[var]
-                        + (1 - self.smoothing) * solution[var]
+                        var: self.smoothing * query_point[var] + (1 - self.smoothing) * solution[var]
                         for var in self._model.vars
                     }
                 else:
@@ -306,13 +294,9 @@ class Model:
 
             # Update best bound (clip values to prevent numerical errors from affecting termination logic)
             if self.minimize:
-                self._best_bound = np.clip(
-                    bound.x, a_min=self.best_bound, a_max=self.objective_value
-                )
+                self._best_bound = np.clip(bound.x, a_min=self.best_bound, a_max=self.objective_value)
             else:
-                self._best_bound = np.clip(
-                    bound.x, a_min=self.objective_value, a_max=self.best_bound
-                )
+                self._best_bound = np.clip(bound.x, a_min=self.objective_value, a_max=self.best_bound)
 
             # Update log
             self._search_log.append(
@@ -331,20 +315,16 @@ class Model:
 
             # Check early termination conditions
             if self.gap <= self.max_gap or self.gap_abs <= self.max_gap_abs:
-                logging.info(
-                    f"Optimality tolerance reached - terminating search early."
-                )
+                logging.info("Optimality tolerance reached - terminating search early.")
                 self._status = mip.OptimizationStatus.OPTIMAL
                 return self.status
             if max_iters_no_improvement is not None:
                 if iters_no_improvement >= max_iters_no_improvement:
-                    logging.info(
-                        f"Max iterations without improvement reached - terminating search early."
-                    )
+                    logging.info("Max iterations without improvement reached - terminating search early.")
                     self._status = mip.OptimizationStatus.FEASIBLE
                     return self.status
 
-        logging.info(f"Max iterations reached - terminating search.")
+        logging.info("Max iterations reached - terminating search.")
         if self.best_solution:
             self._status = mip.OptimizationStatus.FEASIBLE
         else:
@@ -371,9 +351,7 @@ class Model:
         if isinstance(x, mip.Var):
             return self.best_solution[x]
         if isinstance(x, mip.LinExprTensor):
-            return np.array([self.best_solution[var] for var in x.flatten()]).reshape(
-                x.shape
-            )
+            return np.array([self.best_solution[var] for var in x.flatten()]).reshape(x.shape)
         if isinstance(x, Iterable):
             return np.array([self.best_solution[var] for var in x])
         raise TypeError(f"Input of type '{type(x)}' not supported.")
@@ -426,9 +404,7 @@ class Model:
     @property
     def gap(self) -> float:
         """Get the (relative) optimality gap."""
-        return self.gap_abs / max(
-            min(abs(self.objective_value), abs(self.best_bound)), 1e-10
-        )
+        return self.gap_abs / max(min(abs(self.objective_value), abs(self.best_bound)), 1e-10)
 
     @property
     def gap_abs(self) -> float:
@@ -491,9 +467,7 @@ class Model:
             )
 
     @staticmethod
-    def _validate_bounds(
-        lb: float | int, ub: float | int, var_type: str
-    ) -> tuple[float | int, float | int]:
+    def _validate_bounds(lb: float | int, ub: float | int, var_type: str) -> tuple[float | int, float | int]:
         if var_type == mip.BINARY:
             lb, ub = 0, 1
         else:

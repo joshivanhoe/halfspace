@@ -62,20 +62,14 @@ class ConvexTerm:
         self.name = name
 
     @overload
-    def __call__(
-        self, query_point: QueryPoint, return_grad: Literal[False] = False
-    ) -> float:
-        ...
+    def __call__(self, query_point: QueryPoint, return_grad: Literal[False] = False) -> float: ...
 
     @overload
     def __call__(
         self, query_point: QueryPoint, return_grad: Literal[True] = True
-    ) -> tuple[float, float | np.ndarray]:
-        ...
+    ) -> tuple[float, float | np.ndarray]: ...
 
-    def __call__(
-        self, query_point: QueryPoint, return_grad: bool = False
-    ) -> float | tuple[float, float | np.ndarray]:
+    def __call__(self, query_point: QueryPoint, return_grad: bool = False) -> float | tuple[float, float | np.ndarray]:
         """Evaluate the term and (optionally) its gradient.
 
         Args:
@@ -155,6 +149,5 @@ class ConvexTerm:
                 ) / self.step_size
             return grad
         return (
-            self._evaluate_func(x=x + self.step_size / 2)
-            - self._evaluate_func(x=x - self.step_size / 2)
+            self._evaluate_func(x=x + self.step_size / 2) - self._evaluate_func(x=x - self.step_size / 2)
         ) / self.step_size
