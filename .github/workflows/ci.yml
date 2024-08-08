@@ -2,9 +2,9 @@ name: CI workflow
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -29,11 +29,16 @@ jobs:
     - name: Install dependencies
       run: poetry install
 
-    - name: Format with black
-      run: poetry run black ./src
+    - name: Lint and format with ruff
+      run: |
+        ruff check --fix
+        ruff format
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "Lint and format with ruff"
 
-    - name: Lint with flake8
-      run: poetry run flake8 --max-line-length 120
+    - name: Perform type checking with mypy
+      run: mypy src
 
     - name: Run tests
       run: poetry run pytest --cov=src

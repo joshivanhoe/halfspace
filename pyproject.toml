@@ -25,20 +25,29 @@ numpy = ">=1.25.2"
 pandas = ">=2.0.3"
 
 [tool.poetry.group.dev.dependencies]
-black = "*"
 mypy = "*"
-flake8 = "*"
 pre-commit = "*"
-tomli = "*"
+ruff = "*"
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
 pytest-cov = "*"
 
-[tool.poetry.group.docs]
-optional = true
-[tool.poetry.group.docs.dependencies]
-sphinx = "*"
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+extend-select = ["D"]  # pydocstyle
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D"]  # Ignore all directories named `tests` for pydocstyle
+
+[tool.mypy]
+ignore_missing_imports = true
+exclude = ["convex_term.py"]
 
 [build-system]
 requires = ["poetry-core"]
