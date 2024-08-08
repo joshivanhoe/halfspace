@@ -31,8 +31,8 @@ jobs:
 
     - name: Lint and format with ruff
       run: |
-        ruff check --fix
-        ruff format
+        python -m ruff check --fix
+        python -m ruff format
 
     - name: Auto-commit ruff changes
       uses: stefanzweifel/git-auto-commit-action@v4
