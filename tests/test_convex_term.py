@@ -161,3 +161,35 @@ def test_var_tensor_term(
         expected_is_multivariable=True,
         query_point={model.var_by_name(name=name): value for name, value in query_point.items()},
     )
+
+
+@pytest.mark.parametrize("step_size", [0.0, -1.0])
+def test_invalid_step_size_raises(model: Model, step_size: float):
+    x = model.var_by_name("x")
+    with pytest.raises(ValueError, match="step_size must be positive"):
+        ConvexTerm(var=x, func=lambda x: x**2, grad=lambda x: 2 * x, step_size=step_size)
+
+
+def test_var_tensor_2d_term(model: Model):
+    z = model.add_var_tensor(shape=(2, 2), lb=-10, ub=10, name="z")
+    func = lambda w: (w**2).sum()
+    grad = lambda w: 2 * w
+    term = ConvexTerm(var=z, func=func, grad=grad)
+
+    qp = {
+        model.var_by_name("z_0_0"): 1.0,
+        model.var_by_name("z_0_1"): 2.0,
+        model.var_by_name("z_1_0"): -1.0,
+        model.var_by_name("z_1_1"): 0.5,
+    }
+    expected_value = 1.0**2 + 2.0**2 + (-1.0) ** 2 + 0.5**2
+    expected_grad = np.array([[2 * 1.0, 2 * 2.0], [2 * -1.0, 2 * 0.5]])
+
+    # Value and gradient sanity via helper
+    _check_convex_term(
+        term=term,
+        expected_value=expected_value,
+        expected_grad=expected_grad,
+        expected_is_multivariable=True,
+        query_point=qp,
+    )

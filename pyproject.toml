@@ -1,54 +1,77 @@
-[tool.poetry]
+[project]
 name = "halfspace-optimizer"
-version = "0.1.2"
-description = "Cutting-plane solver for mixed-integer convex optimization problems"
-license ="MIT"
+version = "0.1.1"
 authors = [
-    "Joshua Ivanhoe <joshua.k.ivanhoe@gmail.com>"
+  { name="Joshua Ivanhoe", email="joshua.k.ivanhoe@gmail.com" },
 ]
+description = "Cutting-plane solver for mixed-integer convex optimization problems"
 readme = "README.md"
-repository = "https://github.com/joshivanhoe/halfspace"
-documentation = "https://joshivanhoe.github.io/halfspace/"
+license = {file = "LICENSE"}
+requires-python = ">=3.12,<3.13"
+keywords = ["optimization", "mixed-integer", "convex", "cutting-plane", "solver"]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
     "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Mathematics",
 ]
-packages = [
-    { include = "halfspace", from = "src" }
+dependencies = [
+    "mip>=1.15.0,<2.0.0",
+    "numpy>=2.3.3,<3.0.0",
+    "pandas>=2.3.2,<3.0.0",
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.10,<3.13"
-mip = ">=1.15.0"
-numpy = ">=1.25.2"
-pandas = ">=2.0.3"
+[project.urls]
+Homepage = "https://github.com/joshivanhoe/halfspace"
+Issues = "https://github.com/joshivanhoe/halfspace/issues"
 
-[tool.poetry.group.dev.dependencies]
-mypy = "*"
-pre-commit = "*"
-ruff = "*"
-
-[tool.poetry.group.test.dependencies]
-pytest = "*"
-pytest-cov = "*"
-
-[tool.ruff]
-line-length = 100
-
-[tool.ruff.lint]
-extend-select = ["D"]  # pydocstyle
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
-
-[tool.ruff.lint.per-file-ignores]
-"tests/**" = ["D"]  # Ignore all directories named `tests` for pydocstyle
-
-[tool.mypy]
-ignore_missing_imports = true
-exclude = ["convex_term.py"]
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "pre-commit",
+    "tomli",
+]
+test = [
+    "pytest",
+    "pytest-cov",
+]
+all = [
+    "halfspace-optimizer[dev,test]",
+]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+index-url = "https://pypi.org/simple"
+extra-index-url = []
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/halfspace"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=src/halfspace",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+]
+
+[tool.coverage.run]
+source = ["src/halfspace"]
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+]

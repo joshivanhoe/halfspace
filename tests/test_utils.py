@@ -1,6 +1,6 @@
 from contextlib import nullcontext as does_not_raise
 from numbers import Real
-from typing import Iterable, Any, Type
+from typing import Iterable, Any
 
 import pytest
 
@@ -29,17 +29,17 @@ def test_log_table_row(values: Iterable[Real], width: int):
         (1, "x", int, None, 2, True, does_not_raise()),
         (1, "x", int, 0, None, True, does_not_raise()),
         (1, "x", int, 0, 2, False, does_not_raise()),
-        (1, "x", float, 0, 2, True, pytest.raises(AssertionError)),
-        (1, "x", int, 2, 3, True, pytest.raises(AssertionError)),
-        (1, "x", int, 1, 2, False, pytest.raises(AssertionError)),
-        (1, "x", int, -1, 0, True, pytest.raises(AssertionError)),
-        (1, "x", int, 0, 1, False, pytest.raises(AssertionError)),
+        (1, "x", float, 0, 2, True, pytest.raises(ValueError)),
+        (1, "x", int, 2, 3, True, pytest.raises(ValueError)),
+        (1, "x", int, 1, 2, False, pytest.raises(ValueError)),
+        (1, "x", int, -1, 0, True, pytest.raises(ValueError)),
+        (1, "x", int, 0, 1, False, pytest.raises(ValueError)),
     ],
 )
 def test_check_scalar(
     x: Any,
     name: str,
-    var_type: Type | tuple[Type, ...] | None,
+    var_type: type | tuple[type, ...] | None,
     lb: Real | None,
     ub: Real | None,
     include_boundaries: bool,

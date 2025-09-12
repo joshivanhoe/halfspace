@@ -137,3 +137,39 @@ def test_multivariable_nonlinear_constraint_infeasible():
     model.add_nonlinear_constr(var=(x, y), func=lambda x, y: np.exp(x + y) + 1)
     model.optimize()
     _check_solution(model=model, expected_status=mip.OptimizationStatus.INFEASIBLE)
+
+
+def test_maximize_concave_objective():
+    model = Model(minimize=False)
+    x = model.add_var(lb=0, ub=1)
+    model.add_objective_term(var=x, func=lambda x: -(x - 0.75) ** 2 + 1)
+    model.optimize()
+    _check_solution(
+        model=model,
+        expected_objective_value=1.0,
+        expected_solution={x: 0.75},
+    )
+
+
+def test_smoothing_none_runs():
+    model = Model(smoothing=None)
+    x = model.add_var(lb=0, ub=1)
+    model.add_objective_term(var=x, func=lambda x: (x - 0.25) ** 2)
+    status = model.optimize(max_iters=3)
+    assert status in (mip.OptimizationStatus.OPTIMAL, mip.OptimizationStatus.FEASIBLE)
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"max_gap": 0.0},
+        {"max_gap_abs": 0.0},
+        {"infeasibility_tol": 0.0},
+        {"log_freq": 0},
+        {"smoothing": -1e-3},
+        {"smoothing": 1.0},
+    ],
+)
+def test_parameter_validation_raises(kwargs):
+    with pytest.raises(ValueError):
+        Model(**kwargs)

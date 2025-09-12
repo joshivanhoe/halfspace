@@ -3,20 +3,19 @@
 It provides a modular framework for generating cutting planes.
 """
 
-from typing import Callable, Iterable
-from typing import TypeAlias, Literal, overload
+from typing import Callable, Iterable, Literal, overload
 
 import mip
 import numpy as np
 
-from .utils import standard_basis_vector
+from .utils import check_scalar
 
-QueryPoint: TypeAlias = dict[mip.Var, float]
-Var: TypeAlias = mip.Var | Iterable[mip.Var] | mip.LinExprTensor
-Input: TypeAlias = float | Iterable[float] | np.ndarray
-Func: TypeAlias = Callable[[Input], float]
-FuncGrad: TypeAlias = Callable[[Input], tuple[float, float | np.ndarray]]
-Grad: TypeAlias = Callable[[Input], float | np.ndarray]
+type QueryPoint = dict[mip.Var, float]
+type Var = mip.Var | Iterable[mip.Var] | mip.LinExprTensor
+type Input = float | Iterable[float] | np.ndarray
+type Func = Callable[[Input], float]
+type FuncGrad = Callable[[Input], tuple[float, float | np.ndarray]]
+type Grad = Callable[[Input], float | np.ndarray]
 
 
 class ConvexTerm:
@@ -25,15 +24,15 @@ class ConvexTerm:
     Attributes:
         var: The variable(s) included in the term. This can be provided in the form of a single  variable, an
             iterable of multiple variables or a variable tensor.
-        func: A function for computing the term's value. This function should except one argument for each
+        func: A function for computing the term's value. This function should accept one argument for each
             variable in `var`. If `var` is a variable tensor, then the function should accept a single array.
-        grad: A function for computing the term's gradient. This function should except one argument for each
+        grad: A function for computing the term's gradient. This function should accept one argument for each
             variable in `var`. If `var` is a variable tensor, then the function should accept a single array. If
             `None`, then the gradient is approximated numerically using the central finite difference method. If
             `grad` is instead a Boolean and is `True`, then `func` is assumed to return a tuple where the first
             element is the function value and the second element is the gradient. This is useful when the gradient
             is expensive to compute.
-        step_size: The step size used for numerical gradient approximation. If `grad` is provided, then this argument
+        step_size: The step size used for numerical gradient approximation. Must be positive. If `grad` is provided, then this argument
             is ignored.
         name: The name for the term.
     """
@@ -49,12 +48,19 @@ class ConvexTerm:
         """Convex term constructor.
 
         Args:
-            var: The value of the `var` attribute.
-            func: The value of the `func` attribute.
-            grad: The value of the `grad` attribute.
-            step_size: The value of the `step_size` attribute. Must be positive.
-            name: The value of the `name` attribute.
+            var: The variable(s) included in the term. Can be a single variable, an iterable of variables, or a variable tensor.
+            func: The function for computing the term's value.
+            grad: The function for computing the term's gradient, or None for numerical approximation, or True if func returns (value, grad).
+            step_size: The step size for numerical gradient approximation. Must be positive.
+            name: The name for the term.
         """
+        check_scalar(
+            x=step_size,
+            name="step_size",
+            var_type=float,
+            lb=0,
+            include_boundaries=False,
+        )
         self.var = var
         self.func = func
         self.grad = grad
@@ -77,7 +83,7 @@ class ConvexTerm:
             return_grad: Whether to return the term's gradient.
 
         Returns:
-            If `return_grad=False`, then only the value of the term is returned. Conversely, if `return_grad=True`,
+            If `return_grad=False`, then only the value of the term is returned. If `return_grad=True`,
             then a tuple is returned where the first element is the term's value and the second element is the term's
             gradient.
         """
@@ -91,26 +97,40 @@ class ConvexTerm:
 
     @property
     def is_multivariable(self) -> bool:
-        """Check whether the term is multivariable."""
+        """Check whether the term is multivariable.
+        
+        Returns:
+            True if the term involves multiple variables, False otherwise.
+        """
         return not isinstance(self.var, mip.Var)
 
     def generate_cut(self, query_point: QueryPoint) -> mip.LinExpr:
         """Generate a cutting plane for the term.
 
+        The cutting plane is a linear approximation of the convex term at the given query point,
+        valid for all feasible points due to convexity.
+
         Args:
-            query_point: dict mapping mip.Var to float
-                The query point for which the cutting plane is generated.
+            query_point: The query point for which the cutting plane is generated.
 
         Returns:
-            The linear constraint representing the cutting plane.
+            A linear expression representing the cutting plane constraint.
         """
-        func, grad = self(query_point=query_point, return_grad=True)
+        value, grad = self(query_point=query_point, return_grad=True)
         x = self._get_input(query_point=query_point)
         if self.is_multivariable:
-            return mip.xsum(grad * (np.array(self.var) - x)) + func
-        return grad * (self.var - x) + func
+            return mip.xsum(grad * (np.array(self.var) - x)) + value
+        return grad * (self.var - x) + value
 
     def _get_input(self, query_point: QueryPoint) -> Input:
+        """Extract input values from query point based on variable type.
+        
+        Args:
+            query_point: The query point containing variable values.
+            
+        Returns:
+            Input values in the format expected by the function.
+        """
         if self.is_multivariable:
             return np.array([query_point[var] for var in self.var])
         return query_point[self.var]
@@ -118,7 +138,7 @@ class ConvexTerm:
     def _evaluate_func(self, x: Input) -> float | tuple[float, float | np.ndarray]:
         """Evaluate the function value.
 
-        If `grad=True`, then both the value of the function and it's gradient are returned.
+        If `grad=True`, then both the value of the function and its gradient are returned.
         """
         if isinstance(self.var, (mip.Var, mip.LinExprTensor)):
             return self.func(x)
@@ -127,7 +147,14 @@ class ConvexTerm:
         raise TypeError(f"Input of type '{type(x)}' not supported.")
 
     def _evaluate_grad(self, x: Input) -> float | np.ndarray:
-        """Evaluate the gradient."""
+        """Evaluate the gradient.
+        
+        Args:
+            x: The input values at which to evaluate the gradient.
+            
+        Returns:
+            The gradient value(s).
+        """
         if not self.grad:
             return self._approximate_grad(x=x)
         if isinstance(self.var, (mip.Var, mip.LinExprTensor)):
@@ -137,15 +164,22 @@ class ConvexTerm:
         raise TypeError(f"Input of type '{type(x)}' not supported.")
 
     def _approximate_grad(self, x: Input) -> float | np.ndarray:
-        """Approximate the gradient of the function at point using the central finite difference method."""
+        """Approximate the gradient using central finite differences.
+        
+        Args:
+            x: The input values at which to approximate the gradient.
+            
+        Returns:
+            The approximated gradient value(s).
+        """
         if self.is_multivariable:
             n_dim = len(x)
             grad = np.zeros(n_dim)
+            e = np.eye(n_dim)
             for i in range(n_dim):
-                e_i = standard_basis_vector(i=i, n_dim=n_dim)
                 grad[i] = (
-                    self._evaluate_func(x=x + self.step_size / 2 * e_i)
-                    - self._evaluate_func(x=x - self.step_size / 2 * e_i)
+                    self._evaluate_func(x=x + self.step_size / 2 * e[i])
+                    - self._evaluate_func(x=x - self.step_size / 2 * e[i])
                 ) / self.step_size
             return grad
         return (
