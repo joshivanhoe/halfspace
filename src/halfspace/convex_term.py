@@ -8,7 +8,7 @@ from typing import Callable, Iterable, Literal, overload
 import mip
 import numpy as np
 
-from .utils import check_scalar
+from .utils import check_param
 
 type QueryPoint = dict[mip.Var, float]
 type Var = mip.Var | Iterable[mip.Var] | mip.LinExprTensor
@@ -54,7 +54,7 @@ class ConvexTerm:
             step_size: The step size for numerical gradient approximation. Must be positive.
             name: The name for the term.
         """
-        check_scalar(
+        check_param(
             x=step_size,
             name="step_size",
             var_type=float,
@@ -75,7 +75,9 @@ class ConvexTerm:
         self, query_point: QueryPoint, return_grad: Literal[True] = True
     ) -> tuple[float, float | np.ndarray]: ...
 
-    def __call__(self, query_point: QueryPoint, return_grad: bool = False) -> float | tuple[float, float | np.ndarray]:
+    def __call__(
+        self, query_point: QueryPoint, return_grad: bool = False
+    ) -> float | tuple[float, float | np.ndarray]:
         """Evaluate the term and (optionally) its gradient.
 
         Args:
@@ -98,7 +100,7 @@ class ConvexTerm:
     @property
     def is_multivariable(self) -> bool:
         """Check whether the term is multivariable.
-        
+
         Returns:
             True if the term involves multiple variables, False otherwise.
         """
@@ -124,10 +126,10 @@ class ConvexTerm:
 
     def _get_input(self, query_point: QueryPoint) -> Input:
         """Extract input values from query point based on variable type.
-        
+
         Args:
             query_point: The query point containing variable values.
-            
+
         Returns:
             Input values in the format expected by the function.
         """
@@ -148,10 +150,10 @@ class ConvexTerm:
 
     def _evaluate_grad(self, x: Input) -> float | np.ndarray:
         """Evaluate the gradient.
-        
+
         Args:
             x: The input values at which to evaluate the gradient.
-            
+
         Returns:
             The gradient value(s).
         """
@@ -165,10 +167,10 @@ class ConvexTerm:
 
     def _approximate_grad(self, x: Input) -> float | np.ndarray:
         """Approximate the gradient using central finite differences.
-        
+
         Args:
             x: The input values at which to approximate the gradient.
-            
+
         Returns:
             The approximated gradient value(s).
         """
@@ -183,5 +185,6 @@ class ConvexTerm:
                 ) / self.step_size
             return grad
         return (
-            self._evaluate_func(x=x + self.step_size / 2) - self._evaluate_func(x=x - self.step_size / 2)
+            self._evaluate_func(x=x + self.step_size / 2)
+            - self._evaluate_func(x=x - self.step_size / 2)
         ) / self.step_size

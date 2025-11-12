@@ -4,7 +4,7 @@
 
 # ✨halfspace✨
 
-`halfspace` is an open-source, light-weight Python module for modelling and solving mixed-integer convex optimization problems of the form:
+`halfspace` is an open-source, lightweight Python module for modeling and solving mixed-integer convex optimization problems of the form:
 
 $$
 \begin{align}
@@ -21,11 +21,15 @@ It is built on top of the high-performance Python `mip` module and uses a cuttin
 This implementation is based on the approach outlined in [Boyd & Vandenberghe (2008)](https://see.stanford.edu/materials/lsocoee364b/05-localization_methods_notes.pdf) - see Chapter 6.
 
 
-## Quick start
+## Installation
 
-You can install `halfspace` using `pip` as follows:
+`halfspace` requires Python 3.12:
 
 ```bash
+# Using uv (recommended)
+uv add halfspace-optimizer
+
+# Using pip
 pip install halfspace-optimizer
 ```
 
@@ -107,29 +111,34 @@ import logging
 logging.getLogger().setLevel(logging.INFO)
 ```
 
-The logging frequency can be adjusted as desiredusing the model's `log_freq` attribute.
+The logging frequency can be adjusted as desired using the model's `log_freq` attribute.
 
 ## Development
 
-Clone the repository using `git`:
-
 ```bash
+# Clone and setup
 git clone https://github.com/joshivanhoe/halfspace
-````
+cd halfspace
+uv venv .venv --python 3.12
+source .venv/bin/activate
+uv sync --extra dev
 
-Create a fresh virtual environment using `venv` or `conda`.
-Activate the environment and navigate to the cloned `halfspace` directory.
-Install a locally editable version of the package using `pip`:
+# Setup pre-commit hooks
+uv run pre-commit install
+uv run pre-commit install --hook-type commit-msg
 
-```bash
-pip install -e .
+# Run tests
+uv run pytest
 ```
 
-To check the installation has worked, you can run the tests (with coverage metrics) using `pytest` as follows:
+### Pre-commit Hooks
+
+This project uses pre-commit hooks for code quality (Ruff, mypy, pydocstyle, conventional commits). Hooks run automatically on commit, or manually with:
 
 ```bash
-pytest --cov=halfspace tests/
+uv run pre-commit run --all-files
 ```
 
-Contributions are welcome! To see our development priorities, refer to the [open issues](https://github.com/joshivanhoe/halfspace/issues).
-Please submit a pull request with a clear description of the changes you've made.
+### Contributing
+
+Contributions welcome! See [open issues](https://github.com/joshivanhoe/halfspace/issues) for priorities. Ensure pre-commit hooks pass before submitting PRs.

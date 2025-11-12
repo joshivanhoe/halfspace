@@ -16,7 +16,9 @@ def _check_solution(
     expected_status: mip.OptimizationStatus = mip.OptimizationStatus.OPTIMAL,
 ):
     if expected_objective_value is not None:
-        assert model.objective_value == pytest.approx(expected_objective_value, abs=model.max_gap_abs)
+        assert model.objective_value == pytest.approx(
+            expected_objective_value, abs=model.max_gap_abs
+        )
     if expected_solution is not None:
         for x, expected_value in expected_solution.items():
             assert model.var_value(x=x) == pytest.approx(expected_value, abs=VAR_TOL)
@@ -142,7 +144,7 @@ def test_multivariable_nonlinear_constraint_infeasible():
 def test_maximize_concave_objective():
     model = Model(minimize=False)
     x = model.add_var(lb=0, ub=1)
-    model.add_objective_term(var=x, func=lambda x: -(x - 0.75) ** 2 + 1)
+    model.add_objective_term(var=x, func=lambda x: -((x - 0.75) ** 2) + 1)
     model.optimize()
     _check_solution(
         model=model,

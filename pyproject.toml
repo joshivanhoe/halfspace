@@ -1,8 +1,13 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+
 [project]
 name = "halfspace-optimizer"
 version = "0.1.1"
 authors = [
-  { name="Joshua Ivanhoe", email="joshua.k.ivanhoe@gmail.com" },
+  {name="Joshua Ivanhoe", email="joshua.k.ivanhoe@gmail.com"},
 ]
 description = "Cutting-plane solver for mixed-integer convex optimization problems"
 readme = "README.md"
@@ -29,40 +34,38 @@ Issues = "https://github.com/joshivanhoe/halfspace/issues"
 [project.optional-dependencies]
 dev = [
     "ruff",
+    "mypy",
     "pre-commit",
-    "tomli",
-]
-test = [
     "pytest",
     "pytest-cov",
 ]
-all = [
-    "halfspace-optimizer[dev,test]",
+
+[tool.ruff]
+line-length = 100
+exclude = [
+    "*.ipynb",
 ]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.uv]
-index-url = "https://pypi.org/simple"
-extra-index-url = []
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/halfspace"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-addopts = [
-    "--strict-markers",
-    "--strict-config",
-    "--cov=src/halfspace",
-    "--cov-report=term-missing",
-    "--cov-report=html",
+[tool.ruff.lint]
+extend-select = ["D", "I"]  # pydocstyle
+fixable = ["ALL"]
+extend-ignore = [
+    "D100",  # Missing docstring in public module
+    "D104",  # Missing docstring in public package
+    "D105",  # Missing docstring in magic method
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D"]  # no documentation checks required for tests
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+ignore_missing_imports = true
+install_types = true
+non_interactive = true
+check_untyped_defs = true
 
 [tool.coverage.run]
 source = ["src/halfspace"]
@@ -75,3 +78,6 @@ exclude_lines = [
     "raise AssertionError",
     "raise NotImplementedError",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/halfspace"]

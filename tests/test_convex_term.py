@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 
 from halfspace import Model
-from halfspace.convex_term import Func, FuncGrad, Grad, ConvexTerm, QueryPoint
+from halfspace.convex_term import ConvexTerm, Func, FuncGrad, Grad, QueryPoint
 
 
 def _process_callbacks(
@@ -62,7 +62,9 @@ def model() -> Model:
         ({"x": 1}, 1, 2),
     ],
 )
-@pytest.mark.parametrize(["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)])
+@pytest.mark.parametrize(
+    ["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)]
+)
 def test_single_variable_term(
     model: Model,
     query_point: dict[str, float],
@@ -98,7 +100,9 @@ def test_single_variable_term(
         ({"x": 1, "y": 2}, 5, np.array([2, 4])),
     ],
 )
-@pytest.mark.parametrize(["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)])
+@pytest.mark.parametrize(
+    ["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)]
+)
 def test_multivariable_term(
     model: Model,
     query_point: dict[str, float],
@@ -134,7 +138,9 @@ def test_multivariable_term(
         ({"z_0": 1, "z_1": 2}, 5, np.array([2, 4])),
     ],
 )
-@pytest.mark.parametrize(["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)])
+@pytest.mark.parametrize(
+    ["combine_grad", "approximate_grad"], [(True, False), (False, True), (False, False)]
+)
 def test_var_tensor_term(
     model: Model,
     query_point: dict[str, float],
@@ -172,9 +178,11 @@ def test_invalid_step_size_raises(model: Model, step_size: float):
 
 def test_var_tensor_2d_term(model: Model):
     z = model.add_var_tensor(shape=(2, 2), lb=-10, ub=10, name="z")
-    func = lambda w: (w**2).sum()
-    grad = lambda w: 2 * w
-    term = ConvexTerm(var=z, func=func, grad=grad)
+    term = ConvexTerm(
+        var=z,
+        func=lambda w: (w**2).sum(),
+        grad=lambda w: 2 * w,
+    )
 
     qp = {
         model.var_by_name("z_0_0"): 1.0,

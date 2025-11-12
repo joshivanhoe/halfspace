@@ -1,8 +1,7 @@
 """Utility functions for the `halfspace` package."""
 
 import logging
-from typing import Iterable, Any
-
+from typing import Any, Iterable
 
 
 def log_table_header(columns: Iterable[str], width: int = 15) -> None:
@@ -21,7 +20,7 @@ def log_table_header(columns: Iterable[str], width: int = 15) -> None:
     columns_list = list(columns)
     if not columns_list:
         return
-    
+
     columns = [f"{{:{width}}}".format(col) for col in columns_list]
     line = "-{}-".format("-".join("-" * len(col) for col in columns))
     logging.info(line)
@@ -45,12 +44,15 @@ def log_table_row(values: Iterable[float | int], width: int = 15) -> None:
     values_list = list(values)
     if not values_list:
         return
-        
-    values_ = [(f"{{:{width}}}" if isinstance(value, int) else f"{{:{width}.3e}}").format(value) for value in values_list]
+
+    values_ = [
+        (f"{{:{width}}}" if isinstance(value, int) else f"{{:{width}.3e}}").format(value)
+        for value in values_list
+    ]
     logging.info("|{}|".format("|".join(values_)))
 
 
-def check_scalar(
+def check_param(
     x: Any,
     name: str,
     var_type: type | tuple[type, ...] | None = None,
@@ -88,11 +90,15 @@ def check_scalar(
                 raise ValueError(f"Variable '{name}' ({x}) is less than lower bound ({lb}).")
         else:
             if x <= lb:
-                raise ValueError(f"Variable '{name}' ({x}) is less than or equal to lower bound ({lb}).")
+                raise ValueError(
+                    f"Variable '{name}' ({x}) is less than or equal to lower bound ({lb})."
+                )
     if ub is not None:
         if include_boundaries:
             if x > ub:
                 raise ValueError(f"Variable '{name}' ({x}) is greater than upper bound ({ub}).")
         else:
             if x >= ub:
-                raise ValueError(f"Variable '{name}' ({x}) is greater than or equal to upper bound ({ub}).")
+                raise ValueError(
+                    f"Variable '{name}' ({x}) is greater than or equal to upper bound ({ub})."
+                )

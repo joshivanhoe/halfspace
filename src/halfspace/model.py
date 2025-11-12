@@ -10,19 +10,19 @@ import mip
 import numpy as np
 import pandas as pd
 
-from .convex_term import ConvexTerm, Var, Func, FuncGrad, Grad
-from .utils import check_scalar, log_table_header, log_table_row
+from .convex_term import ConvexTerm, Func, FuncGrad, Grad, Var
+from .utils import check_param, log_table_header, log_table_row
 
 type Start = list[tuple[mip.Var, float]]
 
 
 class Model:
     """Mixed-integer convex optimization model using outer approximation.
-    
+
     This class implements an outer approximation algorithm for solving mixed-integer convex
     optimization problems. The algorithm iteratively adds linear cuts to approximate nonlinear
     constraints and objective functions, solving a sequence of mixed-integer linear programs.
-    
+
     The model supports both continuous and discrete variables, linear and nonlinear constraints,
     and can handle both minimization and maximization problems (with concave objectives for
     maximization).
@@ -81,7 +81,7 @@ class Model:
 
     def reset(self) -> None:
         """Reset the model to its initial state.
-        
+
         Clears all variables, constraints, and solution data, returning the model to
         the state it was in immediately after construction.
         """
@@ -273,7 +273,9 @@ class Model:
                     self._model.add_constr(expr <= 0)
 
             # Add linear cut for objective function
-            expr = mip.xsum(term.generate_cut(query_point=query_point) for term in self.objective_terms)
+            expr = mip.xsum(
+                term.generate_cut(query_point=query_point) for term in self.objective_terms
+            )
             if self.minimize:
                 self._model.add_constr(bound >= expr)  # t >= objective
             else:
@@ -287,18 +289,22 @@ class Model:
                 mip.OptimizationStatus.OPTIMAL,
                 mip.OptimizationStatus.FEASIBLE,
             ):
-                logging.info(f"Solve unsuccessful - exiting with optimization status: '{status.value}'.")
+                logging.info(
+                    f"Solve unsuccessful - exiting with optimization status: '{status.value}'."
+                )
                 self._status = status
                 return self.status
 
             # Extract solution and evaluate true objective value
             solution = {var: var.x for var in self._model.vars}
             objective_value_new = sum(term(query_point=solution) for term in self.objective_terms)
-            
+
             # Check if this is a better feasible solution
             is_improvement = self.minimize == (objective_value_new < self.objective_value)
-            is_feasible = all(constr(solution) <= self.infeasibility_tol for constr in self.nonlinear_constrs)
-            
+            is_feasible = all(
+                constr(solution) <= self.infeasibility_tol for constr in self.nonlinear_constrs
+            )
+
             if is_improvement and is_feasible:
                 iters_no_improvement = 0
                 self._objective_value = objective_value_new
@@ -306,12 +312,13 @@ class Model:
             else:
                 if np.isfinite(self.objective_value):
                     iters_no_improvement += 1
-                
+
                 # Update query point for next iteration
                 if self.smoothing is not None:
                     # Smooth between current query point and new solution
                     query_point = {
-                        var: self.smoothing * query_point[var] + (1 - self.smoothing) * solution[var]
+                        var: self.smoothing * query_point[var]
+                        + (1 - self.smoothing) * solution[var]
                         for var in self._model.vars
                     }
                 else:
@@ -320,9 +327,13 @@ class Model:
 
             # Update best bound with monotonicity to prevent numerical issues
             if self.minimize:
-                self._best_bound = np.clip(bound.x, a_min=self.best_bound, a_max=self.objective_value)
+                self._best_bound = np.clip(
+                    bound.x, a_min=self.best_bound, a_max=self.objective_value
+                )
             else:
-                self._best_bound = np.clip(bound.x, a_min=self.objective_value, a_max=self.best_bound)
+                self._best_bound = np.clip(
+                    bound.x, a_min=self.objective_value, a_max=self.best_bound
+                )
 
             # Log progress
             self._search_log.append(
@@ -346,7 +357,9 @@ class Model:
                 return self.status
             if max_iters_no_improvement is not None:
                 if iters_no_improvement >= max_iters_no_improvement:
-                    logging.info("Max iterations without improvement reached - terminating search early.")
+                    logging.info(
+                        "Max iterations without improvement reached - terminating search early."
+                    )
                     self._status = mip.OptimizationStatus.FEASIBLE
                     return self.status
 
@@ -360,13 +373,13 @@ class Model:
 
     def var_by_name(self, name: str) -> mip.Var:
         """Get a variable by its name.
-        
+
         Args:
             name: The name of the variable to retrieve.
-            
+
         Returns:
             The variable with the specified name.
-            
+
         Raises:
             KeyError: If no variable with the given name exists.
         """
@@ -381,7 +394,7 @@ class Model:
 
         Returns:
             Variable value(s) as float or numpy array.
-            
+
         Raises:
             TypeError: If input type is not supported.
         """
@@ -398,7 +411,7 @@ class Model:
     @property
     def objective_terms(self) -> list[ConvexTerm]:
         """Get the objective terms of the model.
-        
+
         Returns:
             List of convex terms that make up the objective function.
         """
@@ -410,7 +423,7 @@ class Model:
 
         After optimization, this includes both original linear constraints and
         the linear cuts added during the outer approximation process.
-        
+
         Returns:
             List of all linear constraints in the model.
         """
@@ -419,7 +432,7 @@ class Model:
     @property
     def nonlinear_constrs(self) -> list[ConvexTerm]:
         """Get the nonlinear constraints of the model.
-        
+
         Returns:
             List of convex terms representing nonlinear constraints.
         """
@@ -428,7 +441,7 @@ class Model:
     @property
     def start(self) -> Start:
         """Get the starting solution or partial solution.
-        
+
         Returns:
             List of (variable, value) pairs defining the starting point.
         """
@@ -437,7 +450,7 @@ class Model:
     @start.setter
     def start(self, value: Start) -> None:
         """Set the starting solution or partial solution.
-        
+
         Args:
             value: List of (variable, value) pairs defining the starting point.
         """
@@ -448,7 +461,7 @@ class Model:
     @property
     def best_solution(self) -> dict[mip.Var, float]:
         """Get the best feasible solution found.
-        
+
         Returns:
             Dictionary mapping variables to their values in the best solution.
         """
@@ -457,7 +470,7 @@ class Model:
     @property
     def objective_value(self) -> float:
         """Get the objective value of the best solution.
-        
+
         Returns:
             Objective function value at the best feasible solution.
         """
@@ -466,7 +479,7 @@ class Model:
     @property
     def best_bound(self) -> float:
         """Get the best bound on the optimal objective value.
-        
+
         Returns:
             Best known bound (lower bound for minimization, upper bound for maximization).
         """
@@ -475,7 +488,7 @@ class Model:
     @property
     def gap(self) -> float:
         """Get the relative optimality gap.
-        
+
         Returns:
             Relative gap as |objective_value - best_bound| / max(|objective_value|, |best_bound|).
         """
@@ -484,7 +497,7 @@ class Model:
     @property
     def gap_abs(self) -> float:
         """Get the absolute optimality gap.
-        
+
         Returns:
             Absolute gap as |objective_value - best_bound|.
         """
@@ -493,7 +506,7 @@ class Model:
     @property
     def status(self) -> mip.OptimizationStatus:
         """Get the optimization status.
-        
+
         Returns:
             Status indicating whether optimization was successful and why it terminated.
         """
@@ -502,7 +515,7 @@ class Model:
     @property
     def search_log(self) -> pd.DataFrame:
         """Get the search progress log.
-        
+
         Returns:
             DataFrame with columns: iteration, objective_value, best_bound, gap.
         """
@@ -511,31 +524,31 @@ class Model:
     @staticmethod
     def sum(terms: Iterable[mip.Var | mip.LinExpr]) -> mip.LinExpr:
         """Create a linear expression from a summation.
-        
+
         Args:
             terms: Iterable of variables or linear expressions to sum.
-            
+
         Returns:
             Linear expression representing the sum of all terms.
         """
         return mip.xsum(terms)
 
     def _validate_params(self) -> None:
-        check_scalar(
+        check_param(
             x=self.max_gap,
             name="max_gap",
             lb=0,
             var_type=float,
             include_boundaries=False,
         )
-        check_scalar(
+        check_param(
             x=self.max_gap_abs,
             name="max_gap_abs",
             lb=0,
             var_type=float,
             include_boundaries=False,
         )
-        check_scalar(
+        check_param(
             x=self.infeasibility_tol,
             name="infeasibility_tol",
             var_type=float,
@@ -543,7 +556,7 @@ class Model:
             include_boundaries=False,
         )
         if self.smoothing is not None:
-            check_scalar(
+            check_param(
                 x=self.smoothing,
                 name="smoothing",
                 var_type=float,
@@ -552,7 +565,7 @@ class Model:
                 include_boundaries=False,
             )
         if self.log_freq is not None:
-            check_scalar(
+            check_param(
                 x=self.log_freq,
                 name="log_freq",
                 var_type=int,
@@ -561,21 +574,23 @@ class Model:
             )
 
     @staticmethod
-    def _validate_bounds(lb: float | int, ub: float | int, var_type: str) -> tuple[float | int, float | int]:
+    def _validate_bounds(
+        lb: float | int, ub: float | int, var_type: str
+    ) -> tuple[float | int, float | int]:
         """Validate and normalize variable bounds.
-        
+
         Args:
             lb: Lower bound value.
             ub: Upper bound value.
             var_type: Variable type ('C', 'I', or 'B').
-            
+
         Returns:
             Tuple of (validated_lb, validated_ub).
         """
         if var_type == mip.BINARY:
             lb, ub = 0, 1
         else:
-            check_scalar(
+            check_param(
                 x=lb,
                 name="lb",
                 var_type=(float, int),
@@ -583,7 +598,7 @@ class Model:
                 lb=-mip.INF,
                 include_boundaries=False,
             )
-            check_scalar(
+            check_param(
                 x=ub,
                 name="ub",
                 var_type=(float, int),
