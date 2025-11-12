@@ -1,27 +1,83 @@
 [build-system]
-requires = ["setuptools >= 61.0"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 
 [project]
 name = "halfspace-optimizer"
 version = "0.1.1"
 authors = [
-  { name="Joshua Ivanhoe", email="joshua.k.ivanhoe@gmail.com" },
+  {name="Joshua Ivanhoe", email="joshua.k.ivanhoe@gmail.com"},
 ]
 description = "Cutting-plane solver for mixed-integer convex optimization problems"
 readme = "README.md"
 license = {file = "LICENSE"}
-requires-python = ">=3.9,<3.12"
+requires-python = ">=3.12,<3.13"
+keywords = ["optimization", "mixed-integer", "convex", "cutting-plane", "solver"]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
     "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Mathematics",
 ]
-dynamic = ["dependencies"]
-
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+dependencies = [
+    "mip>=1.15.0,<2.0.0",
+    "numpy>=2.3.3,<3.0.0",
+    "pandas>=2.3.2,<3.0.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/joshivanhoe/halfspace"
 Issues = "https://github.com/joshivanhoe/halfspace/issues"
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+]
+
+[tool.ruff]
+line-length = 100
+exclude = [
+    "*.ipynb",
+]
+
+[tool.ruff.lint]
+extend-select = ["D", "I"]  # pydocstyle
+fixable = ["ALL"]
+extend-ignore = [
+    "D100",  # Missing docstring in public module
+    "D104",  # Missing docstring in public package
+    "D105",  # Missing docstring in magic method
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D"]  # no documentation checks required for tests
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+ignore_missing_imports = true
+install_types = true
+non_interactive = true
+check_untyped_defs = true
+
+[tool.coverage.run]
+source = ["src/halfspace"]
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/halfspace"]

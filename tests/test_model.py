@@ -1,5 +1,3 @@
-from typing import Optional
-
 import mip
 import numpy as np
 import pandas as pd
@@ -13,8 +11,8 @@ VAR_TOL: float = 1e-2
 
 def _check_solution(
     model: Model,
-    expected_objective_value: Optional[float],
-    expected_solution: Optional[dict[Var, float]],
+    expected_objective_value: float | None = None,
+    expected_solution: dict[Var, float] | None = None,
     expected_status: mip.OptimizationStatus = mip.OptimizationStatus.OPTIMAL,
 ):
     if expected_objective_value is not None:
@@ -74,9 +72,7 @@ def test_multivariable_variable_no_constraints():
     model = Model()
     x = model.add_var(lb=0, ub=1)
     y = model.add_var(lb=0, ub=1)
-    model.add_objective_term(
-        var=(x, y), func=lambda x, y: (x - 0.25) ** 2 + (y - 0.25) ** 2 + 1
-    )
+    model.add_objective_term(var=(x, y), func=lambda x, y: (x - 0.25) ** 2 + (y - 0.25) ** 2 + 1)
     model.optimize()
     _check_solution(
         model=model,
@@ -88,9 +84,7 @@ def test_multivariable_variable_no_constraints():
 def test_multivariable_variable_as_tensor_no_constraints():
     model = Model()
     x = model.add_var_tensor(shape=(2,), lb=0, ub=1)
-    model.add_objective_term(
-        var=x, func=lambda x: (x[0] - 0.25) ** 2 + (x[1] - 0.25) ** 2 + 1
-    )
+    model.add_objective_term(var=x, func=lambda x: (x[0] - 0.25) ** 2 + (x[1] - 0.25) ** 2 + 1)
     model.optimize()
     _check_solution(
         model=model,
@@ -103,9 +97,7 @@ def test_multivariable_linear_constraint():
     model = Model()
     x = model.add_var(lb=0, ub=1)
     y = model.add_var(lb=0, ub=1)
-    model.add_objective_term(
-        var=(x, y), func=lambda x, y: (x - 0.25) ** 2 + (y - 0.25) ** 2 + 1
-    )
+    model.add_objective_term(var=(x, y), func=lambda x, y: (x - 0.25) ** 2 + (y - 0.25) ** 2 + 1)
     model.add_linear_constr(100 * x + y <= 0.25)
     model.optimize()
     _check_solution(
@@ -119,29 +111,18 @@ def test_multivariable_linear_constraint_infeasible():
     model = Model()
     x = model.add_var(lb=0, ub=1)
     y = model.add_var(lb=0, ub=1)
-    model.add_objective_term(
-        var=(x, y), func=lambda x, y: (x - 0.25) ** 2 + (y - 0.25) ** 2 + 1
-    )
+    model.add_objective_term(var=(x, y), func=lambda x, y: (x - 0.25) ** 2 + (y - 0.25) ** 2 + 1)
     model.add_linear_constr(x + y >= 3)
     model.optimize()
-    _check_solution(
-        model=model,
-        expected_objective_value=None,
-        expected_solution=None,
-        expected_status=mip.OptimizationStatus.INFEASIBLE,
-    )
+    _check_solution(model=model, expected_status=mip.OptimizationStatus.INFEASIBLE)
 
 
 def test_multivariable_nonlinear_constraint():
     model = Model(max_gap_abs=1e-2)
     x = model.add_var(lb=0, ub=1)
     y = model.add_var(lb=0, ub=1)
-    model.add_objective_term(
-        var=(x, y), func=lambda x, y: (x - 0.25) ** 2 + (y - 0.25) ** 2 + 1
-    )
-    model.add_nonlinear_constr(
-        var=(x, y), func=lambda x, y: (80 * x) ** 2 + y**2 - 0.25**2
-    )
+    model.add_objective_term(var=(x, y), func=lambda x, y: (x - 0.25) ** 2 + (y - 0.25) ** 2 + 1)
+    model.add_nonlinear_constr(var=(x, y), func=lambda x, y: (80 * x) ** 2 + y**2 - 0.25**2)
     model.optimize()
     _check_solution(
         model=model,
@@ -154,14 +135,43 @@ def test_multivariable_nonlinear_constraint_infeasible():
     model = Model(max_gap_abs=1e-2)
     x = model.add_var(lb=0, ub=1)
     y = model.add_var(lb=0, ub=1)
-    model.add_objective_term(
-        var=(x, y), func=lambda x, y: (x - 0.25) ** 2 + (y - 0.25) ** 2 + 1
-    )
+    model.add_objective_term(var=(x, y), func=lambda x, y: (x - 0.25) ** 2 + (y - 0.25) ** 2 + 1)
     model.add_nonlinear_constr(var=(x, y), func=lambda x, y: np.exp(x + y) + 1)
+    model.optimize()
+    _check_solution(model=model, expected_status=mip.OptimizationStatus.INFEASIBLE)
+
+
+def test_maximize_concave_objective():
+    model = Model(minimize=False)
+    x = model.add_var(lb=0, ub=1)
+    model.add_objective_term(var=x, func=lambda x: -((x - 0.75) ** 2) + 1)
     model.optimize()
     _check_solution(
         model=model,
-        expected_objective_value=None,
-        expected_solution=None,
-        expected_status=mip.OptimizationStatus.INFEASIBLE,
+        expected_objective_value=1.0,
+        expected_solution={x: 0.75},
     )
+
+
+def test_smoothing_none_runs():
+    model = Model(smoothing=None)
+    x = model.add_var(lb=0, ub=1)
+    model.add_objective_term(var=x, func=lambda x: (x - 0.25) ** 2)
+    status = model.optimize(max_iters=3)
+    assert status in (mip.OptimizationStatus.OPTIMAL, mip.OptimizationStatus.FEASIBLE)
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"max_gap": 0.0},
+        {"max_gap_abs": 0.0},
+        {"infeasibility_tol": 0.0},
+        {"log_freq": 0},
+        {"smoothing": -1e-3},
+        {"smoothing": 1.0},
+    ],
+)
+def test_parameter_validation_raises(kwargs):
+    with pytest.raises(ValueError):
+        Model(**kwargs)
